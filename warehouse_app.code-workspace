@@ -1,0 +1,18 @@
+{
+	"folders": [
+		{
+			"name": "warehouse",
+			"path": "."
+		}
+	],
+	"settings": {
+		"files.exclude": {
+			"**/*.g.dart": true,
+			"**/*.chopper.dart": true,
+		},
+		"dart.analysisExcludedFolders": [
+			"**/*.g.dart",
+			"**/*.chopper.dart"
+		],
+	},
+}
