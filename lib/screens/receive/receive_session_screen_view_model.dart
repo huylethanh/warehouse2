@@ -361,7 +361,7 @@ class ReceiveSessionScreenViewModel extends ViewModelBase {
       return;
     }
 
-    DialogService.showErrorBotToast("Failed: ${result.errorMessage}");
+    investigateError(result.errorMessage, null);
   }
 
   void processInput(BuildContext context, String barcode) {
