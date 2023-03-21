@@ -8,9 +8,10 @@ class AppNavigation {
     navKey.currentState!.pushNamed<T>(name, arguments: arguments);
   }
 
-  static void pushReplacementNamed<T extends Object>(String name,
+  static Future<void> pushReplacementNamed<T extends Object>(String name,
       {Object? arguments}) {
-    navKey.currentState!.pushReplacementNamed(name, arguments: arguments);
+    return navKey.currentState!
+        .pushReplacementNamed(name, arguments: arguments);
   }
 }
 
@@ -22,16 +23,20 @@ class Routing {
     switch (settings.name) {
       case Routing.login:
         final reason = settings.arguments as String?;
-        return MaterialPageRoute(builder: (BuildContext context) {
-          return LoginScreen(
-            loginReason: reason,
-          );
-        });
+        return MaterialPageRoute(
+          builder: (BuildContext context) {
+            return LoginScreen(
+              loginReason: reason,
+            );
+          },
+        );
 
       case Routing.home:
-        return MaterialPageRoute(builder: (BuildContext context) {
-          return const HomeScreen();
-        });
+        return MaterialPageRoute(
+          builder: (BuildContext context) {
+            return const HomeScreen();
+          },
+        );
 
       default:
         throw new Exception("Not support ");

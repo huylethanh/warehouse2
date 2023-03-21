@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:warehouse_app/base/view_models/index.dart';
-import 'package:warehouse_app/screens/receive/receive_screen.dart';
 
 import '../put_away/put_away_screen.dart';
+import '../receive/index.dart';
 
 class HomeScreenViewModel extends ViewModelBase {
   static const String receive = "receive";
@@ -63,7 +63,7 @@ class HomeScreenViewModel extends ViewModelBase {
     late Widget page;
     switch (name) {
       case receive:
-        page = ReceiveScreen();
+        page = ReceiveListScreen();
         break;
 
       case putAway:

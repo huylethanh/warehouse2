@@ -41,11 +41,11 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   Widget startup() {
     return const LoginScreen();
 
-    if (LoginReference().accessToken != null) {
-      return const HomeScreen();
-    }
+    // if (LoginReference().accessToken != null) {
+    //   return const HomeScreen();
+    // }
 
-    return const LoginScreen();
+    // return const LoginScreen();
   }
 
   @override

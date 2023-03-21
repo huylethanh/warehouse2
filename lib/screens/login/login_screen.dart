@@ -7,21 +7,10 @@ import 'package:warehouse_app/utils/index.dart';
 
 import 'login_screen_view_model.dart';
 
-class LoginScreen extends StatefulWidget {
+class LoginScreen extends StatelessWidget {
   final String? loginReason;
 
   const LoginScreen({super.key, this.loginReason});
-
-  @override
-  State<LoginScreen> createState() => _LoginScreenState();
-}
-
-class _LoginScreenState extends State<LoginScreen> {
-  @override
-  void initState() {
-    checkPreviousSessionAndRedirect();
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,6 +19,8 @@ class _LoginScreenState extends State<LoginScreen> {
     );
     return ViewModelBuilder.reactive(viewModelBuilder: () {
       return LoginScreenViewModel();
+    }, onViewModelReady: (LoginScreenViewModel viewModel) {
+      viewModel.checkPreviousSessionAndRedirect(context);
     }, builder: (BuildContext context, LoginScreenViewModel viewModel, _) {
       return Scaffold(
         body: Container(
@@ -43,10 +34,10 @@ class _LoginScreenState extends State<LoginScreen> {
                   size: 120,
                   color: AppColor.orange700,
                 ),
-                if (!widget.loginReason.isNullOrEmptyEx())
-                  Text(widget.loginReason!),
+                if (!loginReason.isNullOrEmptyEx()) Text(loginReason!),
                 gap,
-                TextField(
+                TextFormField(
+                  initialValue: viewModel.username,
                   decoration: const InputDecoration(
                     enabledBorder: OutlineInputBorder(
                         borderSide: BorderSide(color: AppColor.secondary400)),
@@ -62,7 +53,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   },
                 ),
                 gap,
-                TextField(
+                TextFormField(
+                  initialValue: viewModel.password,
                   obscureText: !viewModel.showedPassword,
                   decoration: InputDecoration(
                     enabledBorder: const OutlineInputBorder(
@@ -109,16 +101,6 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
         ),
       );
-    });
-  }
-
-  void checkPreviousSessionAndRedirect() {
-    SchedulerBinding.instance.addPostFrameCallback((_) {
-      String? loginToken = LoginReference().accessToken;
-      if (loginToken != null) {
-        Navigator.pushNamedAndRemoveUntil(
-            context, Routing.home, (Route<dynamic> route) => false);
-      }
     });
   }
 }

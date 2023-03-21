@@ -3,16 +3,17 @@ import 'package:warehouse_app/utils/index.dart';
 import 'package:warehouse_app/widgets/index.dart';
 
 mixin ErrorInvestigator {
-  void investigateError(ErrorResponse? error, Function()? callBack) {
+  Future<void> investigateError(
+      ErrorResponse? error, Function()? callBack) async {
     if (error?.code == 'account_being_used') {
       DialogService.showErrorBotToast('account_being_used');
-      LoginReference().clearAll();
-      AppNavigation.pushReplacementNamed(Routing.login,
+      await LoginReference().clearAll();
+      return AppNavigation.pushReplacementNamed(Routing.login,
           arguments: "account_being_used");
-      return;
     }
 
     DialogService.showErrorBotToast(error?.errorMessage ?? "Unknown error");
     callBack?.call();
+    return Future.value();
   }
 }

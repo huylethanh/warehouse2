@@ -3,14 +3,15 @@
 import 'package:flutter/material.dart';
 import 'package:warehouse_app/screens/index.dart';
 import 'package:warehouse_app/services/user_service.dart';
+import 'package:warehouse_app/utils/index.dart';
 import 'package:warehouse_app/view_models/view_model_base.dart';
 
 class LoginScreenViewModel extends ViewModelBase {
   final service = UserService();
 
   bool showedPassword = false;
-  String? username;
-  String? password;
+  String? username = "tnc.tuandao";
+  String? password = "123456";
 
   void showsPassword() {
     showedPassword = !showedPassword;
@@ -19,27 +20,18 @@ class LoginScreenViewModel extends ViewModelBase {
 
   void login(BuildContext context) async {
     setBusy(true);
-    // final login = await service.login(username!, password!);
+    final login = await service.login(username!, password!);
 
-    // if (login) {
-    //   Navigator.pushReplacement(
-    //     context,
-    //     MaterialPageRoute(builder: (builder) {
-    //       return const HomeScreen();
-    //     }),
-    //   );
+    if (login) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (builder) {
+          return const HomeScreen();
+        }),
+      );
 
-    //   return;
-    // }
-
-    await Future.delayed(Duration(milliseconds: 1000));
-
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (builder) {
-        return const HomeScreen();
-      }),
-    );
+      return;
+    }
 
     setBusy(false);
   }
@@ -50,5 +42,13 @@ class LoginScreenViewModel extends ViewModelBase {
 
   void updatePassword(String password) {
     this.password = password;
+  }
+
+  checkPreviousSessionAndRedirect(BuildContext context) {
+    String? loginToken = LoginReference().accessToken;
+    if (loginToken != null) {
+      Navigator.pushNamedAndRemoveUntil(
+          context, Routing.home, (Route<dynamic> route) => false);
+    }
   }
 }

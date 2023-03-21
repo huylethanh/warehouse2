@@ -17,13 +17,13 @@ class ChopperClients {
 
   String? token;
 
-  String baseURL = 'https://ops-api.stg.tnclog.vn';
+  String baseURL = 'https://ops-api.dev.tnclog.vn/';
 
   String? deviceIdentifier;
 
   ChopperClient get client {
-    String accessToken = "";
-    // LoginReference().accessToken!;
+    String accessToken = LoginReference().accessToken!;
+
     return ChopperClient(
       baseUrl: Uri.parse(baseURL),
       interceptors: [

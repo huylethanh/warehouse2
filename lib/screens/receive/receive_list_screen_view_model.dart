@@ -7,12 +7,13 @@ import 'package:warehouse_app/services/index.dart';
 import 'package:warehouse_app/view_models/view_model_base.dart';
 import 'package:warehouse_app/widgets/index.dart';
 
-class ReceiveScreenViewModel extends ViewModelBase {
+class ReceiveListScreenViewModel extends ViewModelBase {
   final _service = ReceiveService();
   final _conditionService = ConditionTypeService();
 
-  final List<ReceiveModel> receives = [];
-  final List<ReceiveModel> _receivesCache = [];
+  List<ReceiveModel> receives = [];
+  List<ReceiveModel> _receivesCache = [];
+
   void init() {
     _loadReceives();
   }
@@ -29,7 +30,7 @@ class ReceiveScreenViewModel extends ViewModelBase {
       return;
     }
 
-    await investigateError(result.errorMessage, () => setBusy(false));
+    investigateError(result.errorMessage, () => setBusy(false));
   }
 
   void showCondition(BuildContext context, ReceiveModel model) async {
