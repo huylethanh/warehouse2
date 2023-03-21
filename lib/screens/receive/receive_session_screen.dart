@@ -38,9 +38,7 @@ class ReceiveSessionScreen extends StatelessWidget {
       builder:
           (BuildContext context, ReceiveSessionScreenViewModel viewModel, _) {
         if (viewModel.isBusy) {
-          return const LoadingWidget(
-            text: "Đang tải dữ liệu...",
-          );
+          return const LoadingWidget();
         }
         final model = viewModel.session;
         const vGap = SizedBox(
@@ -51,7 +49,6 @@ class ReceiveSessionScreen extends StatelessWidget {
           children: [
             Scaffold(
               appBar: AppBar(
-                backgroundColor: Colors.amber,
                 title: const Text("Nhận hàng"),
                 centerTitle: true,
               ),
@@ -63,7 +60,7 @@ class ReceiveSessionScreen extends StatelessWidget {
                     Column(
                       children: [
                         RoundedContainer(
-                          backgroundColor: Colors.grey[200],
+                          backgroundColor: AppColor.gray400.withOpacity(0.5),
                           innerPadding: const EdgeInsets.all(8),
                           child: Column(
                             children: [
@@ -94,8 +91,8 @@ class ReceiveSessionScreen extends StatelessWidget {
                                           Text(
                                             "${model.code} - ${model.irCode}",
                                             style: const TextStyle(
-                                                fontSize: 10,
-                                                color: Colors.black54),
+                                              fontSize: 14,
+                                            ),
                                           ),
                                         ],
                                       ),
@@ -104,15 +101,22 @@ class ReceiveSessionScreen extends StatelessWidget {
                                 ),
                               ),
                               vGap,
-                              Divider(),
+                              const Divider(),
                               vGap,
                               Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  const Text("Condition type"),
-                                  Text(viewModel
-                                      .conditionType.conditionTypeName!),
+                                  const Text("Tình Trạng Hàng Hóa"),
+                                  Expanded(
+                                    child: Text(
+                                      textAlign: TextAlign.right,
+                                      viewModel
+                                          .conditionType.conditionTypeName!,
+                                      style: const TextStyle(
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
                                 ],
                               ),
                               if (viewModel.hasCurrentCode()) ...[
@@ -121,9 +125,16 @@ class ReceiveSessionScreen extends StatelessWidget {
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                   children: [
-                                    const Text("Tote code"),
-                                    Text(viewModel
-                                        .transportControl.currentCode!),
+                                    const Text("Mã Thiết Bị Chứa Hàng"),
+                                    Expanded(
+                                      child: Text(
+                                        viewModel.transportControl.currentCode!,
+                                        textAlign: TextAlign.right,
+                                        style: const TextStyle(
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ),
+                                    vGap,
                                   ],
                                 ),
                               ],
@@ -147,6 +158,16 @@ class ReceiveSessionScreen extends StatelessWidget {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
+                            SplashButtonWidget(
+                              borderRadius: const Radius.circular(5),
+                              innerPadding: const EdgeInsets.all(6),
+                              margin: const EdgeInsets.only(right: 8),
+                              color: AppColor.secondary500,
+                              child: const Icon(FontAwesomeIcons.barcode),
+                              onPressed: () {
+                                scanBarcodeByCamera(context, viewModel);
+                              },
+                            ),
                             Expanded(
                               child: TextFormField(
                                 key: UniqueKey(),
@@ -156,7 +177,7 @@ class ReceiveSessionScreen extends StatelessWidget {
                                   border: const OutlineInputBorder(),
                                   labelText: viewModel.hasCurrentCode()
                                       ? 'Scan barcode'
-                                      : 'Scan tote device',
+                                      : 'Quét Thiết Bị Chứa Hàng',
                                   labelStyle: const TextStyle(fontSize: 15),
                                   isDense: true,
                                   contentPadding: const EdgeInsets.symmetric(
@@ -181,15 +202,6 @@ class ReceiveSessionScreen extends StatelessWidget {
                     ),
                     Column(
                       children: [
-                        ElevatedButton(
-                          onPressed: () {
-                            scanBarcodeNormal(context, viewModel);
-                          },
-                          style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.purpleAccent,
-                              minimumSize: const Size.fromHeight(50)),
-                          child: const Text("Scan"),
-                        ),
                         vGap,
                         ElevatedButton(
                           onPressed: () {
@@ -215,7 +227,7 @@ class ReceiveSessionScreen extends StatelessWidget {
     );
   }
 
-  Future<void> scanBarcodeNormal(
+  Future<void> scanBarcodeByCamera(
       BuildContext context, ReceiveSessionScreenViewModel viewModel) async {
     String barcodeScanRes;
     // Platform messages may fail, so we use a try/catch PlatformException.

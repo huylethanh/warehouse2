@@ -163,7 +163,7 @@ class _SearchAppBarState extends State<SearchAppBar> {
                   hintText: widget.hintText,
                   hintStyle: const TextStyle(fontSize: 14),
                 ),
-                autofocus: true,
+                autofocus: false,
               ),
             )
           : widget.title,

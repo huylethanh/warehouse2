@@ -13,7 +13,7 @@ class LoadingWidget extends StatelessWidget {
   const LoadingWidget({
     Key? key,
     this.size = IconSizes.xl,
-    this.text,
+    this.text = "Đang tải dữ liệu...",
     this.color,
     this.textColor,
   }) : super(key: key);

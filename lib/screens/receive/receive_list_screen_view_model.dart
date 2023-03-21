@@ -74,6 +74,8 @@ class ReceiveListScreenViewModel extends ViewModelBase {
           },
         ),
       );
+
+      return;
     }
 
     setProcessing(false);
