@@ -17,7 +17,7 @@ class RoundedContainer extends StatelessWidget {
   const RoundedContainer({
     Key? key,
     required this.child,
-    this.borderRadius = 20,
+    this.borderRadius = 10,
     this.innerPadding = const EdgeInsets.all(10),
     this.backgroundColor,
     this.borderColor,

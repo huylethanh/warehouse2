@@ -6,6 +6,8 @@ import 'package:warehouse_app/view_models/receive_view_model.dart';
 import 'package:warehouse_app/widgets/index.dart';
 import 'package:warehouse_app/widgets/search_appbar.dart';
 
+import 'receive_list_screen_view_model.dart';
+
 class ReceiveListScreen extends StatelessWidget {
   const ReceiveListScreen({super.key});
 
@@ -13,23 +15,23 @@ class ReceiveListScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return ViewModelBuilder.reactive(
       viewModelBuilder: () {
-        return ReceiveScreenViewModel();
+        return ReceiveListScreenViewModel();
       },
-      onViewModelReady: (ReceiveScreenViewModel viewModel) {
+      onViewModelReady: (ReceiveListScreenViewModel viewModel) {
         viewModel.init();
       },
-      builder: (BuildContext context, ReceiveScreenViewModel viewModel, _) {
+      builder: (BuildContext context, ReceiveListScreenViewModel viewModel, _) {
         if (viewModel.isBusy) {
           return Container(
-            child: const LoadingWidget(),
             color: Colors.white,
+            child: const LoadingWidget(),
           );
         }
         return Stack(
           children: [
             Scaffold(
               appBar: SearchAppBar(
-                title: Text("List Check-in"),
+                title: const Text("Danh Sách Check-in"),
                 onChanged: (value) {
                   viewModel.search(value);
                 },
@@ -51,21 +53,22 @@ class ReceiveListScreen extends StatelessWidget {
     );
   }
 
-  Widget _listItem(BuildContext context, ReceiveScreenViewModel viewModel,
+  Widget _listItem(BuildContext context, ReceiveListScreenViewModel viewModel,
       ReceiveModel model) {
-    final vGap = SizedBox(
+    const vGap = SizedBox(
       height: 8,
     );
     return RoundedContainer(
-        backgroundColor: Colors.grey[300],
-        innerPadding: EdgeInsets.all(8),
-        margin: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+        borderRadius: 10,
+        backgroundColor: AppColor.gray,
+        innerPadding: const EdgeInsets.all(8),
+        margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
         child: IntrinsicHeight(
           child: Row(
             children: [
               Text(
                 StringFormat.hm(model.createdDate),
-                style: TextStyle(fontWeight: FontWeight.bold),
+                style: const TextStyle(fontWeight: FontWeight.bold),
               ),
               const VerticalDivider(
                 color: Colors.grey,
@@ -78,22 +81,22 @@ class ReceiveListScreen extends StatelessWidget {
                   children: [
                     Text(
                       model.shortName!,
-                      style: TextStyle(fontWeight: FontWeight.bold),
+                      style: const TextStyle(fontWeight: FontWeight.bold),
                     ),
                     vGap,
                     Text(
                       "${model.code} - ${model.irCode}",
-                      style: TextStyle(fontSize: 10, color: Colors.black54),
+                      style: const TextStyle(fontSize: 10),
                     ),
                   ],
                 ),
               ),
               ElevatedButton(
-                style: ElevatedButton.styleFrom(backgroundColor: Colors.orange),
+                style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
                 onPressed: () {
                   viewModel.showCondition(context, model);
                 },
-                child: Text("Receive"),
+                child: const Text("Nhận Hàng"),
               )
             ],
           ),

@@ -1,11 +1,16 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 
 import 'package:warehouse_app/models/index.dart';
-import 'package:warehouse_app/screens/condition_type1/conditon_type_screen.dart';
+import 'package:warehouse_app/screens/condition_type/conditon_type_screen.dart';
 import 'package:warehouse_app/services/condition_type_service.dart';
 import 'package:warehouse_app/services/index.dart';
+import 'package:warehouse_app/utils/index.dart';
 import 'package:warehouse_app/view_models/view_model_base.dart';
 import 'package:warehouse_app/widgets/index.dart';
+
+import 'receive_session_screen.dart';
 
 class ReceiveListScreenViewModel extends ViewModelBase {
   final _service = ReceiveService();
@@ -13,6 +18,8 @@ class ReceiveListScreenViewModel extends ViewModelBase {
 
   List<ReceiveModel> receives = [];
   List<ReceiveModel> _receivesCache = [];
+
+  final _debouncer = Debouncer(milliseconds: 300);
 
   void init() {
     _loadReceives();
@@ -39,34 +46,61 @@ class ReceiveListScreenViewModel extends ViewModelBase {
     final result = await _conditionService.getConditionTypes(model.irId!);
 
     if (!result.hasError) {
-      // ignore: use_build_context_synchronously
-      DialogService.showBottomSheet(context,
-          canDismiss: false,
-          title: "Choose condition type",
-          chid: ConditionTypeScreen(model: model, conditions: result.data!));
       setProcessing(false);
-      return;
+
+      final seletedCondition =
+          await DialogService.showBottomSheet<ConditionType>(
+        context,
+        canDismiss: false,
+        title: "Chọn Tình Trạng Hàng Hóa",
+        chid: ConditionTypeScreen(
+          model: model,
+          conditions: result.data!,
+        ),
+      );
+
+      if (seletedCondition == null) {
+        return;
+      }
+
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (BuildContext context) {
+            return ReceiveSessionScreen(
+              conditionType: seletedCondition,
+              receiveModel: model,
+            );
+          },
+        ),
+      );
     }
+
+    setProcessing(false);
 
     investigateError(result.errorMessage, () => setProcessing(false));
   }
 
   void search(String? search) {
-    receives.clear();
-    if (search == null || search.isEmpty) {
-      receives.addAll(_receivesCache);
+    _debouncer.run(() {
+      receives.clear();
+      if (search == null || search.isEmpty) {
+        receives.addAll(_receivesCache);
+        notifyListeners();
+        return;
+      }
+
+      final upper = search.toUpperCase();
+      final found = _receivesCache
+          .where((element) =>
+              (element.irCode != null &&
+                  element.irCode!.toUpperCase().contains(upper)) ||
+              (element.code != null &&
+                  element.irCode!.toUpperCase().contains(upper)))
+          .toList();
+
+      receives.addAll(found);
       notifyListeners();
-      return;
-    }
-
-    final upper = search.toUpperCase();
-    final found = _receivesCache
-        .where((element) =>
-            element.irCode != null &&
-            element.irCode!.toUpperCase().contains(upper))
-        .toList();
-
-    receives.addAll(found);
-    notifyListeners();
+    });
   }
 }

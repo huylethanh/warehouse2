@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:warehouse_app/models/index.dart';
-import 'package:warehouse_app/screens/index.dart';
 import 'package:warehouse_app/view_models/view_model_base.dart';
 
 class ChooseConditionScreeViewModel extends ViewModelBase {
@@ -14,18 +13,7 @@ class ChooseConditionScreeViewModel extends ViewModelBase {
   }
 
   void goToReceiveSession(BuildContext context) {
-    Navigator.pop(context);
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (BuildContext context) {
-          return ReceiveSessionScreen(
-            conditionType: selectedCondion!,
-            receiveModel: receiveModel,
-          );
-        },
-      ),
-    );
+    Navigator.pop(context, selectedCondion);
   }
 
   bool validate() {

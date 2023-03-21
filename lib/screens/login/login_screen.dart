@@ -7,10 +7,21 @@ import 'package:warehouse_app/utils/index.dart';
 
 import 'login_screen_view_model.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
   final String? loginReason;
 
   const LoginScreen({super.key, this.loginReason});
+
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  @override
+  void initState() {
+    checkPreviousSessionAndRedirect();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -19,8 +30,6 @@ class LoginScreen extends StatelessWidget {
     );
     return ViewModelBuilder.reactive(viewModelBuilder: () {
       return LoginScreenViewModel();
-    }, onViewModelReady: (LoginScreenViewModel viewModel) {
-      viewModel.checkPreviousSessionAndRedirect(context);
     }, builder: (BuildContext context, LoginScreenViewModel viewModel, _) {
       return Scaffold(
         body: Container(
@@ -34,10 +43,10 @@ class LoginScreen extends StatelessWidget {
                   size: 120,
                   color: AppColor.orange700,
                 ),
-                if (!loginReason.isNullOrEmptyEx()) Text(loginReason!),
+                if (!widget.loginReason.isNullOrEmptyEx())
+                  Text(widget.loginReason!),
                 gap,
-                TextFormField(
-                  initialValue: viewModel.username,
+                TextField(
                   decoration: const InputDecoration(
                     enabledBorder: OutlineInputBorder(
                         borderSide: BorderSide(color: AppColor.secondary400)),
@@ -53,8 +62,7 @@ class LoginScreen extends StatelessWidget {
                   },
                 ),
                 gap,
-                TextFormField(
-                  initialValue: viewModel.password,
+                TextField(
                   obscureText: !viewModel.showedPassword,
                   decoration: InputDecoration(
                     enabledBorder: const OutlineInputBorder(
@@ -101,6 +109,16 @@ class LoginScreen extends StatelessWidget {
           ),
         ),
       );
+    });
+  }
+
+  void checkPreviousSessionAndRedirect() {
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      String? loginToken = LoginReference().accessToken;
+      if (loginToken != null) {
+        Navigator.pushNamedAndRemoveUntil(
+            context, Routing.home, (Route<dynamic> route) => false);
+      }
     });
   }
 }

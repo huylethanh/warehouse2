@@ -4,8 +4,10 @@ import 'package:stacked/stacked.dart';
 
 import 'package:warehouse_app/models/index.dart';
 import 'package:warehouse_app/utils/index.dart';
-import 'package:warehouse_app/view_models/index.dart';
+import 'package:warehouse_app/widgets/drop_downs/drop_down.dart';
 import 'package:warehouse_app/widgets/index.dart';
+
+import 'conditionn_type_view_model.dart';
 
 class ConditionTypeScreen extends StatelessWidget {
   final ReceiveModel model;
@@ -17,7 +19,7 @@ class ConditionTypeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     const vGap = SizedBox(
-      height: 8,
+      height: 16,
     );
 
     return ViewModelBuilder.reactive(
@@ -26,13 +28,12 @@ class ConditionTypeScreen extends StatelessWidget {
       builder: (BuildContext context, ChooseConditionScreeViewModel viewModel,
           Widget? child) {
         return Padding(
-          padding: const EdgeInsets.all(15.0),
+          padding: const EdgeInsets.all(16.0),
           child: Column(
             children: [
               RoundedContainer(
-                backgroundColor: Colors.grey[300],
-                innerPadding: EdgeInsets.all(8),
-                //  margin: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                backgroundColor: AppColor.gray,
+                innerPadding: const EdgeInsets.all(8),
                 child: IntrinsicHeight(
                   child: Row(
                     children: [
@@ -54,11 +55,12 @@ class ConditionTypeScreen extends StatelessWidget {
                               style:
                                   const TextStyle(fontWeight: FontWeight.bold),
                             ),
-                            vGap,
+                            const SizedBox(
+                              height: 8,
+                            ),
                             Text(
                               "${model.code} - ${model.irCode}",
-                              style: const TextStyle(
-                                  fontSize: 10, color: Colors.black54),
+                              style: const TextStyle(fontSize: 14),
                             ),
                           ],
                         ),
@@ -68,24 +70,18 @@ class ConditionTypeScreen extends StatelessWidget {
                 ),
               ),
               vGap,
-              DropdownButton<ConditionType>(
-                icon: const Icon(
-                  FontAwesomeIcons.chevronDown,
-                  size: 15,
-                ),
-                isExpanded: true,
+              DropDowWidget<ConditionType>(
                 value: viewModel.selectedCondion,
-                items: viewModel.conditions
-                    .map((e) => DropdownMenuItem<ConditionType>(
-                          value: e,
-                          child: Text(e.conditionTypeName!),
-                        ))
-                    .toList(),
+                items: viewModel.conditions,
                 onChanged: (selected) {
                   viewModel.selectedCondion = selected;
                   viewModel.notifyListeners();
                 },
+                displayItemBuilder: (item) {
+                  return Text(item!.conditionTypeName!);
+                },
               ),
+              vGap,
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -93,9 +89,12 @@ class ConditionTypeScreen extends StatelessWidget {
                     onPressed: () {
                       Navigator.pop(context);
                     },
-                    style:
-                        ElevatedButton.styleFrom(backgroundColor: Colors.grey),
-                    child: Text("Back"),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.grey,
+                    ),
+                    child: const Text(
+                      "Quay Lại",
+                    ),
                   ),
                   ElevatedButton(
                     onPressed: viewModel.validate()
@@ -103,9 +102,12 @@ class ConditionTypeScreen extends StatelessWidget {
                             viewModel.goToReceiveSession(context);
                           }
                         : null,
-                    style:
-                        ElevatedButton.styleFrom(backgroundColor: Colors.green),
-                    child: Text("Confirm"),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColor.secondary600,
+                    ),
+                    child: const Text(
+                      "Xác Nhận",
+                    ),
                   ),
                 ],
               )

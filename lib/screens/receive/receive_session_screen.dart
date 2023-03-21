@@ -6,8 +6,9 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:stacked/stacked.dart';
 import 'package:warehouse_app/models/index.dart';
 import 'package:warehouse_app/utils/index.dart';
-import 'package:warehouse_app/view_models/index.dart';
 import 'package:warehouse_app/widgets/index.dart';
+
+import 'receive_session_screen_view_model.dart';
 
 class ReceiveSessionScreen extends StatelessWidget {
   final ReceiveModel receiveModel;
@@ -31,7 +32,7 @@ class ReceiveSessionScreen extends StatelessWidget {
           receiveTask: receiveTask,
         );
       },
-      onModelReady: (ReceiveSessionScreenViewModel viewModel) {
+      onViewModelReady: (ReceiveSessionScreenViewModel viewModel) {
         viewModel.init();
       },
       builder:

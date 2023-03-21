@@ -43,12 +43,4 @@ class LoginScreenViewModel extends ViewModelBase {
   void updatePassword(String password) {
     this.password = password;
   }
-
-  checkPreviousSessionAndRedirect(BuildContext context) {
-    String? loginToken = LoginReference().accessToken;
-    if (loginToken != null) {
-      Navigator.pushNamedAndRemoveUntil(
-          context, Routing.home, (Route<dynamic> route) => false);
-    }
-  }
 }
