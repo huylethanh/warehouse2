@@ -1,6 +1,6 @@
 import 'package:warehouse_app/mixins/error_investagator_mixin.dart';
-import 'package:warehouse_app/models/index.dart';
-import 'package:warehouse_app/services/index.dart';
+import 'package:warehouse_app/models/models.dart';
+import 'package:warehouse_app/services/services.dart';
 import 'package:darq/darq.dart';
 
 class GetInboundRequest with ErrorInvestigator {

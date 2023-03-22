@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:stacked/stacked.dart';
 
-import 'package:warehouse_app/models/index.dart';
+import 'package:warehouse_app/models/models.dart';
 import 'package:warehouse_app/utils/index.dart';
 import 'package:warehouse_app/widgets/drop_downs/drop_down.dart';
 import 'package:warehouse_app/widgets/index.dart';

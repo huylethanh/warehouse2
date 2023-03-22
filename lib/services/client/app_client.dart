@@ -1,5 +1,5 @@
 import 'package:chopper/chopper.dart';
-import 'package:warehouse_app/models/index.dart';
+import 'package:warehouse_app/models/models.dart';
 
 import 'chopper_clients.dart';
 

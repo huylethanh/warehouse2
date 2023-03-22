@@ -1,6 +1,6 @@
 library service;
 
-export 'client/index.dart';
+export 'client/client.dart';
 export 'user_service.dart';
 export 'receive_service.dart';
 export 'task_status_service.dart';

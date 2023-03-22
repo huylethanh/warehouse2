@@ -1,9 +1,9 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
-import 'package:warehouse_app/models/index.dart';
+import 'package:warehouse_app/models/models.dart';
 import 'package:warehouse_app/screens/ask_for_duration1/index.dart';
-import 'package:warehouse_app/services/index.dart';
+import 'package:warehouse_app/services/services.dart';
 import 'package:warehouse_app/services/metadata_service.dart';
 import 'package:warehouse_app/view_models/logics/index.dart';
 import 'package:warehouse_app/view_models/models/index.dart';

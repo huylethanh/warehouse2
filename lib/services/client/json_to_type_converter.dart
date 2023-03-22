@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:chopper/chopper.dart';
 import 'package:warehouse_app/models/error/error_response.dart';
-import 'package:warehouse_app/models/index.dart';
+import 'package:warehouse_app/models/models.dart';
 
 class JsonToTypeConverter extends JsonConverter {
   final Map<Type, Function> typeToJsonFactoryMap = {

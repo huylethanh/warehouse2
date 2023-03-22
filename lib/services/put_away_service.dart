@@ -1,4 +1,4 @@
-import 'package:warehouse_app/models/index.dart';
+import 'package:warehouse_app/models/models.dart';
 import 'package:warehouse_app/services/result_set.dart';
 
 import 'client/app_client.dart';

@@ -1,6 +1,6 @@
 import 'package:copy_with_extension/copy_with_extension.dart';
 import 'package:json_annotation/json_annotation.dart';
-import 'package:warehouse_app/models/index.dart';
+import 'package:warehouse_app/models/models.dart';
 
 part 'put_away_session_response.g.dart';
 

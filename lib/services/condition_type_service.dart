@@ -1,7 +1,7 @@
-import 'package:warehouse_app/models/index.dart';
+import 'package:warehouse_app/models/models.dart';
 import 'package:warehouse_app/services/result_set.dart';
 
-import 'index.dart';
+import 'services.dart';
 
 class ConditionTypeService {
   final _client = AppClient.create();

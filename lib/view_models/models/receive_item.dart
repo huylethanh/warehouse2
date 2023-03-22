@@ -1,5 +1,5 @@
 import 'package:copy_with_extension/copy_with_extension.dart';
-import 'package:warehouse_app/models/index.dart';
+import 'package:warehouse_app/models/models.dart';
 
 part 'receive_item.g.dart';
 

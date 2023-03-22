@@ -1,7 +1,7 @@
-import 'package:warehouse_app/models/index.dart';
+import 'package:warehouse_app/models/models.dart';
 import 'package:warehouse_app/utils/login_reference.dart';
 
-import 'client/index.dart';
+import 'client/client.dart';
 
 class UserService {
   final loginClient = AuthenticationClient.create();
