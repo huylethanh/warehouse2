@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:stacked/stacked.dart';
-import 'package:warehouse_app/utils/index.dart';
+import 'package:warehouse_app/utils/utils.dart';
 
 import 'login_screen_view_model.dart';
 

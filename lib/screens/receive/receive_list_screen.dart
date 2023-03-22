@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 import 'package:warehouse_app/models/models.dart';
-import 'package:warehouse_app/utils/index.dart';
+import 'package:warehouse_app/utils/utils.dart';
 import 'package:warehouse_app/view_models/receive_view_model.dart';
 import 'package:warehouse_app/widgets/index.dart';
 import 'package:warehouse_app/widgets/search_appbar.dart';
@@ -92,7 +92,7 @@ class ReceiveListScreen extends StatelessWidget {
                 ),
               ),
               ElevatedButton(
-                style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
+                style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
                 onPressed: () {
                   viewModel.showCondition(context, model);
                 },

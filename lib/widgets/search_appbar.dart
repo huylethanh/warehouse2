@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:warehouse_app/utils/index.dart';
+import 'package:warehouse_app/utils/utils.dart';
 
 import '../utils/debouncer.dart';
 
@@ -32,6 +32,8 @@ class SearchAppBar extends StatefulWidget implements PreferredSizeWidget {
 
   final bool autofocus;
 
+  final Color? backgroundColor;
+
   const SearchAppBar({
     Key? key,
     this.title,
@@ -55,6 +57,7 @@ class SearchAppBar extends StatefulWidget implements PreferredSizeWidget {
     this.customSearchDecoration,
     this.searchContentPadding,
     this.autofocus = false,
+    this.backgroundColor,
   }) : super(key: key);
   @override
   _SearchAppBarState createState() => _SearchAppBarState();
@@ -107,6 +110,7 @@ class _SearchAppBarState extends State<SearchAppBar> {
     actions.addAll(widget.actions);
 
     return AppBar(
+      backgroundColor: widget.backgroundColor,
       leadingWidth: widget.leadingWidth,
       centerTitle: widget.centerTitle,
       automaticallyImplyLeading: !widget.usingCloseButton,

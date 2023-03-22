@@ -5,7 +5,7 @@ import 'package:warehouse_app/models/models.dart';
 import 'package:warehouse_app/screens/ask_for_duration1/index.dart';
 import 'package:warehouse_app/services/services.dart';
 import 'package:warehouse_app/services/metadata_service.dart';
-import 'package:warehouse_app/view_models/logics/index.dart';
+import 'package:warehouse_app/view_models/logics/logics.dart';
 import 'package:warehouse_app/view_models/models/index.dart';
 
 import 'package:warehouse_app/view_models/view_model_base.dart';

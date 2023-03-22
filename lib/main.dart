@@ -1,6 +1,6 @@
 import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
-import 'package:warehouse_app/utils/index.dart';
+import 'package:warehouse_app/utils/utils.dart';
 
 import 'screens/index.dart';
 

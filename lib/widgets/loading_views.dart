@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:warehouse_app/utils/index.dart';
+import 'package:warehouse_app/utils/utils.dart';
 
 class LoadingWidget extends StatelessWidget {
   final double size;

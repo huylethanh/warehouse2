@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:chopper/chopper.dart';
 import 'package:device_info_plus/device_info_plus.dart';
-import 'package:warehouse_app/utils/index.dart';
+import 'package:warehouse_app/utils/utils.dart';
 
 import 'json_to_type_converter.dart';
 

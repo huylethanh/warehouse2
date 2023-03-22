@@ -1,5 +1,5 @@
 import 'package:warehouse_app/models/error/index.dart';
-import 'package:warehouse_app/utils/index.dart';
+import 'package:warehouse_app/utils/utils.dart';
 import 'package:warehouse_app/widgets/index.dart';
 
 mixin ErrorInvestigator {

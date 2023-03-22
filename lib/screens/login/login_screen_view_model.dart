@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:warehouse_app/screens/index.dart';
 import 'package:warehouse_app/services/user_service.dart';
-import 'package:warehouse_app/utils/index.dart';
+import 'package:warehouse_app/utils/utils.dart';
 import 'package:warehouse_app/view_models/view_model_base.dart';
 
 class LoginScreenViewModel extends ViewModelBase {
