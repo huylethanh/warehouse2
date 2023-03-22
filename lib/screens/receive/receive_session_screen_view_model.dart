@@ -9,7 +9,7 @@ import 'package:warehouse_app/view_models/logics/logics.dart';
 import 'package:warehouse_app/view_models/models/index.dart';
 
 import 'package:warehouse_app/view_models/view_model_base.dart';
-import 'package:warehouse_app/widgets/index.dart';
+import 'package:warehouse_app/widgets/widgets.dart';
 import 'package:darq/darq.dart';
 
 class ReceiveSessionScreenViewModel extends ViewModelBase {

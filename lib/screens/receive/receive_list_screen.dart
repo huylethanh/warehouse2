@@ -3,7 +3,7 @@ import 'package:stacked/stacked.dart';
 import 'package:warehouse_app/models/models.dart';
 import 'package:warehouse_app/utils/utils.dart';
 import 'package:warehouse_app/view_models/receive_view_model.dart';
-import 'package:warehouse_app/widgets/index.dart';
+import 'package:warehouse_app/widgets/widgets.dart';
 import 'package:warehouse_app/widgets/search_appbar.dart';
 
 import 'receive_list_screen_view_model.dart';

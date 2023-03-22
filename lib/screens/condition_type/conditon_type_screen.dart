@@ -5,7 +5,7 @@ import 'package:stacked/stacked.dart';
 import 'package:warehouse_app/models/models.dart';
 import 'package:warehouse_app/utils/utils.dart';
 import 'package:warehouse_app/widgets/drop_downs/drop_down.dart';
-import 'package:warehouse_app/widgets/index.dart';
+import 'package:warehouse_app/widgets/widgets.dart';
 
 import 'conditionn_type_view_model.dart';
 

@@ -1,6 +1,6 @@
 import 'package:warehouse_app/models/error/index.dart';
 import 'package:warehouse_app/utils/utils.dart';
-import 'package:warehouse_app/widgets/index.dart';
+import 'package:warehouse_app/widgets/widgets.dart';
 
 mixin ErrorInvestigator {
   Future<void> investigateError(

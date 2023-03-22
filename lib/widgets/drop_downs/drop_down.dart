@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:warehouse_app/utils/utils.dart';
-import 'package:warehouse_app/widgets/index.dart';
+
+import '../containers/rounded_container.dart';
 
 class DropDowWidget<T> extends StatelessWidget {
   final T? value;

@@ -5,7 +5,7 @@ import 'package:warehouse_app/models/models.dart';
 import 'package:warehouse_app/utils/utils.dart';
 import 'package:warehouse_app/view_models/index.dart';
 import 'package:warehouse_app/view_models/models/index.dart';
-import 'package:warehouse_app/widgets/index.dart';
+import 'package:warehouse_app/widgets/widgets.dart';
 
 class AskForDurationScreen extends StatelessWidget {
   final ReceiveProduct product;

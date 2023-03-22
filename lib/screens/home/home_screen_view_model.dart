@@ -3,7 +3,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:warehouse_app/base/view_models/index.dart';
 import 'package:warehouse_app/models/models.dart';
 import 'package:warehouse_app/services/task_status_service.dart';
-import 'package:warehouse_app/widgets/index.dart';
+import 'package:warehouse_app/widgets/widgets.dart';
 
 import '../put_away/put_away_screen.dart';
 import '../receive/receive.dart';

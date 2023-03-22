@@ -5,3 +5,4 @@ export 'user_service.dart';
 export 'receive_service.dart';
 export 'task_status_service.dart';
 export 'models/index.dart';
+export 'put_away_service.dart';

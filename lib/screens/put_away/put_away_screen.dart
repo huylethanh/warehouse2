@@ -4,7 +4,7 @@ import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:stacked/stacked.dart';
 import 'package:warehouse_app/utils/constants.dart';
-import 'package:warehouse_app/widgets/index.dart';
+import 'package:warehouse_app/widgets/widgets.dart';
 
 import 'put_away_screen_view_model.dart';
 
@@ -79,7 +79,7 @@ class PutAwayScreen extends StatelessWidget {
           ),
           TextButton(
               onPressed: () {
-                viewModel.scan(context, viewModel.scannedBarcode);
+                viewModel.processInput(context, viewModel.scannedBarcode);
               },
               child: const Icon(FontAwesomeIcons.arrowRight))
         ],

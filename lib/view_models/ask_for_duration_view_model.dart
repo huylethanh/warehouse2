@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:warehouse_app/utils/string_extension.dart';
 import 'package:warehouse_app/view_models/models/index.dart';
 import 'package:warehouse_app/view_models/view_model_base.dart';
-import 'package:warehouse_app/widgets/index.dart';
+import 'package:warehouse_app/widgets/widgets.dart';
 
 class AskForDurationViewModel extends ViewModelBase {
   late DurationValue durationValue;

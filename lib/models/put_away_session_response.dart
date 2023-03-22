@@ -9,6 +9,8 @@ part 'put_away_session_response.g.dart';
 class PutAwaySessionResponse {
   @JsonKey(name: "putAwaySessionId")
   @JsonKey(name: "eqcSessionId")
+  final int? sessionId;
+
   final List<PutAwaySession>? items;
   final String? partnerName;
   final double? totalWeight;
@@ -16,6 +18,7 @@ class PutAwaySessionResponse {
   final String? objectType;
 
   PutAwaySessionResponse({
+    this.sessionId,
     this.items,
     this.partnerName,
     this.totalWeight,

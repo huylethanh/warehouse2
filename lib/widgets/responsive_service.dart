@@ -4,7 +4,8 @@ import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:warehouse_app/utils/constants.dart';
-import 'package:warehouse_app/widgets/index.dart';
+
+import 'containers/rounded_container.dart';
 
 class DialogService {
   static Future<T?> showBottomSheet<T>(

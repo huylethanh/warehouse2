@@ -8,7 +8,7 @@ import 'package:warehouse_app/services/condition_type_service.dart';
 import 'package:warehouse_app/services/services.dart';
 import 'package:warehouse_app/utils/utils.dart';
 import 'package:warehouse_app/view_models/view_model_base.dart';
-import 'package:warehouse_app/widgets/index.dart';
+import 'package:warehouse_app/widgets/widgets.dart';
 
 import 'receive_session_screen.dart';
 
