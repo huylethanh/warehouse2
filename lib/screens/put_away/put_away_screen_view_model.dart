@@ -78,6 +78,7 @@ class PutAwayScreenViewModel extends ViewModelBase {
 
     final data = response.items;
 
+    /// continue hire
     return Future.value();
   }
 }
