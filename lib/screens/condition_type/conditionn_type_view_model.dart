@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:warehouse_app/base/view_models/index.dart';
 import 'package:warehouse_app/models/models.dart';
-import 'package:warehouse_app/view_models/view_model_base.dart';
 
 class ChooseConditionScreeViewModel extends ViewModelBase {
   ConditionType? selectedCondion;

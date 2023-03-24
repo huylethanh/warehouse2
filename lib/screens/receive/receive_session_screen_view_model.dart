@@ -1,14 +1,13 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
+import 'package:warehouse_app/base/view_models/index.dart';
 import 'package:warehouse_app/models/models.dart';
 import 'package:warehouse_app/screens/ask_for_duration1/index.dart';
 import 'package:warehouse_app/services/services.dart';
 import 'package:warehouse_app/services/metadata_service.dart';
 import 'package:warehouse_app/view_models/logics/logics.dart';
-import 'package:warehouse_app/view_models/models/index.dart';
 
-import 'package:warehouse_app/view_models/view_model_base.dart';
 import 'package:warehouse_app/widgets/widgets.dart';
 import 'package:darq/darq.dart';
 
@@ -185,7 +184,6 @@ class ReceiveSessionScreenViewModel extends ViewModelBase {
     _serialIndex = -1;
     final transportCheck = await _metadataService.checkTransportAvailable(code);
     if (transportCheck.hasError) {
-      investigateError(transportCheck.errorMessage, null);
       return;
     }
 
@@ -216,7 +214,6 @@ class ReceiveSessionScreenViewModel extends ViewModelBase {
         session.irId!, check.productId!, quantity, check.unitId!);
 
     if (result.hasError) {
-      investigateError(result.errorMessage, null);
       return;
     }
 
@@ -332,7 +329,6 @@ class ReceiveSessionScreenViewModel extends ViewModelBase {
 
     if (res.hasError) {
       _processingItem = null;
-      investigateError(res.errorMessage, null);
       return;
     }
 
@@ -360,8 +356,6 @@ class ReceiveSessionScreenViewModel extends ViewModelBase {
       scannedBarcode = "";
       return;
     }
-
-    investigateError(result.errorMessage, null);
   }
 
   void processInput(BuildContext context, String barcode) {
@@ -411,7 +405,7 @@ class ReceiveSessionScreenViewModel extends ViewModelBase {
         session.code!, transportControl.sessionId!);
 
     if (result.hasError) {
-      investigateError(result.errorMessage, () => setProcessing(false));
+      setProcessing(false);
       return;
     }
 

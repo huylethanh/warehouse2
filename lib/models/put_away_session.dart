@@ -37,6 +37,20 @@ class PutAwaySession {
     this.details,
   });
 
+  String storageTypeString() {
+    final strBuilder = StringBuffer();
+    strBuilder.write(storageTypeName ?? "");
+
+    if (storageTypeName != null && conditionTypeName != null) {
+      strBuilder.write(". ");
+    }
+    ;
+    strBuilder
+        .write(conditionTypeName != null ? "TTHH: $conditionTypeName" : "");
+
+    return strBuilder.toString();
+  }
+
   factory PutAwaySession.fromJson(Map<String, dynamic> json) =>
       _$PutAwaySessionFromJson(json);
 

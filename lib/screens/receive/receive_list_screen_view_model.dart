@@ -1,13 +1,13 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
+import 'package:warehouse_app/base/view_models/index.dart';
 
 import 'package:warehouse_app/models/models.dart';
 import 'package:warehouse_app/screens/condition_type/conditon_type_screen.dart';
 import 'package:warehouse_app/services/condition_type_service.dart';
 import 'package:warehouse_app/services/services.dart';
 import 'package:warehouse_app/utils/utils.dart';
-import 'package:warehouse_app/view_models/view_model_base.dart';
 import 'package:warehouse_app/widgets/widgets.dart';
 
 import 'receive_session_screen.dart';
@@ -36,8 +36,7 @@ class ReceiveListScreenViewModel extends ViewModelBase {
       setBusy(false);
       return;
     }
-
-    investigateError(result.errorMessage, () => setBusy(false));
+    setBusy(false);
   }
 
   void showCondition(BuildContext context, ReceiveModel model) async {
@@ -79,8 +78,6 @@ class ReceiveListScreenViewModel extends ViewModelBase {
     }
 
     setProcessing(false);
-
-    investigateError(result.errorMessage, () => setProcessing(false));
   }
 
   void search(String? search) {

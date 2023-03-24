@@ -1,9 +1,8 @@
-import 'package:warehouse_app/mixins/error_investagator_mixin.dart';
 import 'package:warehouse_app/models/models.dart';
 import 'package:warehouse_app/services/services.dart';
 import 'package:darq/darq.dart';
 
-class GetInboundRequest with ErrorInvestigator {
+class GetInboundRequest {
   final _service = ReceiveService();
 
   final unitMap = <String, int>{};
@@ -15,7 +14,6 @@ class GetInboundRequest with ErrorInvestigator {
     final loaded = await _service.fetchInboundRequest(irId);
 
     if (loaded.hasError) {
-      investigateError(loaded.errorMessage, () => {});
       return null;
     }
 

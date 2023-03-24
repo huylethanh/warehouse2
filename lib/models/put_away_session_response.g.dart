@@ -15,6 +15,8 @@ abstract class _$PutAwaySessionResponseCWProxy {
 
   PutAwaySessionResponse partnerName(String? partnerName);
 
+  PutAwaySessionResponse sessionId(int? sessionId);
+
   PutAwaySessionResponse totalWeight(double? totalWeight);
 
   /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `PutAwaySessionResponse(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
@@ -28,6 +30,7 @@ abstract class _$PutAwaySessionResponseCWProxy {
     String? objectCode,
     String? objectType,
     String? partnerName,
+    int? sessionId,
     double? totalWeight,
   });
 }
@@ -56,6 +59,10 @@ class _$PutAwaySessionResponseCWProxyImpl
       this(partnerName: partnerName);
 
   @override
+  PutAwaySessionResponse sessionId(int? sessionId) =>
+      this(sessionId: sessionId);
+
+  @override
   PutAwaySessionResponse totalWeight(double? totalWeight) =>
       this(totalWeight: totalWeight);
 
@@ -72,6 +79,7 @@ class _$PutAwaySessionResponseCWProxyImpl
     Object? objectCode = const $CopyWithPlaceholder(),
     Object? objectType = const $CopyWithPlaceholder(),
     Object? partnerName = const $CopyWithPlaceholder(),
+    Object? sessionId = const $CopyWithPlaceholder(),
     Object? totalWeight = const $CopyWithPlaceholder(),
   }) {
     return PutAwaySessionResponse(
@@ -91,6 +99,10 @@ class _$PutAwaySessionResponseCWProxyImpl
           ? _value.partnerName
           // ignore: cast_nullable_to_non_nullable
           : partnerName as String?,
+      sessionId: sessionId == const $CopyWithPlaceholder()
+          ? _value.sessionId
+          // ignore: cast_nullable_to_non_nullable
+          : sessionId as int?,
       totalWeight: totalWeight == const $CopyWithPlaceholder()
           ? _value.totalWeight
           // ignore: cast_nullable_to_non_nullable
@@ -113,7 +125,8 @@ extension $PutAwaySessionResponseCopyWith on PutAwaySessionResponse {
 PutAwaySessionResponse _$PutAwaySessionResponseFromJson(
         Map<String, dynamic> json) =>
     PutAwaySessionResponse(
-      items: (json['putAwaySessionId'] as List<dynamic>?)
+      sessionId: json['putAwaySessionId'] as int?,
+      items: (json['items'] as List<dynamic>?)
           ?.map((e) => PutAwaySession.fromJson(e as Map<String, dynamic>))
           .toList(),
       partnerName: json['partnerName'] as String?,
@@ -125,7 +138,8 @@ PutAwaySessionResponse _$PutAwaySessionResponseFromJson(
 Map<String, dynamic> _$PutAwaySessionResponseToJson(
         PutAwaySessionResponse instance) =>
     <String, dynamic>{
-      'putAwaySessionId': instance.items,
+      'putAwaySessionId': instance.sessionId,
+      'items': instance.items,
       'partnerName': instance.partnerName,
       'totalWeight': instance.totalWeight,
       'objectCode': instance.objectCode,

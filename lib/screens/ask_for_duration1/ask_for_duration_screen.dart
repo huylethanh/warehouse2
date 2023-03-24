@@ -4,7 +4,7 @@ import 'package:stacked/stacked.dart';
 import 'package:warehouse_app/models/models.dart';
 import 'package:warehouse_app/utils/utils.dart';
 import 'package:warehouse_app/view_models/index.dart';
-import 'package:warehouse_app/view_models/models/index.dart';
+import 'package:warehouse_app/view_models/logics/logics.dart';
 import 'package:warehouse_app/widgets/widgets.dart';
 
 class AskForDurationScreen extends StatelessWidget {

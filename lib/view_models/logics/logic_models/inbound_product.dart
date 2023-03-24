@@ -28,4 +28,11 @@ class InboundProduct {
   bool hasSerial() {
     return serial != null;
   }
+
+  int out = 0;
+
+  @override
+  String toString() {
+    return "$name\n$sku - $serial";
+  }
 }

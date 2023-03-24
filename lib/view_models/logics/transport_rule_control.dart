@@ -1,8 +1,6 @@
 import 'package:darq/darq.dart';
-
-import '../models/check_list_item.dart';
-import '../models/inbound_product.dart';
-import '../models/put_away_list.dart';
+import '../logics/logic_models/logic_models.dart';
+import 'logic_models/put_away_list.dart';
 
 class TransportRuleControl {
   String? processingSku = null;
@@ -48,5 +46,53 @@ class TransportRuleControl {
     });
 
     return p != null && p.serial == null;
+  }
+
+  int processingEqc(int productId, String? lotNo, String? expireDate) {
+    expireDate = expireDate ?? "qq";
+
+    return remainingList.indexWhere((it) {
+      return it.id == productId &&
+          it.lotNo == lotNo &&
+          (it.expireDate == expireDate ||
+              it.expireDate?.contains(expireDate!) == true);
+    });
+  }
+
+  saveProcessingSku(String sku) {
+    processingSku = sku;
+  }
+
+  bool hasProcessingSku() {
+    return processingSku != null;
+  }
+
+  void cleanProcessing() {
+    processingSku = null;
+  }
+
+  List<CheckListItem> update(int processedIndex, int quantity) {
+    processingSku = null;
+    final check = remainingList[processedIndex];
+    final remaining = check.quantity! - (check.out + quantity);
+
+    check.out = check.out + quantity;
+    if (remaining == 0) {
+      final product = remainingList.removeAt(processedIndex);
+      processedList.add(product);
+    }
+    return putAwayList.remove(check, quantity);
+  }
+
+  bool hasDone() {
+    return remainingList.isEmpty;
+  }
+
+  int count() {
+    return processedList.length;
+  }
+
+  int remaining() {
+    return remainingList.length;
   }
 }

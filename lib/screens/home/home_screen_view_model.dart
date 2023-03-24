@@ -128,12 +128,9 @@ class HomeScreenViewModel extends ViewModelBase {
 
     if (!status.hasError) {
       _remaining = status.data;
-      setBusy(false);
-
-      return;
     }
 
-    investigateError(status.errorMessage, () => setBusy(false));
+    setBusy(false);
   }
 
   Widget showTaskView(BuildContext context) {

@@ -1,22 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:warehouse_app/base/view_models/index.dart';
+import 'package:warehouse_app/models/models.dart';
 import 'package:warehouse_app/services/services.dart';
 import 'package:warehouse_app/utils/utils.dart';
+import 'package:warehouse_app/view_models/logics/logics.dart';
 import 'package:warehouse_app/widgets/widgets.dart';
-
-import '../../view_models/logics/register_transport.dart';
 
 class PutAwayScreenViewModel extends ViewModelBase {
   final RegisterTransport registerTransport = RegisterTransport();
   final _service = PutAwayService();
+  final transportRuleControl = TransportRuleControl();
 
   int sessionId = 0;
   String? registeredTransportCode = null;
 
   // check box
   bool gettingCargo = false;
-
   String scannedBarcode = "";
+
+  OPS operation = OPS.REG_TRANSPORT;
+  int total = 0;
+
+  List<NewTransport> newTransports = [];
+
   processInput(BuildContext context, String scannedBarcode) {
     String barcode = scannedBarcode.trim();
     if (gettingCargo && scannedBarcode.contains("|") && _isSku(barcode)) {
@@ -65,20 +71,59 @@ class PutAwayScreenViewModel extends ViewModelBase {
     final result = await _service.registerTransport(code);
 
     if (result.hasError) {
-      investigateError(result.errorMessage, () {
-        setProcessing(false);
-      });
+      setProcessing(false);
       return;
     }
 
-    final response = result.data;
+    final session = result.data;
 
-    sessionId = response!.sessionId!;
+    sessionId = session!.sessionId!;
     registeredTransportCode = code;
 
-    final data = response.items;
+    final data = _transformToListInboundProduct(session.items ?? []);
 
-    /// continue hire
-    return Future.value();
+    final checkList = transportRuleControl.perceive(data);
+
+    total = checkList.fold(0, (sum, it) {
+      return sum + it.amount;
+    });
+
+    final newTransport = NewTransport(
+        transportCode: code,
+        total: total,
+        checkList: checkList,
+        partner: session.partnerName ?? "",
+        weight: session.totalWeight != null
+            ? "${(session.totalWeight! / 1000).toStringAsFixed(2)} kg"
+            : "");
+
+    newTransports.add(newTransport);
+  }
+
+  List<InboundProduct> _transformToListInboundProduct(
+      List<PutAwaySession> original) {
+    final List<InboundProduct> result = [];
+    for (final pa in original) {
+      if (pa.details == null || pa.details!.isEmpty) {
+        result.add(_transformInboundProduct(pa, null));
+      } else {
+        for (var it in pa.details!) {
+          result.add(_transformInboundProduct(pa, it.storageCode));
+        }
+      }
+    }
+    return result;
+  }
+
+  InboundProduct _transformInboundProduct(
+      PutAwaySession session, String? serial) {
+    return InboundProduct(
+        id: session.productBarcodeId,
+        sku: session.barcode,
+        name: session.productName,
+        quantity: serial == null ? session.qty : 1,
+        image: session.avatarURL,
+        serial: serial,
+        condition: session.storageTypeString());
   }
 }

@@ -1,7 +1,5 @@
-import 'package:warehouse_app/view_models/models/check_list_item.dart';
-import 'package:warehouse_app/view_models/models/put_away_item.dart';
-
-import 'inbound_product.dart';
+import 'logic_models.dart';
+import 'put_away_item.dart';
 
 class PutAwayList {
   final data = <String, PutAwayitem>{};

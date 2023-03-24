@@ -1,4 +1,4 @@
-import 'package:warehouse_app/view_models/models/inbound_product.dart';
+import 'inbound_product.dart';
 
 class PutAwayitem {
   late InboundProduct product;

@@ -1,7 +1,6 @@
-import 'package:warehouse_app/mixins/index.dart';
 import 'package:warehouse_app/services/metadata_service.dart';
 
-class CheckHasFullDimension with ErrorInvestigator {
+class CheckHasFullDimension {
   final _medataService = MetadataService();
 
   final Set _qualifiedProducts = {};
@@ -14,7 +13,6 @@ class CheckHasFullDimension with ErrorInvestigator {
     final result = await _medataService.productDimension(productId, unitId);
 
     if (result.hasError) {
-      investigateError(result.errorMessage, null);
       return false;
     }
 

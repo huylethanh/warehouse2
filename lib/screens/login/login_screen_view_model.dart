@@ -1,10 +1,9 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
+import 'package:warehouse_app/base/view_models/index.dart';
 import 'package:warehouse_app/screens/index.dart';
 import 'package:warehouse_app/services/user_service.dart';
-import 'package:warehouse_app/utils/utils.dart';
-import 'package:warehouse_app/view_models/view_model_base.dart';
 
 class LoginScreenViewModel extends ViewModelBase {
   final service = UserService();

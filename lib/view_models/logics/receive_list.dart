@@ -1,7 +1,8 @@
 import 'package:warehouse_app/models/models.dart';
-import '../models/index.dart';
 
 import 'package:darq/darq.dart';
+
+import 'logic_models/logic_models.dart';
 
 class ReceivedList {
   // does it need to be clear when change transport?

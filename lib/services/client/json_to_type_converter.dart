@@ -3,6 +3,9 @@ import 'dart:convert';
 import 'package:chopper/chopper.dart';
 import 'package:warehouse_app/models/error/error_response.dart';
 import 'package:warehouse_app/models/models.dart';
+import 'package:warehouse_app/utils/login_reference.dart';
+import 'package:warehouse_app/utils/routing.dart';
+import 'package:warehouse_app/widgets/responsive_service.dart';
 
 class JsonToTypeConverter extends JsonConverter {
   final Map<Type, Function> typeToJsonFactoryMap = {
@@ -36,7 +39,29 @@ class JsonToTypeConverter extends JsonConverter {
 
   @override
   Response convertError<ResultType, ItemType>(Response response) {
+    final error = _parseToError(response);
+    if (error.code == 'account_being_used') {
+      DialogService.showErrorBotToast('account_being_used');
+      LoginReference().clearAll().then((value) {
+        return AppNavigation.pushReplacementNamed(Routing.login,
+            arguments: "account_being_used");
+      });
+    }
+
+    DialogService.showErrorBotToast(error.errorMessage ?? "Unknown error");
     return response;
+  }
+
+  ErrorResponse _parseToError(Response response) {
+    final errorJson = response.body;
+
+    final data = errorJson?.toString() ?? "";
+    if (data.isEmpty) {
+      return ErrorResponse(code: "unknonw", errorMessage: "unknown message");
+    }
+
+    final error = json.decode(data);
+    return ErrorResponse.fromJson(error);
   }
 
   @override
