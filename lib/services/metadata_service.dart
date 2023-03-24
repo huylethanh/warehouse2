@@ -53,4 +53,15 @@ class MetadataService {
 
     return ResultSet.error(res.error);
   }
+
+  Future<ResultSet<CheckCodeResponse?>> query(
+      String code, bool isPutAway) async {
+    final res = await _client.queryCode(code, true, isPutAway);
+
+    if (res.isSuccessful) {
+      return ResultSet.success(res.body!);
+    }
+
+    return ResultSet.error(res.error);
+  }
 }

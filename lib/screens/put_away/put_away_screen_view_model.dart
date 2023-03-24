@@ -3,13 +3,14 @@ import 'package:warehouse_app/base/view_models/index.dart';
 import 'package:warehouse_app/models/models.dart';
 import 'package:warehouse_app/services/services.dart';
 import 'package:warehouse_app/utils/utils.dart';
-import 'package:warehouse_app/view_models/logics/logics.dart';
+import 'package:warehouse_app/logics/logics.dart';
 import 'package:warehouse_app/widgets/widgets.dart';
 
 class PutAwayScreenViewModel extends ViewModelBase {
   final RegisterTransport registerTransport = RegisterTransport();
   final _service = PutAwayService();
   final transportRuleControl = TransportRuleControl();
+  final registerBin = RegisterBin();
 
   int sessionId = 0;
   String? registeredTransportCode = null;
@@ -20,6 +21,7 @@ class PutAwayScreenViewModel extends ViewModelBase {
 
   OPS operation = OPS.REG_TRANSPORT;
   int total = 0;
+  bool isAwaitingSku = false;
 
   List<NewTransport> newTransports = [];
 
@@ -60,13 +62,19 @@ class PutAwayScreenViewModel extends ViewModelBase {
       return;
     }
 
+    if (registerBin.current() == null) {
+      await _registerBin(code);
+      setProcessing(false);
+      return;
+    }
+
     setProcessing(false);
 
     return Future.value();
   }
 
   Future<void> _registerTransport(String code) async {
-    const operation = OPS.REG_TRANSPORT;
+    operation = OPS.REG_TRANSPORT;
 
     final result = await _service.registerTransport(code);
 
@@ -98,6 +106,21 @@ class PutAwayScreenViewModel extends ViewModelBase {
             : "");
 
     newTransports.add(newTransport);
+  }
+
+  Future<void> _registerBin(String code) async {
+    operation = OPS.REG_BIN;
+
+    final success = await registerBin.execute(code, isPutaway: true);
+
+    if (!success) {
+      DialogService.showErrorBotToast("Vị trí lưu kho không đúng");
+      return;
+    }
+
+    isAwaitingSku = true;
+
+    // lam tep cho nay
   }
 
   List<InboundProduct> _transformToListInboundProduct(

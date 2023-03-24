@@ -3,9 +3,10 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:stacked/stacked.dart';
 import 'package:warehouse_app/models/models.dart';
 import 'package:warehouse_app/utils/utils.dart';
-import 'package:warehouse_app/view_models/index.dart';
-import 'package:warehouse_app/view_models/logics/logics.dart';
+import 'package:warehouse_app/logics/logics.dart';
 import 'package:warehouse_app/widgets/widgets.dart';
+
+import 'ask_for_duration_screen_view_model.dart';
 
 class AskForDurationScreen extends StatelessWidget {
   final ReceiveProduct product;
@@ -29,9 +30,10 @@ class AskForDurationScreen extends StatelessWidget {
 
     return ViewModelBuilder.reactive(
       viewModelBuilder: () {
-        return AskForDurationViewModel(durationValue);
+        return AskForDurationScreenViewModel(durationValue);
       },
-      builder: (BuildContext context, AskForDurationViewModel viewModel, _) {
+      builder:
+          (BuildContext context, AskForDurationScreenViewModel viewModel, _) {
         final duration = viewModel.durationValue;
         return Padding(
           padding: const EdgeInsets.symmetric(
@@ -182,7 +184,7 @@ class AskForDurationScreen extends StatelessWidget {
 
   Widget _labelAndDateSelection(
     BuildContext context,
-    AskForDurationViewModel viewModel,
+    AskForDurationScreenViewModel viewModel,
     String label,
     String displayValue,
     String fieldName,

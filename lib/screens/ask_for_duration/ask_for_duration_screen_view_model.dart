@@ -2,18 +2,17 @@ import 'dart:math';
 
 import 'package:warehouse_app/base/view_models/index.dart';
 import 'package:warehouse_app/utils/string_extension.dart';
+import 'package:warehouse_app/logics/logics.dart';
 import 'package:warehouse_app/widgets/widgets.dart';
 
-import 'logics/logic_models/logic_models.dart';
-
-class AskForDurationViewModel extends ViewModelBase {
+class AskForDurationScreenViewModel extends ViewModelBase {
   late DurationValue durationValue;
   late Map<String, bool> validateFields;
 
   bool isValid = false;
   double? percentShelfLife;
 
-  AskForDurationViewModel(DurationValue? durationValue) {
+  AskForDurationScreenViewModel(DurationValue? durationValue) {
     this.durationValue = durationValue ?? DurationValue();
 
     validateFields = <String, bool>{
