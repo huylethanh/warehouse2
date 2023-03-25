@@ -12,12 +12,18 @@ class HomeScreenViewModel extends ViewModelBase {
   final _service = TaskStatusService();
   RemainingTask? _remaining = null;
 
-  static const String receive = "receive";
-  static const String putAway = "putAway";
-  static const String pickUp = "pickUp";
-  static const String transfer = "transfer";
+  static const String receive = "receive"; // 1
+  static const String putAway = "putAway"; //2
+  static const String pickUp = "pickUp"; //3
+  static const String transfer = "transfer"; //4
   static const String audit = "audit";
   static const String handOver = "handOver";
+
+  static const String view5 = "Eqc";
+  static const String view6 = "Return";
+  static const String view7 = "Repick";
+  static const String view8 = "RandomCount";
+  static const String view9 = "VerifyCycleCount";
 
   int selectedIndex = 0;
 
@@ -84,6 +90,17 @@ class HomeScreenViewModel extends ViewModelBase {
       default:
         page = PutAwayScreen();
         break;
+    }
+
+    final checked = _checkAction(context, name);
+
+    if (checked == null) {
+      return;
+    }
+
+    if (checked == false) {
+      DialogService.showWarningBotToast("Bạn còn công việc chưa hoàn thành.");
+      return;
     }
 
     Navigator.push(
@@ -235,6 +252,8 @@ class HomeScreenViewModel extends ViewModelBase {
       }
     }
 
+    // check more view here
+
     if (view == null) {
       return;
     }
@@ -244,6 +263,34 @@ class HomeScreenViewModel extends ViewModelBase {
         return view!;
       },
     ));
+  }
+
+  bool? _checkAction(BuildContext context, String viewName) {
+    final task = _remaining ?? None();
+
+    if (task is None) {
+      return true;
+    }
+
+    var actionCycleCount = "";
+    if (task is CycleCountTask) {
+      actionCycleCount = task.isVerify() ? view9 : view8; // magic number here
+    }
+
+    final continueable =
+        ((viewName == receive || viewName == view6) && task is ReceiveTask) ||
+            (viewName == putAway && task is PutAwayTask) ||
+            ((viewName == actionCycleCount) && task is CycleCountTask) ||
+            (viewName == pickUp && task is PickUpTask) ||
+            (viewName == transfer && task is TransferTask) ||
+            (viewName == view5 && task is EqcTask);
+
+    if (continueable) {
+      goToRemaining(context, task, receive);
+      return null;
+    }
+
+    return false;
   }
 
   Widget _taskView(
