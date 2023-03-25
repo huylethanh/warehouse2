@@ -61,12 +61,13 @@ class ReceivedList {
     var exist = data[item.barcode];
 
     late ReceivedItem recent;
-    var modifyIndex = 0;
+    var modifyIndex = -1;
     if (exist != null) {
       exist = exist.copyWith(
           count: exist.count! + amount, weight: weight, item: item);
 
       recent = exist;
+      data[item.barcode!] = exist;
     } else {
       final newItem = ReceivedItem(
           name: product.productName,
@@ -83,16 +84,12 @@ class ReceivedList {
         modifyIndex = index;
       }
 
-      return CheckListItem(
-          name: it.name ?? "",
-          sku: it.item?.barcode ?? "",
-          imgUrl: it.imageUrl,
-          amount: it.count ?? 1);
+      return _toCheckListItem(it);
     }).toList();
 
-    if (modifyIndex != 0) {
-      final reAdd = list.removeAt(modifyIndex);
-      list.insert(0, reAdd);
+    if (modifyIndex != -1) {
+      final found = list.removeAt(modifyIndex);
+      list.insert(0, found);
     }
 
     return MapEntry<ReceivedItem, List<CheckListItem>>(recent, list);
@@ -100,5 +97,13 @@ class ReceivedList {
 
   clear() {
     data.clear();
+  }
+
+  CheckListItem _toCheckListItem(ReceivedItem it) {
+    return CheckListItem(
+        name: it.name ?? "",
+        sku: it.item?.barcode ?? "",
+        imgUrl: it.imageUrl,
+        amount: it.count ?? 1);
   }
 }

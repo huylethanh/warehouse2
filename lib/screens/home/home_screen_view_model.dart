@@ -231,7 +231,7 @@ class HomeScreenViewModel extends ViewModelBase {
   }
 
   void goToRemaining(
-      BuildContext context, RemainingTask task, String viewName) {
+      BuildContext context, RemainingTask task, String viewName) async {
     Widget? view;
 
     if (viewName == receive) {
@@ -258,11 +258,13 @@ class HomeScreenViewModel extends ViewModelBase {
       return;
     }
 
-    Navigator.push(context, MaterialPageRoute(
+    await Navigator.push(context, MaterialPageRoute(
       builder: (BuildContext context) {
         return view!;
       },
     ));
+
+    _loadTaskStatus();
   }
 
   bool? _checkAction(BuildContext context, String viewName) {
