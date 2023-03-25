@@ -250,7 +250,7 @@ class ReceiveSessionScreen extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.only(right: 8.0),
               child: FieldValue(
-                field: const Text(
+                fieldName: const Text(
                   "Tổng:",
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
@@ -310,7 +310,7 @@ class ReceiveSessionScreen extends StatelessWidget {
                 children: [
                   Expanded(
                     child: FieldValue(
-                      field: const Text(
+                      fieldName: const Text(
                         "Tên hàng:",
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
@@ -328,7 +328,7 @@ class ReceiveSessionScreen extends StatelessWidget {
               ),
               const Divider(),
               FieldValue(
-                field: const Text(
+                fieldName: const Text(
                   "SKU:",
                 ),
                 value: Text(
@@ -339,7 +339,7 @@ class ReceiveSessionScreen extends StatelessWidget {
                 height: 8,
               ),
               FieldValue(
-                field: const Text("Tình trạng:",
+                fieldName: const Text("Tình trạng:",
                     style: TextStyle(fontSize: 12, color: AppColor.gray400)),
                 value: Text(
                   isNullOrEmpty(item.condition) ? "NA" : item.condition,
@@ -361,7 +361,7 @@ class ReceiveSessionScreen extends StatelessWidget {
       child: Column(
         children: [
           FieldValue(
-            field: const Text(
+            fieldName: const Text(
               "Tên hàng:",
             ),
             value: Text(
@@ -372,7 +372,7 @@ class ReceiveSessionScreen extends StatelessWidget {
             height: 12,
           ),
           FieldValue(
-            field: const Text(
+            fieldName: const Text(
               "SKU:",
             ),
             value: Text(

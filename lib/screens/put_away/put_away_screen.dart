@@ -6,6 +6,7 @@ import 'package:stacked/stacked.dart';
 import 'package:warehouse_app/utils/constants.dart';
 import 'package:warehouse_app/widgets/widgets.dart';
 
+import '../../logics/logic_models/logic_models.dart';
 import 'put_away_screen_view_model.dart';
 
 class PutAwayScreen extends StatelessWidget {
@@ -22,24 +23,33 @@ class PutAwayScreen extends StatelessWidget {
           height: 10,
         );
         return Scaffold(
-            appBar: AppBar(
-              title: Text("Lưu Khho"),
-              centerTitle: true,
-            ),
-            body: Padding(
-              padding: const EdgeInsets.all(15.0),
-              child: Column(
-                children: [
-                  ..._barcodeScanText(context, viewModel),
-                  vGap,
-                  const Divider(),
-                  vGap,
-                  _info(context, viewModel),
-                  vGap,
-                  _partner(context, viewModel),
-                ],
+          appBar: AppBar(
+            title: Text("Lưu Khho"),
+            centerTitle: true,
+          ),
+          body: Stack(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(15.0),
+                child: Column(
+                  children: [
+                    ..._barcodeScanText(context, viewModel),
+                    vGap,
+                    const Divider(),
+                    // vGap,
+                    // _info(context, viewModel),
+                    vGap,
+                    _partner(context, viewModel, viewModel.newTransport),
+                  ],
+                ),
               ),
-            ));
+              if (viewModel.isProcessing)
+                const BlurLoadingWidget(
+                  text: "Loading...",
+                ),
+            ],
+          ),
+        );
       },
     );
   }
@@ -64,7 +74,7 @@ class PutAwayScreen extends StatelessWidget {
             child: TextFormField(
               decoration: const InputDecoration(
                 border: OutlineInputBorder(),
-                labelText: 'Quet thiết bị chứa hàng',
+                labelText: 'Quét thiết bị chứa hàng',
                 labelStyle: TextStyle(fontSize: 15),
                 isDense: true,
                 contentPadding: EdgeInsets.symmetric(
@@ -111,52 +121,44 @@ class PutAwayScreen extends StatelessWidget {
     ];
   }
 
-  Widget _info(BuildContext context, PutAwayScreenViewModel viewModel) {
+  // Widget _info(BuildContext context, PutAwayScreenViewModel viewModel) {
+  //   const vGap = SizedBox(
+  //     height: 10,
+  //   );
+  //   return RoundedContainer(
+  //     backgroundColor: Colors.grey.withOpacity(0.3),
+  //     innerPadding: EdgeInsets.all(8),
+  //     child: Column(
+  //       children: [
+  //         _titleAndValue(title: "Vị trí thao tác", value: "value"),
+  //         vGap,
+  //         _titleAndValue(title: "Số lượng barcode có thể đặt", value: "value"),
+  //       ],
+  //     ),
+  //   );
+  // }
+
+  Widget _partner(BuildContext context, PutAwayScreenViewModel viewModel,
+      NewTransport? newTransport) {
+    if (newTransport == null) {
+      return const SizedBox();
+    }
+
     const vGap = SizedBox(
       height: 10,
     );
     return RoundedContainer(
-      backgroundColor: Colors.grey.withOpacity(0.3),
-      innerPadding: EdgeInsets.all(8),
+      backgroundColor: AppColor.gray,
+      innerPadding: const EdgeInsets.all(8),
       child: Column(
         children: [
-          _titleAndValue(title: "Vị trí thao tác", value: "value"),
+          FieldValue(
+              fieldName: const Text("Khách hàng:"),
+              value: Text(newTransport.partner)),
           vGap,
-          _titleAndValue(title: "Số lượng barcode có thể đặt", value: "value"),
-        ],
-      ),
-    );
-  }
-
-  Widget _partner(BuildContext context, PutAwayScreenViewModel viewModel) {
-    const vGap = SizedBox(
-      height: 10,
-    );
-    return RoundedContainer(
-      backgroundColor: Colors.grey.withOpacity(0.3),
-      innerPadding: EdgeInsets.all(8),
-      child: Column(
-        children: [
-          _titleAndValue(title: "Khách hàng", value: "value"),
-          vGap,
-          _titleAndValue(title: "Tổng trọng lượng", value: "value"),
-        ],
-      ),
-    );
-  }
-
-  Widget _titleAndValue(
-      {required String title, required String value, TextStyle? textStyle}) {
-    return DefaultTextStyle(
-      style: textStyle ??
-          const TextStyle(color: Colors.black54, fontWeight: FontWeight.bold),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            title,
-          ),
-          Text(value),
+          FieldValue(
+              fieldName: const Text("Tổng trọng lượng:"),
+              value: Text(newTransport.weight)),
         ],
       ),
     );

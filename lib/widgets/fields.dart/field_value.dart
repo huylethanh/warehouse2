@@ -1,20 +1,23 @@
 import 'package:flutter/material.dart';
 
 class FieldValue extends StatelessWidget {
-  final Widget field;
+  final Widget fieldName;
   final Widget value;
 
-  const FieldValue({super.key, required this.field, required this.value});
+  const FieldValue({super.key, required this.fieldName, required this.value});
 
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
-        field,
+        DefaultTextStyle(
+            style: const TextStyle(fontWeight: FontWeight.bold),
+            child: fieldName),
         const SizedBox(
           width: 8,
         ),
-        value,
+        DefaultTextStyle(
+            style: const TextStyle(fontWeight: FontWeight.bold), child: value),
       ],
     );
   }
