@@ -23,7 +23,13 @@ class PutAwayScreenViewModel extends ViewModelBase {
   int total = 0;
   bool isAwaitingSku = false;
 
-  List<NewTransport> newTransports = [];
+  NewTransport? newTransport;
+
+  Future<void> resume(PutAwayTask task) {
+    operation = OPS.RESUMING;
+
+    registerTransport.resume(task.sessionId!, task.locationCode!);
+  }
 
   processInput(BuildContext context, String scannedBarcode) {
     String barcode = scannedBarcode.trim();
@@ -40,8 +46,6 @@ class PutAwayScreenViewModel extends ViewModelBase {
   }
 
   Future<void> scan(String barcode) async {
-    setProcessing(true);
-
     final parts = barcode.split("|");
     final code = parts[0];
 
@@ -53,8 +57,9 @@ class PutAwayScreenViewModel extends ViewModelBase {
 
     if (quantity == null) {
       DialogService.showErrorBotToast("Mã serial không hợp lệ");
-      setProcessing(false);
     }
+
+    setProcessing(true);
 
     if (registerTransport.current() == null) {
       await _registerTransport(code);
@@ -76,27 +81,21 @@ class PutAwayScreenViewModel extends ViewModelBase {
   Future<void> _registerTransport(String code) async {
     operation = OPS.REG_TRANSPORT;
 
-    final result = await _service.registerTransport(code);
+    final transport = await registerTransport.execute(code);
 
-    if (result.hasError) {
-      setProcessing(false);
+    if (transport == null) {
       return;
     }
 
-    final session = result.data;
-
-    sessionId = session!.sessionId!;
-    registeredTransportCode = code;
-
-    final data = _transformToListInboundProduct(session.items ?? []);
-
+    final session = transport.key;
+    final data = transport.value;
     final checkList = transportRuleControl.perceive(data);
 
     total = checkList.fold(0, (sum, it) {
       return sum + it.amount;
     });
 
-    final newTransport = NewTransport(
+    newTransport = NewTransport(
         transportCode: code,
         total: total,
         checkList: checkList,
@@ -104,8 +103,6 @@ class PutAwayScreenViewModel extends ViewModelBase {
         weight: session.totalWeight != null
             ? "${(session.totalWeight! / 1000).toStringAsFixed(2)} kg"
             : "");
-
-    newTransports.add(newTransport);
   }
 
   Future<void> _registerBin(String code) async {
@@ -121,32 +118,5 @@ class PutAwayScreenViewModel extends ViewModelBase {
     isAwaitingSku = true;
 
     // lam tep cho nay
-  }
-
-  List<InboundProduct> _transformToListInboundProduct(
-      List<PutAwaySession> original) {
-    final List<InboundProduct> result = [];
-    for (final pa in original) {
-      if (pa.details == null || pa.details!.isEmpty) {
-        result.add(_transformInboundProduct(pa, null));
-      } else {
-        for (var it in pa.details!) {
-          result.add(_transformInboundProduct(pa, it.storageCode));
-        }
-      }
-    }
-    return result;
-  }
-
-  InboundProduct _transformInboundProduct(
-      PutAwaySession session, String? serial) {
-    return InboundProduct(
-        id: session.productBarcodeId,
-        sku: session.barcode,
-        name: session.productName,
-        quantity: serial == null ? session.qty : 1,
-        image: session.avatarURL,
-        serial: serial,
-        condition: session.storageTypeString());
   }
 }
