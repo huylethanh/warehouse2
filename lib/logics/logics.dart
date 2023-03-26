@@ -7,3 +7,4 @@ export 'check_has_full_dememsion.dart';
 export 'transport_rule_control.dart';
 export 'register_bin.dart';
 export 'query_info_at_location.dart';
+export 'process_put_away.dart';

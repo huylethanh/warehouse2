@@ -65,4 +65,8 @@ abstract class AppClient extends ChopperService {
     @Path("code") String code,
     @Query("includeAdvance") bool includeIrCode,
   );
+
+  @Post(path: "/putaway-sessions/{id}/process")
+  Future<Response> putAwayProcess(
+      @Path("id") int sessionId, @Body() Map<String, dynamic> request);
 }

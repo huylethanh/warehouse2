@@ -18,6 +18,7 @@ class PutAwayScreenViewModel extends ViewModelBase {
   final transportRuleControl = TransportRuleControl();
   final queryInfoAtLocation = QueryInfoAtLocation();
   final registerBin = RegisterBin();
+  final processPutAway = ProcessPutAway();
 
   int sessionId = 0;
   String? registeredTransportCode = null;
@@ -115,9 +116,68 @@ class PutAwayScreenViewModel extends ViewModelBase {
       return;
     }
 
+    final currentBin = registerBin.current();
+    if (transportRuleControl.hasProcessingSku()) {
+      if (!isNullOrEmpty(currentBin)) {
+        await _process(code, currentBin!, quantity!);
+      }
+    } else {
+      final currentTransport = registerTransport.current() ?? "";
+      if (currentTransport.toUpperCase().compareTo(code.toUpperCase()) == 0 &&
+          transportRuleControl.hasDone()) {
+        //
+        //
+        //
+        //TODO; check khere
+        //
+        //
+        //
+        return;
+      }
+
+      _process(code, currentBin!, quantity!);
+    }
+
     setProcessing(false);
 
     return Future.value();
+  }
+
+  Future<void> _process(String code, String bin, int quantity) async {
+    if (transportRuleControl.hasProcessingSku()) {
+      final found = transportRuleControl.find(code);
+
+      if (found > -1) {
+      } else {
+        //
+      }
+      isAwaitingSku = true;
+    }
+  }
+
+  Future<void> _submit(String bin, int productIndex, int quantity) async {
+    final product = transportRuleControl.getAt(productIndex);
+
+    final result = await processPutAway.execute(registerTransport.sessionId,
+        registerTransport.current() ?? "", bin, product, quantity);
+
+    final saved = PutAwayitem(product, quantity);
+    final checkList = transportRuleControl.update(productIndex, quantity);
+
+    if (transportRuleControl.hasDone()) {
+      total = 0;
+      registerBin.clear();
+      registerTransport.clear();
+      transportRuleControl.clear();
+      isAwaitingSku = false;
+
+      newTransport = newTransport!.copyWith(checkList: checkList, total: total);
+      return;
+    }
+
+    total -= quantity;
+
+    newTransport = newTransport!.copyWith(checkList: checkList, total: total);
   }
 
   String getStepMessage() {
