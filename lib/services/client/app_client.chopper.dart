@@ -189,4 +189,22 @@ class _$AppClient extends AppClient {
     return client
         .send<CheckDimensionResponse, CheckDimensionResponse>($request);
   }
+
+  @override
+  Future<Response<Inventory>> checkLocationInfo(
+    String code,
+    bool includeIrCode,
+  ) {
+    final Uri $url = Uri.parse('/Locations/${code}/inventory');
+    final Map<String, dynamic> $params = <String, dynamic>{
+      'includeAdvance': includeIrCode
+    };
+    final Request $request = Request(
+      'GET',
+      $url,
+      client.baseUrl,
+      parameters: $params,
+    );
+    return client.send<Inventory, Inventory>($request);
+  }
 }

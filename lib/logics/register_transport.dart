@@ -33,7 +33,7 @@ class RegisterTransport {
         response, _transformToListInboundProduct(response.items ?? []));
   }
 
-  resume(int sessionId, String transportCode) {
+  void resume(int sessionId, String transportCode) {
     this.sessionId = sessionId;
     registeredTransportCode = transportCode;
   }
@@ -63,5 +63,9 @@ class RegisterTransport {
         image: session.avatarURL,
         serial: serial,
         condition: session.storageTypeString());
+  }
+
+  clear() {
+    registeredTransportCode = null;
   }
 }

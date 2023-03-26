@@ -10,6 +10,7 @@ class PutAwayScreenViewModel extends ViewModelBase {
   final RegisterTransport registerTransport = RegisterTransport();
   final _service = PutAwayService();
   final transportRuleControl = TransportRuleControl();
+  final queryInfoAtLocation = QueryInfoAtLocation();
   final registerBin = RegisterBin();
 
   int sessionId = 0;
@@ -25,10 +26,39 @@ class PutAwayScreenViewModel extends ViewModelBase {
 
   NewTransport? newTransport;
 
-  Future<void> resume(PutAwayTask task) {
+  Future<void> resume(PutAwayTask task) async {
+    setBusy(true);
     operation = OPS.RESUMING;
 
     registerTransport.resume(task.sessionId!, task.locationCode!);
+
+    final current = await queryInfoAtLocation.stow(task.locationCode!);
+
+    if (current.isEmpty) {
+      total = 0;
+      registerBin.clear();
+      registerTransport.clear();
+      transportRuleControl.clear();
+
+      return;
+    }
+
+    final checkList = transportRuleControl.perceive(current);
+
+    total = checkList.fold(0, (sum, it) {
+      return sum + it.amount;
+    });
+
+    newTransport = NewTransport(
+        transportCode: task.locationCode,
+        total: total,
+        checkList: checkList,
+        partner: task.partnerName ?? "",
+        weight: task.totalWeight != null
+            ? "${(task.totalWeight! / 1000).toStringAsFixed(2)} kg"
+            : "");
+
+    setBusy(false);
   }
 
   processInput(BuildContext context, String scannedBarcode) {

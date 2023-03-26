@@ -25,3 +25,4 @@ export 'put_away_session_response.dart';
 export 'product_unit.dart';
 export 'check_code_response.dart';
 export 'check_demension_response.dart';
+export 'inventory.dart';

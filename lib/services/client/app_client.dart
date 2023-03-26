@@ -59,4 +59,10 @@ abstract class AppClient extends ChopperService {
       @Path("id") int productIdg,
       @Query("unitId") int unitIdg,
       @Query("isVerify") bool verified);
+
+  @Get(path: "/Locations/{code}/inventory")
+  Future<Response<Inventory>> checkLocationInfo(
+    @Path("code") String code,
+    @Query("includeAdvance") bool includeIrCode,
+  );
 }

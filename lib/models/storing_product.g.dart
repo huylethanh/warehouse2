@@ -17,7 +17,7 @@ StoringProduct _$StoringProductFromJson(Map<String, dynamic> json) =>
       productName: json['productName'] as String?,
       avatarURL: json['avatarURL'] as String?,
       pendingOutQty: json['pendingOutQty'] as int?,
-      conditionTypeId: json['conditionTypeId'] as int?,
+      conditionTypeId: json['conditionTypeId'] as String?,
       conditionTypeName: json['conditionTypeName'] as String?,
       unitId: json['unitId'] as int?,
       unitName: json['unitName'] as String?,

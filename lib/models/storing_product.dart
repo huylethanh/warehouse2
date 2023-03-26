@@ -15,7 +15,7 @@ class StoringProduct {
   final String? productName;
   final String? avatarURL;
   final int? pendingOutQty;
-  final int? conditionTypeId;
+  final String? conditionTypeId;
   final String? conditionTypeName;
   final int? unitId;
   final String? unitName;
@@ -54,6 +54,35 @@ class StoringProduct {
     this.assetType,
     this.storageTypeName,
   });
+
+  List<String>? _serials;
+  List<String> get serials {
+    if (_serials == null) {
+      _serials = [];
+
+      for (final it in details ?? []) {
+        _serials!.add(it.storageCode);
+      }
+    }
+    return _serials!;
+  }
+
+  bool isBatch() {
+    return productType == ProductType.nonSerial;
+  }
+
+  String storageTypeString() {
+    final strBuilder = StringBuffer();
+    strBuilder.write(storageTypeName ?? "");
+
+    if (storageTypeName != null && conditionTypeName != null) {
+      strBuilder.write(". ");
+    }
+    strBuilder
+        .write(conditionTypeName != null ? "TTHH: $conditionTypeName" : "");
+
+    return strBuilder.toString();
+  }
 
   factory StoringProduct.fromJson(Map<String, dynamic> json) =>
       _$StoringProductFromJson(json);

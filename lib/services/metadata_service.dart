@@ -64,4 +64,15 @@ class MetadataService {
 
     return ResultSet.error(res.error);
   }
+
+  Future<ResultSet<Inventory>> queryInfo(String code,
+      {bool includesIrCode = false}) async {
+    final res = await _client.checkLocationInfo(code, includesIrCode);
+
+    if (res.isSuccessful) {
+      return ResultSet.success(res.body!);
+    }
+
+    return ResultSet.error(res.error);
+  }
 }

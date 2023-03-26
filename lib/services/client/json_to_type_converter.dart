@@ -24,6 +24,7 @@ class JsonToTypeConverter extends JsonConverter {
     PutAwaySessionResponse: (json) => PutAwaySessionResponse.fromJson(json),
     CheckCodeResponse: (json) => CheckCodeResponse.fromJson(json),
     CheckDimensionResponse: (json) => CheckDimensionResponse.fromJson(json),
+    Inventory: (json) => Inventory.fromJson(json),
   };
 
   JsonToTypeConverter();

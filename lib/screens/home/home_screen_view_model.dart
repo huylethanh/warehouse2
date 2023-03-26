@@ -247,8 +247,9 @@ class HomeScreenViewModel extends ViewModelBase {
 
     if (viewName == putAway) {
       if (task is PutAwayTask) {
-        final converted = task;
-        view = PutAwayScreen();
+        view = PutAwayScreen(
+          resumeTask: task,
+        );
       }
     }
 

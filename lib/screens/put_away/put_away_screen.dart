@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:stacked/stacked.dart';
+import 'package:warehouse_app/models/models.dart';
 import 'package:warehouse_app/utils/constants.dart';
 import 'package:warehouse_app/widgets/widgets.dart';
 
@@ -10,13 +11,20 @@ import '../../logics/logic_models/logic_models.dart';
 import 'put_away_screen_view_model.dart';
 
 class PutAwayScreen extends StatelessWidget {
-  const PutAwayScreen({super.key});
+  final PutAwayTask? resumeTask;
+
+  const PutAwayScreen({super.key, this.resumeTask});
 
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder.reactive(
       viewModelBuilder: () {
         return PutAwayScreenViewModel();
+      },
+      onViewModelReady: (PutAwayScreenViewModel viewModel) {
+        if (resumeTask != null) {
+          viewModel.resume(resumeTask!);
+        }
       },
       builder: (BuildContext context, PutAwayScreenViewModel viewModel, _) {
         const vGap = SizedBox(
