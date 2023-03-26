@@ -1,3 +1,4 @@
+import 'package:darq/darq.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
@@ -5,6 +6,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:stacked/stacked.dart';
 import 'package:warehouse_app/models/models.dart';
 import 'package:warehouse_app/utils/constants.dart';
+import 'package:warehouse_app/utils/utils.dart';
 import 'package:warehouse_app/widgets/widgets.dart';
 
 import '../../logics/logic_models/logic_models.dart';
@@ -44,10 +46,9 @@ class PutAwayScreen extends StatelessWidget {
                     ..._barcodeScanText(context, viewModel),
                     vGap,
                     const Divider(),
-                    // vGap,
-                    // _info(context, viewModel),
                     vGap,
-                    _partner(context, viewModel, viewModel.newTransport),
+                    _partner(context, viewModel),
+                    _checkList(context, viewModel),
                   ],
                 ),
               ),
@@ -146,8 +147,11 @@ class PutAwayScreen extends StatelessWidget {
   //   );
   // }
 
-  Widget _partner(BuildContext context, PutAwayScreenViewModel viewModel,
-      NewTransport? newTransport) {
+  Widget _partner(
+    BuildContext context,
+    PutAwayScreenViewModel viewModel,
+  ) {
+    NewTransport? newTransport = viewModel.newTransport;
     if (newTransport == null) {
       return const SizedBox();
     }
@@ -169,6 +173,150 @@ class PutAwayScreen extends StatelessWidget {
               value: Text(newTransport.weight)),
         ],
       ),
+    );
+  }
+
+  Widget _checkList(
+    BuildContext context,
+    PutAwayScreenViewModel viewModel,
+  ) {
+    NewTransport? newTransport = viewModel.newTransport;
+    if (newTransport == null) {
+      return const SizedBox();
+    }
+
+    final items = newTransport.checkList;
+    int sum = items.sum((e) => e.amount);
+
+    return Flexible(
+      child: Container(
+        padding: EdgeInsets.symmetric(vertical: 8),
+        width: double.infinity,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Text(
+              newTransport.transportCode!,
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(
+              height: 8,
+            ),
+            Row(
+              children: [
+                const Expanded(
+                  child: Text(
+                    "Sản phẩm cần lưu kho",
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(right: 8.0),
+                  child: FieldValue(
+                    fieldName: const Text(
+                      "Tổng:",
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    value: Text(
+                      "$sum",
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                )
+              ],
+            ),
+            Expanded(
+              child: RoundedContainer(
+                margin: const EdgeInsets.symmetric(vertical: 16),
+                backgroundColor: AppColor.gray600,
+                child: ListView.builder(
+                    itemCount: items.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      final item = items[index];
+                      return _item(context, viewModel, item, index == 0);
+                    }),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _item(BuildContext context, PutAwayScreenViewModel viewModel,
+      CheckListItem item, bool isFirst) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        RoundedContainer(
+          backgroundColor: AppColor.gray,
+          height: 70,
+          width: 70,
+          child: Image.network(
+            item.imgUrl ?? "",
+            errorBuilder: (context, error, stackTrace) {
+              return const Icon(
+                FontAwesomeIcons.image,
+                size: 40,
+              );
+            },
+          ),
+        ),
+        const SizedBox(
+          width: 16,
+        ),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              if (!isFirst) Divider(),
+              Row(
+                children: [
+                  Expanded(
+                    child: FieldValue(
+                      fieldName: const Text(
+                        "Tên hàng:",
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      value: Text(
+                        item.name,
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ),
+                  Text(
+                    "${item.amount}",
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                ],
+              ),
+              const Divider(),
+              FieldValue(
+                fieldName: const Text(
+                  "SKU:",
+                ),
+                value: Text(
+                  item.sku,
+                ),
+              ),
+              const SizedBox(
+                height: 8,
+              ),
+              FieldValue(
+                fieldName: const Text("Tình trạng:",
+                    style: TextStyle(fontSize: 12, color: AppColor.gray400)),
+                value: Text(
+                  isNullOrEmpty(item.condition) ? "NA" : item.condition,
+                  style: const TextStyle(fontSize: 12, color: AppColor.gray400),
+                ),
+              ),
+            ],
+          ),
+        )
+      ],
     );
   }
 

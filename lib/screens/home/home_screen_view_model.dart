@@ -289,7 +289,7 @@ class HomeScreenViewModel extends ViewModelBase {
             (viewName == view5 && task is EqcTask);
 
     if (continueable) {
-      goToRemaining(context, task, receive);
+      goToRemaining(context, task, viewName);
       return null;
     }
 
