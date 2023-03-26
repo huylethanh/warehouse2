@@ -3,7 +3,7 @@ import 'package:warehouse_app/services/put_away_service.dart';
 
 import 'logic_models/logic_models.dart';
 
-enum OPS { REG_TRANSPORT, REG_BIN, PROCESS, FINISH, RESUMING }
+enum OPS { REG_TRANSPORT, REG_BIN, SERIAL_SCAN, PROCESS, FINISH, RESUMING }
 
 class RegisterTransport {
   final _service = PutAwayService();

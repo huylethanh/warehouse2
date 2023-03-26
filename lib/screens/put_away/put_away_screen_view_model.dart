@@ -1,24 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:warehouse_app/base/view_models/index.dart';
 import 'package:warehouse_app/models/models.dart';
-import 'package:warehouse_app/services/services.dart';
 import 'package:warehouse_app/utils/utils.dart';
 import 'package:warehouse_app/logics/logics.dart';
 import 'package:warehouse_app/widgets/widgets.dart';
 
-enum Steps {
-  tole,
-  bin,
-  product,
-}
-
 class PutAwayScreenViewModel extends ViewModelBase {
   final RegisterTransport registerTransport = RegisterTransport();
-  final _service = PutAwayService();
   final transportRuleControl = TransportRuleControl();
   final queryInfoAtLocation = QueryInfoAtLocation();
   final registerBin = RegisterBin();
   final processPutAway = ProcessPutAway();
+  final putAllIn = PutAllIn();
+  final finishPutAwaySession = FinishPutAwaySessio();
 
   int sessionId = 0;
   String? registeredTransportCode = null;
@@ -76,7 +70,7 @@ class PutAwayScreenViewModel extends ViewModelBase {
       return;
     }
 
-    scan(barcode);
+    scan(context, barcode);
   }
 
   void cargoSelectedChanges(bool value) {
@@ -88,7 +82,7 @@ class PutAwayScreenViewModel extends ViewModelBase {
     return true;
   }
 
-  Future<void> scan(String barcode) async {
+  Future<void> scan(BuildContext context, String barcode) async {
     final parts = barcode.split("|");
     final code = parts[0];
 
@@ -117,45 +111,126 @@ class PutAwayScreenViewModel extends ViewModelBase {
     }
 
     final currentBin = registerBin.current();
+
     if (transportRuleControl.hasProcessingSku()) {
       if (!isNullOrEmpty(currentBin)) {
-        await _process(code, currentBin!, quantity!);
+        await _process(context, code, currentBin!, quantity!);
       }
     } else {
       final currentTransport = registerTransport.current() ?? "";
       if (currentTransport.toUpperCase().compareTo(code.toUpperCase()) == 0 &&
           transportRuleControl.hasDone()) {
-        //
-        //
-        //
-        //TODO; check khere
-        //
-        //
-        //
+        await _putAllIn(context, registerBin.current() ?? "none");
+        setProcessing(false);
         return;
       }
 
-      _process(code, currentBin!, quantity!);
+      await _process(context, code, currentBin!, quantity!);
     }
 
     setProcessing(false);
-
-    return Future.value();
   }
 
-  Future<void> _process(String code, String bin, int quantity) async {
+  Future<void> _putAllIn(BuildContext context, String bin) async {
+    final confirmed = await DialogService.confirmDialog(
+      context,
+      title: "Đưa tất cả sản phẩm lên vị trí",
+      message: "Lưu ý hành động này không thể hoàn tác.",
+      yesLabel: "Chấp nhận",
+      noLabel: "Hủy",
+    );
+
+    if (!confirmed) {
+      return;
+    }
+
+    final transportCode = registerTransport.current();
+
+    if (isNullOrEmpty(transportCode)) {
+      return;
+    }
+
+    final bin = registerBin.current();
+
+    if (isNullOrEmpty(bin)) {
+      return;
+    }
+
+    operation = OPS.PROCESS;
+
+    putAllIn.execute(registerTransport.sessionId, transportCode!, bin!);
+
+    total = 0;
+    registerBin.clear();
+    registerTransport.clear();
+    transportRuleControl.clear();
+    isAwaitingSku = false;
+
+    final result = await _finish();
+  }
+
+  void _changeBIN(CheckCodeResponse value) {
+    registerBin.updateBin(value);
+  }
+
+  Future<bool> _finish() async {
+    final result = await finishPutAwaySession.execute(
+        registerTransport.sessionId, transportRuleControl.hasDone());
+    return result;
+  }
+
+  Future<void> _process(
+      BuildContext context, String code, String bin, int quantity) async {
     if (transportRuleControl.hasProcessingSku()) {
       final found = transportRuleControl.find(code);
 
       if (found > -1) {
+        _submit(bin, found);
       } else {
-        //
+        transportRuleControl.cleanProcessing();
+        DialogService.showErrorBotToast("Mã serial không hợp lệ");
       }
       isAwaitingSku = true;
+      return;
     }
+
+    final found = transportRuleControl.query(code);
+    if (found > -1) {
+      final product = transportRuleControl.getAt(found);
+
+      // product was found with SERIAL
+      if (product.serial == code) {
+        _submit(bin, found);
+      } else {
+        // product was found with SKU
+        if (product.hasSerial()) {
+          isAwaitingSku = false;
+          transportRuleControl.saveProcessingSku(product.sku!);
+          await _askForSerial(context, product);
+        } else {
+          _submit(bin, found, quantity: quantity);
+        }
+      }
+
+      return;
+    }
+
+    final assertBin = registerBin.checkBin(code, isPutAway: true);
+    if (assertBin != null) {
+//_process.postValue(Resource.Success(ChangeBIN(assertBin)));
+
+      return;
+    }
+    DialogService.showErrorBotToast("Không tìm thấy sản phẩ");
   }
 
-  Future<void> _submit(String bin, int productIndex, int quantity) async {
+  Future<void> _askForSerial(BuildContext context, InboundProduct product) {
+    operation = OPS.SERIAL_SCAN;
+    // show product on UI
+    return Future.value();
+  }
+
+  Future<void> _submit(String bin, int productIndex, {int quantity = 1}) async {
     final product = transportRuleControl.getAt(productIndex);
 
     final result = await processPutAway.execute(registerTransport.sessionId,
@@ -191,6 +266,9 @@ class PutAwayScreenViewModel extends ViewModelBase {
 
       case OPS.PROCESS:
         return "Scan SERIAL/Barcode/Bin/Tote code";
+
+      case OPS.SERIAL_SCAN:
+        return "Quét mã SERIAL";
 
       default:
         throw Exception("not support $operation");

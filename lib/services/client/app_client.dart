@@ -69,4 +69,8 @@ abstract class AppClient extends ChopperService {
   @Post(path: "/putaway-sessions/{id}/process")
   Future<Response> putAwayProcess(
       @Path("id") int sessionId, @Body() Map<String, dynamic> request);
+
+  @Post(path: "/putaway-sessions/{id}/finish")
+  Future<Response> putAwayFinish(@Path("id") int sessionId,
+      @Query("finishTransport") bool finishTransport);
 }

@@ -30,4 +30,14 @@ class PutAwayService {
 
     return ResultSet.error(res.error);
   }
+
+  Future<ResultSet<bool?>> finish(int sessionId, bool closeTransport) async {
+    final res = await _client.putAwayFinish(sessionId, closeTransport);
+
+    if (res.isSuccessful) {
+      return ResultSet.success(true);
+    }
+
+    return ResultSet.error(res.error);
+  }
 }
