@@ -46,6 +46,7 @@ class PutAwayScreen extends StatelessWidget {
                   children: [
                     ..._barcodeScanText(context, viewModel),
                     const Divider(),
+                    _binLocation(context, viewModel),
                     _partner(context, viewModel),
                     _checkList(context, viewModel),
                   ],
@@ -182,18 +183,27 @@ class PutAwayScreen extends StatelessWidget {
       child: Column(
         children: [
           FieldValue(
+              expanedFieldName: true,
               fieldName: const Text("Vị trí thao tác:"),
               value: Text(bin.locationCode ?? "")),
           const SizedBox(
             height: 8,
           ),
           FieldValue(
-              fieldName: const Text("Tổng trọng lượng:"),
-              value: RichText(
-                  text: TextSpan(text: "$numberMaxSkuOfBin", children: [
-                const TextSpan(text: "/"),
-                TextSpan(text: " $numberAvailableSkuOfBin")
-              ]))),
+            expanedFieldName: true,
+            fieldName: const Text("SL barcode có thể đặt/ SL barcode tối đa:"),
+            value: RichText(
+              text: TextSpan(
+                text: "$numberMaxSkuOfBin",
+                children: [
+                  const TextSpan(text: "/"),
+                  TextSpan(
+                      text: "$numberAvailableSkuOfBin",
+                      style: const TextStyle(color: AppColor.colorF6931D))
+                ],
+              ),
+            ),
+          ),
         ],
       ),
     );
@@ -209,6 +219,7 @@ class PutAwayScreen extends StatelessWidget {
     }
 
     return RoundedContainer(
+      margin: const EdgeInsets.symmetric(vertical: 8),
       backgroundColor: AppColor.gray,
       innerPadding: const EdgeInsets.all(8),
       child: Column(
@@ -272,7 +283,10 @@ class PutAwayScreen extends StatelessWidget {
                     ),
                     value: Text(
                       "$sum",
-                      style: const TextStyle(fontWeight: FontWeight.bold),
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: AppColor.colorF6931D,
+                      ),
                     ),
                   ),
                 )

@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 
 abstract class IconSizes {
-  static const double scale = 1;
-  static const double med = 24 * scale;
-  static const double xl = 48 * scale;
-  static const double sm = 16 * scale;
-  static const double xs = 12 * scale;
+  static const double med = 24;
+  static const double xl = 48;
+  static const double sm = 16;
+  static const double xs = 12;
 }
 
 class AppColor {
@@ -15,6 +14,7 @@ class AppColor {
   static const Color secondary500 = Color(0xffF79A31);
   static const Color secondary400 = Color(0xffF9B262);
   static const Color secondary300 = Color(0xffFBCA93);
+  static const Color colorF6931D = Color(0xffF6931D);
 
   static const Color orange100 = Color(0xffFFEDD5);
   static const Color orange700 = Color(0xffC2410C);
