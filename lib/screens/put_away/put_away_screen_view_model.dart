@@ -6,6 +6,12 @@ import 'package:warehouse_app/utils/utils.dart';
 import 'package:warehouse_app/logics/logics.dart';
 import 'package:warehouse_app/widgets/widgets.dart';
 
+enum Steps {
+  tole,
+  bin,
+  product,
+}
+
 class PutAwayScreenViewModel extends ViewModelBase {
   final RegisterTransport registerTransport = RegisterTransport();
   final _service = PutAwayService();
@@ -23,8 +29,9 @@ class PutAwayScreenViewModel extends ViewModelBase {
   OPS operation = OPS.REG_TRANSPORT;
   int total = 0;
   bool isAwaitingSku = false;
-
+  bool cargoSelected = false;
   NewTransport? newTransport;
+  CheckCodeResponse? checkCodeResponse;
 
   Future<void> resume(PutAwayTask task) async {
     setBusy(true);
@@ -71,6 +78,11 @@ class PutAwayScreenViewModel extends ViewModelBase {
     scan(barcode);
   }
 
+  void cargoSelectedChanges(bool value) {
+    cargoSelected = value;
+    notifyListeners();
+  }
+
   bool _isSku(String barcode) {
     return true;
   }
@@ -108,9 +120,24 @@ class PutAwayScreenViewModel extends ViewModelBase {
     return Future.value();
   }
 
-  Future<void> _registerTransport(String code) async {
-    operation = OPS.REG_TRANSPORT;
+  String getStepMessage() {
+    switch (operation) {
+      case OPS.REG_TRANSPORT:
+        return "Quét thiết bị chứa hàng";
 
+      case OPS.RESUMING:
+      case OPS.REG_BIN:
+        return "Quét vị trí lưu kho";
+
+      case OPS.PROCESS:
+        return "Scan SERIAL/Barcode/Bin/Tote code";
+
+      default:
+        throw Exception("not support $operation");
+    }
+  }
+
+  Future<void> _registerTransport(String code) async {
     final transport = await registerTransport.execute(code);
 
     if (transport == null) {
@@ -133,11 +160,11 @@ class PutAwayScreenViewModel extends ViewModelBase {
         weight: session.totalWeight != null
             ? "${(session.totalWeight! / 1000).toStringAsFixed(2)} kg"
             : "");
+
+    operation = OPS.REG_BIN;
   }
 
   Future<void> _registerBin(String code) async {
-    operation = OPS.REG_BIN;
-
     final success = await registerBin.execute(code, isPutaway: true);
 
     if (!success) {
@@ -147,6 +174,8 @@ class PutAwayScreenViewModel extends ViewModelBase {
 
     isAwaitingSku = true;
 
-    // lam tep cho nay
+    operation = OPS.PROCESS;
+
+    checkCodeResponse = registerBin.registeredBin;
   }
 }

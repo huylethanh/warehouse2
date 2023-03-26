@@ -1,4 +1,5 @@
 import 'package:darq/darq.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
@@ -44,9 +45,7 @@ class PutAwayScreen extends StatelessWidget {
                 child: Column(
                   children: [
                     ..._barcodeScanText(context, viewModel),
-                    vGap,
                     const Divider(),
-                    vGap,
                     _partner(context, viewModel),
                     _checkList(context, viewModel),
                   ],
@@ -81,12 +80,12 @@ class PutAwayScreen extends StatelessWidget {
           ),
           Expanded(
             child: TextFormField(
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: 'Quét thiết bị chứa hàng',
-                labelStyle: TextStyle(fontSize: 15),
+              decoration: InputDecoration(
+                border: const OutlineInputBorder(),
+                labelText: viewModel.getStepMessage(),
+                labelStyle: const TextStyle(fontSize: 15),
                 isDense: true,
-                contentPadding: EdgeInsets.symmetric(
+                contentPadding: const EdgeInsets.symmetric(
                   vertical: 10,
                   horizontal: 10,
                 ),
@@ -104,7 +103,7 @@ class PutAwayScreen extends StatelessWidget {
         ],
       ),
       const SizedBox(
-        height: 10,
+        height: 8,
       ),
       Row(
         children: const [
@@ -126,7 +125,19 @@ class PutAwayScreen extends StatelessWidget {
             ),
           ),
         ],
-      )
+      ),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          const Text("Hàng kiện"),
+          CupertinoSwitch(
+            onChanged: (bool value) {
+              viewModel.cargoSelectedChanges(value);
+            },
+            value: viewModel.cargoSelected,
+          ),
+        ],
+      ),
     ];
   }
 
@@ -147,6 +158,47 @@ class PutAwayScreen extends StatelessWidget {
   //   );
   // }
 
+  Widget _binLocation(
+    BuildContext context,
+    PutAwayScreenViewModel viewModel,
+  ) {
+    if (viewModel.checkCodeResponse == null) {
+      return const SizedBox();
+    }
+
+    final bin = viewModel.checkCodeResponse!;
+
+    int maxNumberSKU = bin.maxNumberSKU ?? 0;
+
+    int currentNumberSKU = bin.currentNumberSKU ?? 0;
+    final numberAvailableSkuOfBin = (maxNumberSKU - currentNumberSKU < 0)
+        ? 0
+        : (maxNumberSKU - currentNumberSKU);
+    final numberMaxSkuOfBin = maxNumberSKU;
+
+    return RoundedContainer(
+      backgroundColor: AppColor.gray,
+      innerPadding: const EdgeInsets.all(8),
+      child: Column(
+        children: [
+          FieldValue(
+              fieldName: const Text("Vị trí thao tác:"),
+              value: Text(bin.locationCode ?? "")),
+          const SizedBox(
+            height: 8,
+          ),
+          FieldValue(
+              fieldName: const Text("Tổng trọng lượng:"),
+              value: RichText(
+                  text: TextSpan(text: "$numberMaxSkuOfBin", children: [
+                const TextSpan(text: "/"),
+                TextSpan(text: " $numberAvailableSkuOfBin")
+              ]))),
+        ],
+      ),
+    );
+  }
+
   Widget _partner(
     BuildContext context,
     PutAwayScreenViewModel viewModel,
@@ -156,9 +208,6 @@ class PutAwayScreen extends StatelessWidget {
       return const SizedBox();
     }
 
-    const vGap = SizedBox(
-      height: 10,
-    );
     return RoundedContainer(
       backgroundColor: AppColor.gray,
       innerPadding: const EdgeInsets.all(8),
@@ -167,7 +216,9 @@ class PutAwayScreen extends StatelessWidget {
           FieldValue(
               fieldName: const Text("Khách hàng:"),
               value: Text(newTransport.partner)),
-          vGap,
+          const SizedBox(
+            height: 8,
+          ),
           FieldValue(
               fieldName: const Text("Tổng trọng lượng:"),
               value: Text(newTransport.weight)),
@@ -186,7 +237,7 @@ class PutAwayScreen extends StatelessWidget {
     }
 
     final items = newTransport.checkList;
-    int sum = items.sum((e) => e.amount);
+    int sum = newTransport.total;
 
     return Flexible(
       child: Container(
