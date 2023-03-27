@@ -5,7 +5,7 @@ class SplashButtonWidget extends StatelessWidget {
   final Radius? borderRadius;
 
   /// Allow to use non-circular border radius (e.g only round top left, top right)
-  final BorderRadius? circularBorderRadius;
+  final BorderRadius? nonCircularBorderRadius;
   final Function()? onPressed;
   final Widget child;
   final EdgeInsets? innerPadding;
@@ -17,9 +17,8 @@ class SplashButtonWidget extends StatelessWidget {
   final Color? borderColor;
   final double elevation;
   final Alignment childAlign;
-  final Color? disableColor;
+  final Color? disabledColor;
   final double borderThickness;
-  final BoxConstraints? constraints;
 
   const SplashButtonWidget({
     required this.child,
@@ -32,13 +31,12 @@ class SplashButtonWidget extends StatelessWidget {
     this.width,
     this.height,
     this.disabled = false,
+    this.disabledColor,
     this.borderColor,
     this.elevation = 0.0,
     this.childAlign = Alignment.center,
-    this.disableColor,
     this.borderThickness = 0.0,
-    this.circularBorderRadius,
-    this.constraints,
+    this.nonCircularBorderRadius,
     Key? key,
   }) : super(key: key);
 
@@ -47,7 +45,6 @@ class SplashButtonWidget extends StatelessWidget {
     bool isDisable = (disabled || onPressed == null);
     return Container(
       margin: margin,
-      constraints: constraints,
       child: Material(
         elevation: elevation,
         clipBehavior: Clip.hardEdge,
@@ -55,20 +52,21 @@ class SplashButtonWidget extends StatelessWidget {
           side: borderColor != null
               ? BorderSide(color: borderColor!, width: borderThickness)
               : BorderSide.none,
-          borderRadius: circularBorderRadius != null
-              ? circularBorderRadius!
+          borderRadius: nonCircularBorderRadius != null
+              ? nonCircularBorderRadius!
               : (borderRadius != null
                   ? BorderRadius.all(borderRadius!)
                   : BorderRadius.zero),
         ),
-        color: isDisable ? (disableColor ?? Colors.grey) : color,
+        color: isDisable ? (disabledColor ?? Colors.grey) : color,
         child: InkWell(
           splashColor: splashColor,
           onTap: isDisable ? null : onPressed,
           child: Container(
+            width: width,
+            height: this.height,
             padding: innerPadding,
             alignment: childAlign,
-            constraints: constraints,
             child: child,
           ),
         ),

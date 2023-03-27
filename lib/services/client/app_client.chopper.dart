@@ -207,4 +207,38 @@ class _$AppClient extends AppClient {
     );
     return client.send<Inventory, Inventory>($request);
   }
+
+  @override
+  Future<Response<dynamic>> putAwayProcess(
+    int sessionId,
+    Map<String, dynamic> request,
+  ) {
+    final Uri $url = Uri.parse('/putaway-sessions/${sessionId}/process');
+    final $body = request;
+    final Request $request = Request(
+      'POST',
+      $url,
+      client.baseUrl,
+      body: $body,
+    );
+    return client.send<dynamic, dynamic>($request);
+  }
+
+  @override
+  Future<Response<dynamic>> putAwayFinish(
+    int sessionId,
+    bool finishTransport,
+  ) {
+    final Uri $url = Uri.parse('/putaway-sessions/${sessionId}/finish');
+    final Map<String, dynamic> $params = <String, dynamic>{
+      'finishTransport': finishTransport
+    };
+    final Request $request = Request(
+      'POST',
+      $url,
+      client.baseUrl,
+      parameters: $params,
+    );
+    return client.send<dynamic, dynamic>($request);
+  }
 }

@@ -200,7 +200,7 @@ class ReceiveSessionScreen extends StatelessWidget {
                       },
                       style: ElevatedButton.styleFrom(
                           minimumSize: const Size.fromHeight(50)),
-                      child: const Text("End"),
+                      child: const Text("Kết thúc"),
                     )
                   ],
                 ),

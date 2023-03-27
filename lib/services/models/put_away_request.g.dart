@@ -9,6 +9,7 @@ part of 'put_away_request.dart';
 PutAwayRequest _$PutAwayRequestFromJson(Map<String, dynamic> json) =>
     PutAwayRequest(
       processAll: json['processAll'] as bool?,
+      destLocationCode: json['destLocationCode'] as String?,
       transportCode: json['transportCode'] as String?,
       productBarcodeId: json['productBarcodeId'] as int?,
       serial: json['serial'] as String?,
@@ -18,6 +19,7 @@ PutAwayRequest _$PutAwayRequestFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$PutAwayRequestToJson(PutAwayRequest instance) =>
     <String, dynamic>{
       'processAll': instance.processAll,
+      'destLocationCode': instance.destLocationCode,
       'transportCode': instance.transportCode,
       'productBarcodeId': instance.productBarcodeId,
       'serial': instance.serial,

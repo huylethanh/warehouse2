@@ -3,7 +3,9 @@ import 'dart:io';
 import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:warehouse_app/utils/constants.dart';
+import 'package:warehouse_app/widgets/widgets.dart';
 
 import 'containers/rounded_container.dart';
 
@@ -27,25 +29,57 @@ class DialogService {
             maxWidth: MediaQuery.of(context).size.width / 2,
             child: SingleChildScrollView(
               child: Padding(
-                  padding: EdgeInsets.only(
+                  padding: EdgeInsets.all(16).copyWith(
+                    top: 2,
                     bottom: MediaQuery.of(context).viewInsets.bottom,
                   ),
                   child: Column(
                     children: [
-                      RoundedContainer(
-                          margin: const EdgeInsets.only(top: 8),
-                          innerPadding: EdgeInsets.zero,
-                          backgroundColor: AppColor.gray400.withOpacity(0.5),
-                          child: const SizedBox(
-                            height: 5,
-                            width: 200,
-                          )),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 16),
-                        child: Text(
-                          title,
-                          style: const TextStyle(fontSize: 18),
-                        ),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Expanded(child: SizedBox()),
+                          Column(
+                            children: [
+                              RoundedContainer(
+                                  margin: const EdgeInsets.only(top: 2),
+                                  innerPadding: EdgeInsets.zero,
+                                  backgroundColor:
+                                      AppColor.gray400.withOpacity(0.5),
+                                  child: const SizedBox(
+                                    height: 4,
+                                    width: 100,
+                                  )),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 8),
+                                child: Text(
+                                  title,
+                                  style: const TextStyle(fontSize: 18),
+                                ),
+                              ),
+                            ],
+                          ),
+                          Expanded(
+                            child: Align(
+                              alignment: Alignment.centerRight,
+                              child: SplashButtonWidget(
+                                margin: const EdgeInsets.only(top: 8.0),
+                                width: 25,
+                                height: 25,
+                                color: AppColor.gray,
+                                borderRadius: const Radius.circular(50),
+                                child: const Icon(
+                                  FontAwesomeIcons.xmark,
+                                  size: 20,
+                                ),
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                       chid,
                     ],

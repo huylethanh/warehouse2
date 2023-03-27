@@ -1,6 +1,9 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:warehouse_app/base/view_models/index.dart';
 import 'package:warehouse_app/models/models.dart';
+import 'package:warehouse_app/screens/put_away/quantity_input.dart';
 import 'package:warehouse_app/utils/utils.dart';
 import 'package:warehouse_app/logics/logics.dart';
 import 'package:warehouse_app/widgets/widgets.dart';
@@ -15,7 +18,6 @@ class PutAwayScreenViewModel extends ViewModelBase {
   final finishPutAwaySession = FinishPutAwaySessio();
 
   int sessionId = 0;
-  String? registeredTransportCode = null;
 
   // check box
   bool gettingCargo = false;
@@ -45,6 +47,7 @@ class PutAwayScreenViewModel extends ViewModelBase {
       return;
     }
 
+    finishPutAwaySession.startProgress();
     final checkList = transportRuleControl.perceive(current);
 
     total = checkList.fold(0, (sum, it) {
@@ -63,10 +66,20 @@ class PutAwayScreenViewModel extends ViewModelBase {
     setBusy(false);
   }
 
-  processInput(BuildContext context, String scannedBarcode) {
+  processInput(BuildContext context, String scannedBarcode) async {
     String barcode = scannedBarcode.trim();
     if (gettingCargo && scannedBarcode.contains("|") && _isSku(barcode)) {
-      //show quantity dialog
+      final quantity = await DialogService.showBottomSheet<int>(context,
+          canDismiss: false,
+          chid: const QuantityInput(),
+          title: "Nhập số lượng");
+
+      if (quantity == null) {
+        return;
+      }
+
+      scan(context, "$barcode|$quantity!");
+
       return;
     }
 
@@ -131,6 +144,33 @@ class PutAwayScreenViewModel extends ViewModelBase {
     setProcessing(false);
   }
 
+  bool wasFinished() {
+    return finishPutAwaySession.finished ||
+        !finishPutAwaySession.progressStarted;
+  }
+
+  Future<void> endSession(BuildContext context) async {
+    final confirmed = await DialogService.confirmDialog(
+      context,
+      title: "Kết thúc",
+      message: "Bạn có muốn kết thúc công việc?",
+      yesLabel: "Chấp nhận",
+      noLabel: "Hủy",
+    );
+
+    if (!confirmed) {
+      return;
+    }
+
+    setProcessing(true);
+
+    await _finish();
+
+    setProcessing(false);
+
+    Navigator.pop(context);
+  }
+
   Future<void> _putAllIn(BuildContext context, String bin) async {
     final confirmed = await DialogService.confirmDialog(
       context,
@@ -169,7 +209,20 @@ class PutAwayScreenViewModel extends ViewModelBase {
     final result = await _finish();
   }
 
-  void _changeBIN(CheckCodeResponse value) {
+  void _changeBIN(BuildContext context, CheckCodeResponse value) async {
+    final confirmed = await DialogService.confirmDialog(
+      context,
+      title: "Đổi kho",
+      message:
+          "Bạn có chắc muốn chuyển sang vị trí lưu kho ${value.locationCode}",
+      yesLabel: "Chấp nhận",
+      noLabel: "Hủy",
+    );
+
+    if (!confirmed) {
+      return;
+    }
+
     registerBin.updateBin(value);
   }
 
@@ -215,13 +268,14 @@ class PutAwayScreenViewModel extends ViewModelBase {
       return;
     }
 
-    final assertBin = registerBin.checkBin(code, isPutAway: true);
+    final assertBin = await registerBin.checkBin(code, isPutAway: true);
     if (assertBin != null) {
-//_process.postValue(Resource.Success(ChangeBIN(assertBin)));
+      _changeBIN(context, assertBin);
 
       return;
     }
-    DialogService.showErrorBotToast("Không tìm thấy sản phẩ");
+
+    DialogService.showErrorBotToast("Không tìm thấy sản phẩm");
   }
 
   Future<void> _askForSerial(BuildContext context, InboundProduct product) {
@@ -284,6 +338,8 @@ class PutAwayScreenViewModel extends ViewModelBase {
 
     final session = transport.key;
     final data = transport.value;
+
+    finishPutAwaySession.startProgress();
     final checkList = transportRuleControl.perceive(data);
 
     total = checkList.fold(0, (sum, it) {
