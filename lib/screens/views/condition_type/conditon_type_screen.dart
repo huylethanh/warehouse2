@@ -32,7 +32,7 @@ class ConditionTypeScreen extends StatelessWidget {
           child: Column(
             children: [
               RoundedContainer(
-                backgroundColor: AppColor.gray,
+                backgroundColor: AppColor.color636366,
                 innerPadding: const EdgeInsets.all(8),
                 child: IntrinsicHeight(
                   child: Row(
@@ -103,7 +103,7 @@ class ConditionTypeScreen extends StatelessWidget {
                           }
                         : null,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColor.secondary600,
+                      backgroundColor: AppColor.colorF5870A,
                     ),
                     child: const Text(
                       "Xác Nhận",

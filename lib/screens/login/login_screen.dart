@@ -41,7 +41,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 const Icon(
                   Icons.warehouse,
                   size: 120,
-                  color: AppColor.orange700,
+                  color: AppColor.colorC2410C,
                 ),
                 if (!widget.loginReason.isNullOrEmptyEx())
                   Text(widget.loginReason!),
@@ -49,9 +49,9 @@ class _LoginScreenState extends State<LoginScreen> {
                 TextField(
                   decoration: const InputDecoration(
                     enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: AppColor.secondary400)),
+                        borderSide: BorderSide(color: AppColor.colorF9B262)),
                     focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: AppColor.secondary600)),
+                        borderSide: BorderSide(color: AppColor.colorF5870A)),
                     floatingLabelStyle: TextStyle(color: Colors.grey),
                     labelText: 'Tài Khoản',
                     hintText: "Nhập tài khoản",
@@ -66,9 +66,9 @@ class _LoginScreenState extends State<LoginScreen> {
                   obscureText: !viewModel.showedPassword,
                   decoration: InputDecoration(
                     enabledBorder: const OutlineInputBorder(
-                        borderSide: BorderSide(color: AppColor.secondary400)),
+                        borderSide: BorderSide(color: AppColor.colorF9B262)),
                     focusedBorder: const OutlineInputBorder(
-                        borderSide: BorderSide(color: AppColor.secondary600)),
+                        borderSide: BorderSide(color: AppColor.colorF5870A)),
                     floatingLabelStyle: TextStyle(color: Colors.grey),
                     labelText: 'Mật Khẩu',
                     hintText: "Nhập mật khẩu",
@@ -79,7 +79,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       icon: Icon(
                         Icons.remove_red_eye_sharp,
                         color: viewModel.showedPassword
-                            ? AppColor.secondary500
+                            ? AppColor.colorF79A31
                             : Colors.grey,
                         size: 20,
                       ),
@@ -98,7 +98,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           viewModel.login(context);
                         },
                   style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColor.orange700,
+                      backgroundColor: AppColor.colorC2410C,
                       minimumSize: const Size.fromHeight(50)),
                   child: Text(
                     viewModel.isBusy ? "Đăng Nhập ..." : "Đăng Nhập",

@@ -59,7 +59,7 @@ class ReceiveListScreen extends StatelessWidget {
     );
     return RoundedContainer(
         borderRadius: 10,
-        backgroundColor: AppColor.gray,
+        backgroundColor: AppColor.color636366,
         innerPadding: const EdgeInsets.all(8),
         margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
         child: IntrinsicHeight(

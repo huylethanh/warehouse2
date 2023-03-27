@@ -97,7 +97,7 @@ class PutAwayScreen extends StatelessWidget {
             borderRadius: const Radius.circular(5),
             innerPadding: const EdgeInsets.all(6),
             margin: const EdgeInsets.only(right: 8),
-            color: AppColor.secondary500,
+            color: AppColor.colorF79A31,
             child: const Icon(FontAwesomeIcons.barcode),
             onPressed: () {
               scanBarcodeByCamera(context, viewModel);
@@ -185,7 +185,7 @@ class PutAwayScreen extends StatelessWidget {
     final numberMaxSkuOfBin = maxNumberSKU;
 
     return RoundedContainer(
-      backgroundColor: AppColor.gray,
+      backgroundColor: AppColor.color636366,
       innerPadding: const EdgeInsets.all(8),
       child: Column(
         children: [
@@ -227,7 +227,7 @@ class PutAwayScreen extends StatelessWidget {
 
     return RoundedContainer(
       margin: const EdgeInsets.symmetric(vertical: 8),
-      backgroundColor: AppColor.gray,
+      backgroundColor: AppColor.color636366,
       innerPadding: const EdgeInsets.all(8),
       child: Column(
         children: [
@@ -302,7 +302,7 @@ class PutAwayScreen extends StatelessWidget {
             Expanded(
               child: RoundedContainer(
                 margin: const EdgeInsets.symmetric(vertical: 16),
-                backgroundColor: AppColor.gray600,
+                backgroundColor: AppColor.color3D3D3D,
                 child: ListView.builder(
                     itemCount: items.length,
                     itemBuilder: (BuildContext context, int index) {
@@ -382,11 +382,12 @@ class PutAwayScreen extends StatelessWidget {
                 ),
                 FieldValue(
                   fieldName: const Text("Tình trạng:",
-                      style: TextStyle(fontSize: 12, color: AppColor.gray400)),
+                      style:
+                          TextStyle(fontSize: 12, color: AppColor.colorB4B4B3)),
                   value: Text(
                     isNullOrEmpty(item.condition) ? "NA" : item.condition,
-                    style:
-                        const TextStyle(fontSize: 12, color: AppColor.gray400),
+                    style: const TextStyle(
+                        fontSize: 12, color: AppColor.colorB4B4B3),
                   ),
                 ),
               ],

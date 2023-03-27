@@ -3,14 +3,13 @@
 import 'package:flutter/material.dart';
 import 'package:warehouse_app/base/view_models/index.dart';
 import 'package:warehouse_app/models/models.dart';
+import 'package:warehouse_app/screens/views/views.dart';
 import 'package:warehouse_app/services/services.dart';
 import 'package:warehouse_app/services/metadata_service.dart';
 import 'package:warehouse_app/logics/logics.dart';
 
 import 'package:warehouse_app/widgets/widgets.dart';
 import 'package:darq/darq.dart';
-
-import '../ask_for_duration/ask_for_duration_screen.dart';
 
 class ReceiveSessionScreenViewModel extends ViewModelBase {
   final _receiveService = ReceiveService();

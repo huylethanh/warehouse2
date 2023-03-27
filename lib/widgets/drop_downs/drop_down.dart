@@ -21,7 +21,7 @@ class DropDowWidget<T> extends StatelessWidget {
   Widget build(BuildContext context) {
     return RoundedContainer(
       innerPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 16),
-      backgroundColor: AppColor.gray.withOpacity(0.5),
+      backgroundColor: AppColor.color636366.withOpacity(0.5),
       child: DropdownButtonHideUnderline(
         child: DropdownButton<T>(
             icon: const Icon(

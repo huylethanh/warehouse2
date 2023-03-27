@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:warehouse_app/base/view_models/index.dart';
 
 import 'package:warehouse_app/models/models.dart';
-import 'package:warehouse_app/screens/condition_type/conditon_type_screen.dart';
+import 'package:warehouse_app/screens/views/views.dart';
 import 'package:warehouse_app/services/condition_type_service.dart';
 import 'package:warehouse_app/services/services.dart';
 import 'package:warehouse_app/utils/utils.dart';

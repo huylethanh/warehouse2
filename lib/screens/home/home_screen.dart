@@ -23,7 +23,7 @@ class HomeScreen extends StatelessWidget {
             slivers: [
               SliverAppBar(
                 pinned: true,
-                backgroundColor: AppColor.secondary600,
+                backgroundColor: AppColor.colorF5870A,
                 expandedHeight: 160,
                 elevation: 1,
                 flexibleSpace: FlexibleSpaceBar(

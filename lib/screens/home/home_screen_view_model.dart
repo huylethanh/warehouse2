@@ -3,6 +3,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:warehouse_app/base/view_models/index.dart';
 import 'package:warehouse_app/models/models.dart';
 import 'package:warehouse_app/services/task_status_service.dart';
+import 'package:warehouse_app/utils/utils.dart';
 import 'package:warehouse_app/widgets/widgets.dart';
 
 import '../put_away/put_away_screen.dart';
@@ -301,7 +302,7 @@ class HomeScreenViewModel extends ViewModelBase {
       required String taskCode,
       required void Function() onPressed}) {
     return RoundedContainer(
-      backgroundColor: Colors.amber,
+      backgroundColor: AppColor.colorF6931D,
       innerPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       margin: const EdgeInsets.symmetric(
         vertical: 16,

@@ -59,7 +59,7 @@ class ReceiveSessionScreen extends StatelessWidget {
                 child: Column(
                   children: [
                     RoundedContainer(
-                      backgroundColor: AppColor.gray400.withOpacity(0.5),
+                      backgroundColor: AppColor.colorB4B4B3.withOpacity(0.5),
                       innerPadding: const EdgeInsets.all(8),
                       child: Column(
                         children: [
@@ -158,7 +158,7 @@ class ReceiveSessionScreen extends StatelessWidget {
                           borderRadius: const Radius.circular(5),
                           innerPadding: const EdgeInsets.all(6),
                           margin: const EdgeInsets.only(right: 8),
-                          color: AppColor.secondary500,
+                          color: AppColor.colorF79A31,
                           child: const Icon(FontAwesomeIcons.barcode),
                           onPressed: () {
                             scanBarcodeByCamera(context, viewModel);
@@ -265,7 +265,7 @@ class ReceiveSessionScreen extends StatelessWidget {
         Expanded(
           child: RoundedContainer(
             margin: const EdgeInsets.symmetric(vertical: 16),
-            backgroundColor: AppColor.gray600,
+            backgroundColor: AppColor.color3D3D3D,
             child: ListView.builder(
                 itemCount: items.length,
                 itemBuilder: (BuildContext context, int index) {
@@ -284,7 +284,7 @@ class ReceiveSessionScreen extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         RoundedContainer(
-          backgroundColor: AppColor.gray,
+          backgroundColor: AppColor.color636366,
           height: 70,
           width: 70,
           child: Image.network(
@@ -340,10 +340,12 @@ class ReceiveSessionScreen extends StatelessWidget {
               ),
               FieldValue(
                 fieldName: const Text("Tình trạng:",
-                    style: TextStyle(fontSize: 12, color: AppColor.gray400)),
+                    style:
+                        TextStyle(fontSize: 12, color: AppColor.colorB4B4B3)),
                 value: Text(
                   isNullOrEmpty(item.condition) ? "NA" : item.condition,
-                  style: const TextStyle(fontSize: 12, color: AppColor.gray400),
+                  style: const TextStyle(
+                      fontSize: 12, color: AppColor.colorB4B4B3),
                 ),
               ),
             ],
@@ -357,7 +359,7 @@ class ReceiveSessionScreen extends StatelessWidget {
       ReceivedItem item) {
     return RoundedContainer(
       margin: const EdgeInsets.only(top: 12),
-      backgroundColor: AppColor.gray600,
+      backgroundColor: AppColor.color3D3D3D,
       child: Column(
         children: [
           FieldValue(

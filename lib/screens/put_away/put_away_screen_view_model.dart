@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:warehouse_app/base/view_models/index.dart';
 import 'package:warehouse_app/models/models.dart';
-import 'package:warehouse_app/screens/put_away/quantity_input.dart';
+import 'package:warehouse_app/screens/views/views.dart';
 import 'package:warehouse_app/utils/utils.dart';
 import 'package:warehouse_app/logics/logics.dart';
 import 'package:warehouse_app/widgets/widgets.dart';

@@ -45,7 +45,7 @@ class DialogService {
                                   margin: const EdgeInsets.only(top: 2),
                                   innerPadding: EdgeInsets.zero,
                                   backgroundColor:
-                                      AppColor.gray400.withOpacity(0.5),
+                                      AppColor.colorB4B4B3.withOpacity(0.5),
                                   child: const SizedBox(
                                     height: 4,
                                     width: 100,
@@ -67,7 +67,7 @@ class DialogService {
                                 margin: const EdgeInsets.only(top: 8.0),
                                 width: 25,
                                 height: 25,
-                                color: AppColor.gray,
+                                color: AppColor.color636366,
                                 borderRadius: const Radius.circular(50),
                                 child: const Icon(
                                   FontAwesomeIcons.xmark,
