@@ -33,30 +33,54 @@ class PutAwayScreen extends StatelessWidget {
         const vGap = SizedBox(
           height: 10,
         );
-        return Scaffold(
-          appBar: AppBar(
-            title: Text("Lưu Khho"),
-            centerTitle: true,
-          ),
-          body: Stack(
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(15.0),
-                child: Column(
-                  children: [
-                    ..._barcodeScanText(context, viewModel),
-                    const Divider(),
-                    _binLocation(context, viewModel),
-                    _partner(context, viewModel),
-                    _checkList(context, viewModel),
-                  ],
+        return WillPopScope(
+          onWillPop: () {
+            if (viewModel.wasFinished()) {
+              return Future.value(true);
+            }
+
+            viewModel.endSession(context);
+            return Future.value(false);
+          },
+          child: Scaffold(
+            appBar: AppBar(
+              title: const Text("Lưu Kho"),
+              centerTitle: true,
+            ),
+            body: Stack(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(15.0),
+                  child: Column(
+                    children: [
+                      ..._barcodeScanText(context, viewModel),
+                      const Divider(),
+                      Expanded(
+                        child: Column(
+                          children: [
+                            _binLocation(context, viewModel),
+                            _partner(context, viewModel),
+                            _checkList(context, viewModel),
+                          ],
+                        ),
+                      ),
+                      ElevatedButton(
+                        onPressed: () {
+                          viewModel.endSession(context);
+                        },
+                        style: ElevatedButton.styleFrom(
+                            minimumSize: const Size.fromHeight(50)),
+                        child: const Text("Kết thúc"),
+                      )
+                    ],
+                  ),
                 ),
-              ),
-              if (viewModel.isProcessing)
-                const BlurLoadingWidget(
-                  text: "Loading...",
-                ),
-            ],
+                if (viewModel.isProcessing)
+                  const BlurLoadingWidget(
+                    text: "Loading...",
+                  ),
+              ],
+            ),
           ),
         );
       },
@@ -141,23 +165,6 @@ class PutAwayScreen extends StatelessWidget {
       ),
     ];
   }
-
-  // Widget _info(BuildContext context, PutAwayScreenViewModel viewModel) {
-  //   const vGap = SizedBox(
-  //     height: 10,
-  //   );
-  //   return RoundedContainer(
-  //     backgroundColor: Colors.grey.withOpacity(0.3),
-  //     innerPadding: EdgeInsets.all(8),
-  //     child: Column(
-  //       children: [
-  //         _titleAndValue(title: "Vị trí thao tác", value: "value"),
-  //         vGap,
-  //         _titleAndValue(title: "Số lượng barcode có thể đặt", value: "value"),
-  //       ],
-  //     ),
-  //   );
-  // }
 
   Widget _binLocation(
     BuildContext context,
@@ -312,76 +319,81 @@ class PutAwayScreen extends StatelessWidget {
 
   Widget _item(BuildContext context, PutAwayScreenViewModel viewModel,
       CheckListItem item, bool isFirst) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        RoundedContainer(
-          backgroundColor: AppColor.gray,
-          height: 70,
-          width: 70,
-          child: Image.network(
-            item.imgUrl ?? "",
-            errorBuilder: (context, error, stackTrace) {
-              return const Icon(
-                FontAwesomeIcons.image,
-                size: 40,
-              );
-            },
+    return RoundedContainer(
+      margin: const EdgeInsets.symmetric(vertical: 8),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          RoundedContainer(
+            innerPadding: EdgeInsets.all(2),
+            backgroundColor: Colors.transparent,
+            height: 70,
+            width: 70,
+            child: Image.network(
+              item.imgUrl ?? "",
+              errorBuilder: (context, error, stackTrace) {
+                return const Icon(
+                  FontAwesomeIcons.image,
+                  size: 40,
+                );
+              },
+            ),
           ),
-        ),
-        const SizedBox(
-          width: 16,
-        ),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              if (!isFirst) Divider(),
-              Row(
-                children: [
-                  Expanded(
-                    child: FieldValue(
-                      fieldName: const Text(
-                        "Tên hàng:",
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      value: Text(
-                        item.name,
-                        style: const TextStyle(fontWeight: FontWeight.bold),
+          const SizedBox(
+            width: 16,
+          ),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Divider(),
+                Row(
+                  children: [
+                    Expanded(
+                      child: FieldValue(
+                        fieldName: const Text(
+                          "Tên hàng:",
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        value: Text(
+                          item.name,
+                          style: const TextStyle(fontWeight: FontWeight.bold),
+                        ),
                       ),
                     ),
+                    Text(
+                      "${item.amount}",
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
+                const Divider(),
+                FieldValue(
+                  fieldName: const Text(
+                    "SKU:",
                   ),
-                  Text(
-                    "${item.amount}",
-                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  value: Text(
+                    item.sku,
                   ),
-                ],
-              ),
-              const Divider(),
-              FieldValue(
-                fieldName: const Text(
-                  "SKU:",
                 ),
-                value: Text(
-                  item.sku,
+                const SizedBox(
+                  height: 8,
                 ),
-              ),
-              const SizedBox(
-                height: 8,
-              ),
-              FieldValue(
-                fieldName: const Text("Tình trạng:",
-                    style: TextStyle(fontSize: 12, color: AppColor.gray400)),
-                value: Text(
-                  isNullOrEmpty(item.condition) ? "NA" : item.condition,
-                  style: const TextStyle(fontSize: 12, color: AppColor.gray400),
+                FieldValue(
+                  fieldName: const Text("Tình trạng:",
+                      style: TextStyle(fontSize: 12, color: AppColor.gray400)),
+                  value: Text(
+                    isNullOrEmpty(item.condition) ? "NA" : item.condition,
+                    style:
+                        const TextStyle(fontSize: 12, color: AppColor.gray400),
+                  ),
                 ),
-              ),
-            ],
-          ),
-        )
-      ],
+              ],
+            ),
+          )
+        ],
+      ),
     );
   }
 
