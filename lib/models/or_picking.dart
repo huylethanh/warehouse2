@@ -18,7 +18,7 @@ class ORPicking {
   @JsonKey(name: "numOfItem")
   final int? productCount;
 
-  final String? sizeNam;
+  final String? sizeName;
   final String? createdDate;
   final int? numOfTransport;
   final int? priority;
@@ -28,7 +28,7 @@ class ORPicking {
     this.code,
     this.orderCount,
     this.productCount,
-    this.sizeNam,
+    this.sizeName,
     this.createdDate,
     this.numOfTransport,
     this.priority,

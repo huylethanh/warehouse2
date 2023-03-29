@@ -119,8 +119,8 @@ class _$ORPickingCWProxyImpl implements _$ORPickingCWProxy {
           ? _value.productCount
           // ignore: cast_nullable_to_non_nullable
           : productCount as int?,
-      sizeNam: sizeNam == const $CopyWithPlaceholder()
-          ? _value.sizeNam
+      sizeName: sizeNam == const $CopyWithPlaceholder()
+          ? _value.sizeName
           // ignore: cast_nullable_to_non_nullable
           : sizeNam as String?,
     );
@@ -142,7 +142,7 @@ ORPicking _$ORPickingFromJson(Map<String, dynamic> json) => ORPicking(
       code: json['pickListCode'] as String?,
       orderCount: json['numOfOR'] as int?,
       productCount: json['numOfItem'] as int?,
-      sizeNam: json['sizeNam'] as String?,
+      sizeName: json['sizeNam'] as String?,
       createdDate: json['createdDate'] as String?,
       numOfTransport: json['numOfTransport'] as int?,
       priority: json['priority'] as int?,
@@ -153,7 +153,7 @@ Map<String, dynamic> _$ORPickingToJson(ORPicking instance) => <String, dynamic>{
       'pickListCode': instance.code,
       'numOfOR': instance.orderCount,
       'numOfItem': instance.productCount,
-      'sizeNam': instance.sizeNam,
+      'sizeNam': instance.sizeName,
       'createdDate': instance.createdDate,
       'numOfTransport': instance.numOfTransport,
       'priority': instance.priority,
