@@ -22,10 +22,10 @@ class ReceiveListScreenViewModel extends ViewModelBase {
   final _debouncer = Debouncer(milliseconds: 300);
 
   void init() {
-    _loadReceives();
+    fetchData();
   }
 
-  void _loadReceives() async {
+  void fetchData() async {
     setBusy(true);
 
     final result = await _service.checkingSessions();

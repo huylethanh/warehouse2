@@ -241,4 +241,159 @@ class _$AppClient extends AppClient {
     );
     return client.send<dynamic, dynamic>($request);
   }
+
+  @override
+  Future<Response<List<ORPicking>>> pickList() {
+    final Uri $url = Uri.parse('/PickLists');
+    final Request $request = Request(
+      'GET',
+      $url,
+      client.baseUrl,
+    );
+    return client.send<List<ORPicking>, ORPicking>($request);
+  }
+
+  @override
+  Future<Response<dynamic>> finishPicklist(String picklistCode) {
+    final Uri $url = Uri.parse('PickLists/${picklistCode}/pick-whole');
+    final Request $request = Request(
+      'PUT',
+      $url,
+      client.baseUrl,
+    );
+    return client.send<dynamic, dynamic>($request);
+  }
+
+  @override
+  Future<Response<bool>> isAutoPickList() {
+    final Uri $url = Uri.parse('PickLists/auto-picklist');
+    final Request $request = Request(
+      'GET',
+      $url,
+      client.baseUrl,
+    );
+    return client.send<bool, bool>($request);
+  }
+
+  @override
+  Future<Response<dynamic>> submitGetAutoPicklist() {
+    final Uri $url = Uri.parse('PickLists/auto-picklist');
+    final Request $request = Request(
+      'POST',
+      $url,
+      client.baseUrl,
+    );
+    return client.send<dynamic, dynamic>($request);
+  }
+
+  @override
+  Future<Response<ORPicking>> orPick(int pickListId) {
+    final Uri $url = Uri.parse('/PickLists/${pickListId}/for-picking');
+    final Request $request = Request(
+      'GET',
+      $url,
+      client.baseUrl,
+    );
+    return client.send<ORPicking, ORPicking>($request);
+  }
+
+  @override
+  Future<Response<PickingPath>> registerTransport(
+    int pickListId,
+    Map<String, dynamic> request,
+  ) {
+    final Uri $url = Uri.parse('/PickLists/${pickListId}/register-transports');
+    final $body = request;
+    final Request $request = Request(
+      'PUT',
+      $url,
+      client.baseUrl,
+      body: $body,
+    );
+    return client.send<PickingPath, PickingPath>($request);
+  }
+
+  @override
+  Future<Response<PickingPath>> getPickUpPath(int pickListId) {
+    final Uri $url = Uri.parse('/PickLists/${pickListId}/picking-actions');
+    final Request $request = Request(
+      'GET',
+      $url,
+      client.baseUrl,
+    );
+    return client.send<PickingPath, PickingPath>($request);
+  }
+
+  @override
+  Future<Response<PickingPath>> skipPick(
+    int pickListId,
+    Map<String, dynamic> request,
+  ) {
+    final Uri $url = Uri.parse('/PickLists/${pickListId}/skip-item');
+    final $body = request;
+    final Request $request = Request(
+      'PUT',
+      $url,
+      client.baseUrl,
+      body: $body,
+    );
+    return client.send<PickingPath, PickingPath>($request);
+  }
+
+  @override
+  Future<Response<PickProcessResponse>> processPicking(
+      Map<String, dynamic> request) {
+    final Uri $url = Uri.parse('/PickLists/pick-item');
+    final $body = request;
+    final Request $request = Request(
+      'POST',
+      $url,
+      client.baseUrl,
+      body: $body,
+    );
+    return client.send<PickProcessResponse, PickProcessResponse>($request);
+  }
+
+  @override
+  Future<Response<PickProcessResponse>> pickAllInBin(
+      Map<String, dynamic> request) {
+    final Uri $url = Uri.parse('/PickLists/pick-bin');
+    final $body = request;
+    final Request $request = Request(
+      'POST',
+      $url,
+      client.baseUrl,
+      body: $body,
+    );
+    return client.send<PickProcessResponse, PickProcessResponse>($request);
+  }
+
+  @override
+  Future<Response<PickingPath>> repick(Map<String, dynamic> request) {
+    final Uri $url = Uri.parse('/PickLists/repick');
+    final $body = request;
+    final Request $request = Request(
+      'POST',
+      $url,
+      client.baseUrl,
+      body: $body,
+    );
+    return client.send<PickingPath, PickingPath>($request);
+  }
+
+  @override
+  Future<Response<dynamic>> finishPickingUp(
+    int sessionId,
+    Map<String, dynamic> request,
+  ) {
+    final Uri $url = Uri.parse('/PickingSessions/${sessionId}/finish');
+    final $body = request;
+    final Request $request = Request(
+      'PUT',
+      $url,
+      client.baseUrl,
+      body: $body,
+    );
+    return client.send<dynamic, dynamic>($request);
+  }
 }

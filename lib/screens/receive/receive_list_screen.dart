@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 import 'package:warehouse_app/models/models.dart';
 import 'package:warehouse_app/utils/utils.dart';
+import 'package:warehouse_app/widgets/inside_pull_to_refresh_widget.dart';
 import 'package:warehouse_app/widgets/widgets.dart';
 import 'package:warehouse_app/widgets/search_appbar.dart';
 
@@ -38,12 +39,15 @@ class ReceiveListScreen extends StatelessWidget {
                   viewModel.search(null);
                 },
               ),
-              body: ListView.builder(
-                  itemCount: viewModel.receives.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    final model = viewModel.receives[index];
-                    return _listItem(context, viewModel, model);
-                  }),
+              body: InsidePullToRefreshWidget(
+                handlerPull: () => viewModel.fetchData(),
+                child: ListView.builder(
+                    itemCount: viewModel.receives.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      final model = viewModel.receives[index];
+                      return _listItem(context, viewModel, model);
+                    }),
+              ),
             ),
             if (viewModel.isProcessing) const BlurLoadingWidget(text: "Loading")
           ],

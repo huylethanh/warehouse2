@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:warehouse_app/base/view_models/index.dart';
 import 'package:warehouse_app/models/models.dart';
+import 'package:warehouse_app/screens/picking/picking.dart';
 import 'package:warehouse_app/services/task_status_service.dart';
 import 'package:warehouse_app/utils/utils.dart';
 import 'package:warehouse_app/widgets/widgets.dart';
@@ -15,7 +16,7 @@ class HomeScreenViewModel extends ViewModelBase {
 
   static const String receive = "receive"; // 1
   static const String putAway = "putAway"; //2
-  static const String pickUp = "pickUp"; //3
+  static const String picking = "pickUp"; //3
   static const String transfer = "transfer"; //4
   static const String audit = "audit";
   static const String handOver = "handOver";
@@ -48,7 +49,7 @@ class HomeScreenViewModel extends ViewModelBase {
     );
     views.add(
       {
-        "name": pickUp,
+        "name": picking,
         "icon": FontAwesomeIcons.truckFast,
         "color": Colors.indigoAccent
       },
@@ -81,15 +82,15 @@ class HomeScreenViewModel extends ViewModelBase {
     late Widget page;
     switch (name) {
       case receive:
-        page = ReceiveListScreen();
+        page = const ReceiveListScreen();
         break;
 
       case putAway:
-        page = PutAwayScreen();
+        page = const PutAwayScreen();
         break;
 
-      default:
-        page = PutAwayScreen();
+      case picking:
+        page = const PickingListScreen();
         break;
     }
 
@@ -122,7 +123,7 @@ class HomeScreenViewModel extends ViewModelBase {
       case putAway:
         return "Lưu Kho";
 
-      case pickUp:
+      case picking:
         return "Lấy Hàng";
 
       case transfer:
@@ -285,7 +286,7 @@ class HomeScreenViewModel extends ViewModelBase {
         ((viewName == receive || viewName == view6) && task is ReceiveTask) ||
             (viewName == putAway && task is PutAwayTask) ||
             ((viewName == actionCycleCount) && task is CycleCountTask) ||
-            (viewName == pickUp && task is PickUpTask) ||
+            (viewName == picking && task is PickUpTask) ||
             (viewName == transfer && task is TransferTask) ||
             (viewName == view5 && task is EqcTask);
 

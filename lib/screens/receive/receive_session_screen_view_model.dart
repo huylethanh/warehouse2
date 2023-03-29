@@ -49,10 +49,10 @@ class ReceiveSessionScreenViewModel extends ViewModelBase {
   });
 
   init() {
-    _loadData();
+    loadData();
   }
 
-  _loadData() async {
+  loadData() async {
     setBusy(true);
     await fetchInboundResponse();
     if (receiveTask != null) {

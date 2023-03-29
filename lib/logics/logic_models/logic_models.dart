@@ -4,3 +4,4 @@ export 'inbound_product.dart';
 export 'duration_value.dart';
 export 'new_transport.dart';
 export 'put_away_item.dart';
+export 'or_view_item.dart';

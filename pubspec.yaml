@@ -37,8 +37,8 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
   http: ^0.13.5
-  json_serializable: ^6.5.1
-  json_annotation: ^4.7.0
+  json_serializable: ^6.6.1
+  json_annotation: ^4.8.0
   copy_with_extension: ^4.0.4
   chopper: ^5.1.0
   stacked: ^3.0.0
@@ -49,6 +49,7 @@ dependencies:
   flutter_barcode_scanner: ^2.0.0
   darq: ^1.2.1
   bot_toast: ^4.0.3
+  pull_to_refresh: ^2.0.0
 
 dev_dependencies:
   flutter_test:

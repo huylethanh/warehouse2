@@ -2,7 +2,7 @@ import 'dart:io';
 import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'loading_views.dart';
+import 'loading_widget.dart';
 
 class BlurLoadingWidget extends StatelessWidget {
   final String? text;

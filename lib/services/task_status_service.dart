@@ -2,14 +2,11 @@ import 'dart:convert';
 
 import 'package:warehouse_app/models/models.dart';
 import 'package:warehouse_app/services/result_set.dart';
+import 'package:warehouse_app/services/service_base.dart';
 
-import 'client/app_client.dart';
-
-class TaskStatusService {
-  final _appClient = AppClient.create();
-
+class TaskStatusService extends ServiceBase {
   Future<ResultSet<RemainingTask?>> getTaskStatus() async {
-    final res = await _appClient.taskStatus();
+    final res = await client.taskStatus();
 
     if (res.isSuccessful) {
       return ResultSet.success(_convertTask(res.body!));

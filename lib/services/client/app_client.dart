@@ -73,4 +73,50 @@ abstract class AppClient extends ChopperService {
   @Post(path: "/putaway-sessions/{id}/finish")
   Future<Response> putAwayFinish(@Path("id") int sessionId,
       @Query("finishTransport") bool finishTransport);
+
+  // PICKING
+  @Get(path: "/PickLists")
+  Future<Response<List<ORPicking>>> pickList();
+
+  @Put(path: "PickLists/{code}/pick-whole")
+  Future<Response> finishPicklist(@Path("code") String picklistCode);
+
+  @Get(path: "PickLists/auto-picklist")
+  Future<Response<bool>> isAutoPickList();
+
+  @Post(path: "PickLists/auto-picklist")
+  Future<Response> submitGetAutoPicklist();
+
+  @Get(path: "/PickLists/{id}/for-picking")
+  Future<Response<ORPicking>> orPick(@Path("id") int pickListId);
+
+  @Put(path: "/PickLists/{id}/register-transports")
+  Future<Response<PickingPath>> registerTransport(@Path("id") int pickListId,
+      @Body() Map<String, dynamic> request); // body: RegTransportRequest
+
+  @Get(path: "/PickLists/{id}/picking-actions")
+  Future<Response<PickingPath>> getPickUpPath(@Path("id") int pickListId);
+
+  @Put(path: "/PickLists/{id}/skip-item")
+  Future<Response<PickingPath>> skipPick(@Path("id") int pickListId,
+      @Body() Map<String, dynamic> request); // @Body body: SkipItemRequest
+
+  @Post(path: "/PickLists/pick-item")
+  Future<Response<PickProcessResponse>> processPicking(
+      @Body() Map<String, dynamic> request); //@Body body: PickProcessPayload);
+
+  @Post(path: "/PickLists/pick-bin")
+  Future<Response<PickProcessResponse>> pickAllInBin(
+      @Body() Map<String, dynamic> request); //@Body body: PickProcessPayload);
+
+  @Post(path: "/PickLists/repick")
+  Future<Response<PickingPath>> repick(
+      @Body() Map<String, dynamic> request); //@Body body: RepickRequest);
+
+  @Put(path: "/PickingSessions/{id}/finish")
+  Future<Response> finishPickingUp(
+      @Path("id")
+          int sessionId,
+      @Body()
+          Map<String, dynamic> request); // @Body body: FinishPickingPayload);
 }

@@ -1,14 +1,12 @@
 import 'package:warehouse_app/models/check_out_transport_request.dart';
 import 'package:warehouse_app/models/models.dart';
-import 'package:warehouse_app/services/client/client.dart';
 import 'package:warehouse_app/services/result_set.dart';
+import 'package:warehouse_app/services/service_base.dart';
 
-class ReceiveService {
-  final _client = AppClient.create();
-
+class ReceiveService extends ServiceBase {
   Future<ResultSet<List<ReceiveModel>?>> checkingSessions(
       {bool unFinished = true}) async {
-    final res = await _client.checkinSessions(unFinished);
+    final res = await client.checkinSessions(unFinished);
 
     if (res.isSuccessful) {
       return ResultSet.success(res.body ?? []);
@@ -18,7 +16,7 @@ class ReceiveService {
   }
 
   Future<ResultSet<InboundResponse?>> fetchInboundRequest(int irId) async {
-    final res = await _client.inboundRequest(irId);
+    final res = await client.inboundRequest(irId);
 
     if (res.isSuccessful) {
       return ResultSet.success(res.body);
@@ -30,7 +28,7 @@ class ReceiveService {
   Future<ResultSet<IdResponse?>> receiveCheckInTransport(
       String codeString, CheckInTransportRequest request) async {
     final res =
-        await _client.receiveCheckInTransport(codeString, request.toJson());
+        await client.receiveCheckInTransport(codeString, request.toJson());
 
     if (res.isSuccessful) {
       return ResultSet.success(res.body);
@@ -41,7 +39,7 @@ class ReceiveService {
 
   Future<ResultSet<bool?>> currentReceiveQuantity(
       int irId, int productId, int quantity, int unitId) async {
-    final res = await _client.currentReceiveQuantity(irId, productId, unitId);
+    final res = await client.currentReceiveQuantity(irId, productId, unitId);
 
     if (res.isSuccessful) {
       final check = res.body;
@@ -57,7 +55,7 @@ class ReceiveService {
 
   Future<ResultSet<bool?>> receiveCheckOutTransport(
       String code, int sessionId) async {
-    final res = await _client.receiveCheckOutTransport(
+    final res = await client.receiveCheckOutTransport(
         code, sessionId, CheckOutTransportRequest(note: "").toJson());
 
     if (res.isSuccessful) {
@@ -70,7 +68,7 @@ class ReceiveService {
   Future<ResultSet<bool?>> processProduct(
       String code, int sessionId, CheckingProduct payload) async {
     final res =
-        await _client.receiveCheckProduct(code, sessionId, payload.toJson());
+        await client.receiveCheckProduct(code, sessionId, payload.toJson());
 
     if (res.isSuccessful) {
       return ResultSet.success(true);

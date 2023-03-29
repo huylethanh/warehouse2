@@ -1,14 +1,12 @@
 import 'package:warehouse_app/models/models.dart';
-import 'package:warehouse_app/services/client/app_client.dart';
 import 'package:warehouse_app/services/models/check_transport_result.dart';
 import 'package:warehouse_app/services/result_set.dart';
+import 'package:warehouse_app/services/service_base.dart';
 
-class MetadataService {
-  final _client = AppClient.create();
-
+class MetadataService extends ServiceBase {
   Future<ResultSet<CheckTransportResult?>> checkTransportAvailable(
       String code) async {
-    final res = await _client.queryCode(code, true, false);
+    final res = await client.queryCode(code, true, false);
 
     if (res.isSuccessful) {
       final checkedCode = res.body!;
@@ -32,7 +30,7 @@ class MetadataService {
   }
 
   Future<ResultSet<bool?>> tranferable(String code) async {
-    final res = await _client.queryCode(code, true, false);
+    final res = await client.queryCode(code, true, false);
 
     if (!res.isSuccessful) {
       return ResultSet.error(res.error);
@@ -45,7 +43,7 @@ class MetadataService {
 
   Future<ResultSet<CheckDimensionResponse?>> productDimension(
       int productId, int unitId) async {
-    final res = await _client.checkFullDimensionInfo(productId, unitId, true);
+    final res = await client.checkFullDimensionInfo(productId, unitId, true);
 
     if (res.isSuccessful) {
       return ResultSet.success(res.body!);
@@ -56,7 +54,7 @@ class MetadataService {
 
   Future<ResultSet<CheckCodeResponse?>> query(
       String code, bool isPutAway) async {
-    final res = await _client.queryCode(code, true, isPutAway);
+    final res = await client.queryCode(code, true, isPutAway);
 
     if (res.isSuccessful) {
       return ResultSet.success(res.body!);
@@ -67,7 +65,7 @@ class MetadataService {
 
   Future<ResultSet<Inventory>> queryInfo(String code,
       {bool includesIrCode = false}) async {
-    final res = await _client.checkLocationInfo(code, includesIrCode);
+    final res = await client.checkLocationInfo(code, includesIrCode);
 
     if (res.isSuccessful) {
       return ResultSet.success(res.body!);
