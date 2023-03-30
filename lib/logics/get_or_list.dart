@@ -19,21 +19,24 @@ class GetORList {
 
     final List<ORViewItem> items = [];
     list.asMap().forEach(
-      (index, orSession) {
-        final DateTime? date = DateTime.tryParse(orSession.createdDate ?? "");
+      (index, orPickingItem) {
+        final DateTime? date =
+            DateTime.tryParse(orPickingItem.createdDate ?? "");
         final minute = date?.minute ?? 0;
 
         items.add(
           ORViewItem(
-              pickListId: orSession.id,
-              code: orSession.code,
-              orAmount: orSession.orderCount.toString(),
-              productAmount: orSession.productCount.toString(),
-              sizeName: orSession.sizeName,
-              createdDate: orSession.createdDate,
-              dataIndex: index,
-              priority: orSession.priority,
-              currentMinute: minute),
+            pickListId: orPickingItem.id,
+            code: orPickingItem.code,
+            orAmount: orPickingItem.orderCount.toString(),
+            productAmount: orPickingItem.productCount.toString(),
+            sizeName: orPickingItem.sizeName,
+            createdDate: orPickingItem.createdDate,
+            dataIndex: index,
+            priority: orPickingItem.priority,
+            currentMinute: minute,
+            orPicking: orPickingItem,
+          ),
         );
       },
     );

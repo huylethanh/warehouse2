@@ -94,7 +94,8 @@ class HomeScreenViewModel extends ViewModelBase {
         break;
     }
 
-    final checked = _checkAction(context, name);
+    final checked = true;
+    // _checkAction(context, name);
 
     if (checked == null) {
       return;

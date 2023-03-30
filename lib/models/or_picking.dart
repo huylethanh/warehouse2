@@ -18,6 +18,7 @@ class ORPicking {
   @JsonKey(name: "numOfItem")
   final int? productCount;
 
+  @JsonKey(name: "sizeName")
   final String? sizeName;
   final String? createdDate;
   final int? numOfTransport;

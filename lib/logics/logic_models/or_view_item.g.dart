@@ -19,6 +19,8 @@ abstract class _$ORViewItemCWProxy {
 
   ORViewItem orAmount(String? orAmount);
 
+  ORViewItem orPicking(ORPicking orPicking);
+
   ORViewItem pickListId(int? pickListId);
 
   ORViewItem priority(int? priority);
@@ -40,6 +42,7 @@ abstract class _$ORViewItemCWProxy {
     int? currentMinute,
     int? dataIndex,
     String? orAmount,
+    ORPicking? orPicking,
     int? pickListId,
     int? priority,
     String? productAmount,
@@ -73,6 +76,9 @@ class _$ORViewItemCWProxyImpl implements _$ORViewItemCWProxy {
   ORViewItem orAmount(String? orAmount) => this(orAmount: orAmount);
 
   @override
+  ORViewItem orPicking(ORPicking orPicking) => this(orPicking: orPicking);
+
+  @override
   ORViewItem pickListId(int? pickListId) => this(pickListId: pickListId);
 
   @override
@@ -100,6 +106,7 @@ class _$ORViewItemCWProxyImpl implements _$ORViewItemCWProxy {
     Object? currentMinute = const $CopyWithPlaceholder(),
     Object? dataIndex = const $CopyWithPlaceholder(),
     Object? orAmount = const $CopyWithPlaceholder(),
+    Object? orPicking = const $CopyWithPlaceholder(),
     Object? pickListId = const $CopyWithPlaceholder(),
     Object? priority = const $CopyWithPlaceholder(),
     Object? productAmount = const $CopyWithPlaceholder(),
@@ -131,6 +138,10 @@ class _$ORViewItemCWProxyImpl implements _$ORViewItemCWProxy {
           ? _value.orAmount
           // ignore: cast_nullable_to_non_nullable
           : orAmount as String?,
+      orPicking: orPicking == const $CopyWithPlaceholder() || orPicking == null
+          ? _value.orPicking
+          // ignore: cast_nullable_to_non_nullable
+          : orPicking as ORPicking,
       pickListId: pickListId == const $CopyWithPlaceholder()
           ? _value.pickListId
           // ignore: cast_nullable_to_non_nullable
@@ -172,6 +183,7 @@ ORViewItem _$ORViewItemFromJson(Map<String, dynamic> json) => ORViewItem(
       chosen: json['chosen'] as bool? ?? false,
       priority: json['priority'] as int?,
       currentMinute: json['currentMinute'] as int? ?? 0,
+      orPicking: ORPicking.fromJson(json['orPicking'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$ORViewItemToJson(ORViewItem instance) =>
@@ -186,4 +198,5 @@ Map<String, dynamic> _$ORViewItemToJson(ORViewItem instance) =>
       'chosen': instance.chosen,
       'priority': instance.priority,
       'currentMinute': instance.currentMinute,
+      'orPicking': instance.orPicking,
     };

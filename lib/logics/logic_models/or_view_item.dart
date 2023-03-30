@@ -1,5 +1,6 @@
 import 'package:copy_with_extension/copy_with_extension.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:warehouse_app/models/models.dart';
 
 part 'or_view_item.g.dart';
 
@@ -16,6 +17,7 @@ class ORViewItem {
   final bool chosen;
   final int? priority;
   final int currentMinute;
+  final ORPicking orPicking;
 
   ORViewItem({
     this.pickListId,
@@ -28,6 +30,7 @@ class ORViewItem {
     this.chosen = false,
     this.priority,
     this.currentMinute = 0,
+    required this.orPicking,
   });
 
   factory ORViewItem.fromJson(Map<String, dynamic> json) =>

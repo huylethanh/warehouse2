@@ -21,7 +21,7 @@ abstract class _$ORPickingCWProxy {
 
   ORPicking productCount(int? productCount);
 
-  ORPicking sizeNam(String? sizeNam);
+  ORPicking sizeName(String? sizeName);
 
   /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `ORPicking(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
   ///
@@ -37,7 +37,7 @@ abstract class _$ORPickingCWProxy {
     int? orderCount,
     int? priority,
     int? productCount,
-    String? sizeNam,
+    String? sizeName,
   });
 }
 
@@ -70,7 +70,7 @@ class _$ORPickingCWProxyImpl implements _$ORPickingCWProxy {
   ORPicking productCount(int? productCount) => this(productCount: productCount);
 
   @override
-  ORPicking sizeNam(String? sizeNam) => this(sizeNam: sizeNam);
+  ORPicking sizeName(String? sizeName) => this(sizeName: sizeName);
 
   @override
 
@@ -88,7 +88,7 @@ class _$ORPickingCWProxyImpl implements _$ORPickingCWProxy {
     Object? orderCount = const $CopyWithPlaceholder(),
     Object? priority = const $CopyWithPlaceholder(),
     Object? productCount = const $CopyWithPlaceholder(),
-    Object? sizeNam = const $CopyWithPlaceholder(),
+    Object? sizeName = const $CopyWithPlaceholder(),
   }) {
     return ORPicking(
       code: code == const $CopyWithPlaceholder()
@@ -119,10 +119,10 @@ class _$ORPickingCWProxyImpl implements _$ORPickingCWProxy {
           ? _value.productCount
           // ignore: cast_nullable_to_non_nullable
           : productCount as int?,
-      sizeName: sizeNam == const $CopyWithPlaceholder()
+      sizeName: sizeName == const $CopyWithPlaceholder()
           ? _value.sizeName
           // ignore: cast_nullable_to_non_nullable
-          : sizeNam as String?,
+          : sizeName as String?,
     );
   }
 }
@@ -142,7 +142,7 @@ ORPicking _$ORPickingFromJson(Map<String, dynamic> json) => ORPicking(
       code: json['pickListCode'] as String?,
       orderCount: json['numOfOR'] as int?,
       productCount: json['numOfItem'] as int?,
-      sizeName: json['sizeNam'] as String?,
+      sizeName: json['sizeName'] as String?,
       createdDate: json['createdDate'] as String?,
       numOfTransport: json['numOfTransport'] as int?,
       priority: json['priority'] as int?,
@@ -153,7 +153,7 @@ Map<String, dynamic> _$ORPickingToJson(ORPicking instance) => <String, dynamic>{
       'pickListCode': instance.code,
       'numOfOR': instance.orderCount,
       'numOfItem': instance.productCount,
-      'sizeNam': instance.sizeName,
+      'sizeName': instance.sizeName,
       'createdDate': instance.createdDate,
       'numOfTransport': instance.numOfTransport,
       'priority': instance.priority,
