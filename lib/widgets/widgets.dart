@@ -5,3 +5,4 @@ export 'responsive_service.dart';
 export 'loading_widget.dart';
 export 'blur_loading_widget.dart';
 export 'fields.dart/fields.dart';
+export 'barcode_scanner/barcode_scanner_widget.dart';

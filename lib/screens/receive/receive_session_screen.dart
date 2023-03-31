@@ -8,7 +8,6 @@ import 'package:stacked/stacked.dart';
 import 'package:warehouse_app/logics/logics.dart';
 import 'package:warehouse_app/models/models.dart';
 import 'package:warehouse_app/utils/utils.dart';
-import 'package:warehouse_app/widgets/inside_pull_to_refresh_widget.dart';
 import 'package:warehouse_app/widgets/widgets.dart';
 
 import 'receive_session_screen_view_model.dart';
@@ -152,47 +151,17 @@ class ReceiveSessionScreen extends StatelessWidget {
                       ],
                     ),
                     vGap,
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        SplashButtonWidget(
-                          borderRadius: const Radius.circular(5),
-                          innerPadding: const EdgeInsets.all(6),
-                          margin: const EdgeInsets.only(right: 8),
-                          color: AppColor.colorF79A31,
-                          child: const Icon(FontAwesomeIcons.barcode),
-                          onPressed: () {
-                            scanBarcodeByCamera(context, viewModel);
-                          },
-                        ),
-                        Expanded(
-                          child: TextFormField(
-                            key: UniqueKey(),
-                            //   controller: viewModel.controller,
-                            initialValue: viewModel.scannedBarcode,
-                            decoration: InputDecoration(
-                              border: const OutlineInputBorder(),
-                              labelText: viewModel.hasCurrentCode()
-                                  ? 'Scan barcode'
-                                  : 'Quét Thiết Bị Chứa Hàng',
-                              labelStyle: const TextStyle(fontSize: 15),
-                              isDense: true,
-                              contentPadding: const EdgeInsets.symmetric(
-                                vertical: 10,
-                                horizontal: 10,
-                              ),
-                            ),
-                            onChanged: (value) {
-                              viewModel.scannedBarcode = value;
-                            },
-                          ),
-                        ),
-                        TextButton(
-                            onPressed: () {
-                              viewModel.scan(context, viewModel.scannedBarcode);
-                            },
-                            child: const Icon(FontAwesomeIcons.arrowRight))
-                      ],
+                    BarcodeScanner(
+                      value: viewModel.scannedBarcode,
+                      labelText: viewModel.hasCurrentCode()
+                          ? 'Scan barcode'
+                          : 'Quét Thiết Bị Chứa Hàng',
+                      finishScanned: (String? barcode) {
+                        viewModel.processInput(context, barcode!);
+                      },
+                      onBarcodeValueChanges: (value) {
+                        viewModel.scannedBarcode = value;
+                      },
                     ),
                     Expanded(child: _receiveItems(context, viewModel)),
                     ElevatedButton(
@@ -387,17 +356,17 @@ class ReceiveSessionScreen extends StatelessWidget {
     );
   }
 
-  Future<void> scanBarcodeByCamera(
-      BuildContext context, ReceiveSessionScreenViewModel viewModel) async {
-    String barcodeScanRes;
-    // Platform messages may fail, so we use a try/catch PlatformException.
-    try {
-      barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
-          '#ff6666', 'Cancel', true, ScanMode.BARCODE);
-      // ignore: use_build_context_synchronously
-      viewModel.processInput(context, barcodeScanRes);
-    } on PlatformException {
-      barcodeScanRes = 'Failed to get platform version.';
-    }
-  }
+  // Future<void> scanBarcodeByCamera(
+  //     BuildContext context, ReceiveSessionScreenViewModel viewModel) async {
+  //   String barcodeScanRes;
+  //   // Platform messages may fail, so we use a try/catch PlatformException.
+  //   try {
+  //     barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
+  //         '#ff6666', 'Cancel', true, ScanMode.BARCODE);
+  //     // ignore: use_build_context_synchronously
+  //     viewModel.processInput(context, barcodeScanRes);
+  //   } on PlatformException {
+  //     barcodeScanRes = 'Failed to get platform version.';
+  //   }
+  // }
 }
