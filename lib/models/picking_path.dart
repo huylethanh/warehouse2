@@ -2,7 +2,7 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 import 'picking_bin.dart';
-import 'picking_product.dart';
+import 'pick_product.dart';
 
 part 'picking_path.g.dart';
 
@@ -17,7 +17,7 @@ class PickingPath {
   final String? sizeName;
   final String? createdDate;
   final int? priority;
-  final List<PickingProduct>? products;
+  final List<PickProduct>? products;
   final List<PickingBin>? bins;
 
   PickingPath({

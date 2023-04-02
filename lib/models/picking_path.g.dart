@@ -23,7 +23,7 @@ abstract class _$PickingPathCWProxy {
 
   PickingPath priority(int? priority);
 
-  PickingPath products(List<PickingProduct>? products);
+  PickingPath products(List<PickProduct>? products);
 
   PickingPath sizeName(String? sizeName);
 
@@ -42,7 +42,7 @@ abstract class _$PickingPathCWProxy {
     int? pickListId,
     int? pickSessionId,
     int? priority,
-    List<PickingProduct>? products,
+    List<PickProduct>? products,
     String? sizeName,
   });
 }
@@ -81,8 +81,7 @@ class _$PickingPathCWProxyImpl implements _$PickingPathCWProxy {
   PickingPath priority(int? priority) => this(priority: priority);
 
   @override
-  PickingPath products(List<PickingProduct>? products) =>
-      this(products: products);
+  PickingPath products(List<PickProduct>? products) => this(products: products);
 
   @override
   PickingPath sizeName(String? sizeName) => this(sizeName: sizeName);
@@ -143,7 +142,7 @@ class _$PickingPathCWProxyImpl implements _$PickingPathCWProxy {
       products: products == const $CopyWithPlaceholder()
           ? _value.products
           // ignore: cast_nullable_to_non_nullable
-          : products as List<PickingProduct>?,
+          : products as List<PickProduct>?,
       sizeName: sizeName == const $CopyWithPlaceholder()
           ? _value.sizeName
           // ignore: cast_nullable_to_non_nullable
@@ -172,7 +171,7 @@ PickingPath _$PickingPathFromJson(Map<String, dynamic> json) => PickingPath(
       createdDate: json['createdDate'] as String?,
       priority: json['priority'] as int?,
       products: (json['products'] as List<dynamic>?)
-          ?.map((e) => PickingProduct.fromJson(e as Map<String, dynamic>))
+          ?.map((e) => PickProduct.fromJson(e as Map<String, dynamic>))
           .toList(),
       bins: (json['bins'] as List<dynamic>?)
           ?.map((e) => PickingBin.fromJson(e as Map<String, dynamic>))

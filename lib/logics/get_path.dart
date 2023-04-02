@@ -6,7 +6,7 @@ import '../services/picking_service.dart';
 
 class GetPath {
   final _service = PickingService();
-  final Map<int, PickingProduct> productMap = {};
+  final Map<int, PickProduct> productMap = {};
   final List<PickingBin> path = [];
 
   PickingPath? data;
@@ -105,11 +105,10 @@ class GetPath {
               id: pick.locationId,
               index: pick.locationIndex,
               code: pick.locationCode),
-          product: (productMap[pick.productId] ?? PickingProduct.dummy())
-              .copyWith(
-                  quantity: pick.quantity,
-                  storageCodes: pick.storageCodes,
-                  unitId: pick.unitId)));
+          product: (productMap[pick.productId] ?? PickProduct.dummy()).copyWith(
+              quantity: pick.quantity,
+              storageCodes: pick.storageCodes,
+              unitId: pick.unitId)));
     }
 
     return result;

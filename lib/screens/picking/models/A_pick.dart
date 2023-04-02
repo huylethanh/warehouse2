@@ -5,7 +5,7 @@ class APick {
   final int binId;
   final bool canPickAll;
   final PickingTransport transport;
-  final PickingProduct product;
+  final PickProduct product;
 
   APick({
     required this.bin,

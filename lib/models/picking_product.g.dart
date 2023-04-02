@@ -7,23 +7,19 @@ part of 'picking_product.dart';
 // **************************************************************************
 
 abstract class _$PickingProductCWProxy {
-  PickingProduct barcode(String? barcode);
-
-  PickingProduct description(ProductDescription? description);
-
-  PickingProduct image(String? image);
-
-  PickingProduct name(String? name);
-
-  PickingProduct productBarcodeId(int? productBarcodeId);
-
-  PickingProduct productType(ProductType? productType);
+  PickingProduct productId(int? productId);
 
   PickingProduct quantity(int? quantity);
 
-  PickingProduct storageCodes(List<String> storageCodes);
+  PickingProduct s(dynamic s);
 
-  PickingProduct unitId(int unitId);
+  PickingProduct serial(String? serial);
+
+  PickingProduct sku(String? sku);
+
+  PickingProduct typeLabel(String? typeLabel);
+
+  PickingProduct unitId(int? unitId);
 
   /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `PickingProduct(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
   ///
@@ -32,14 +28,12 @@ abstract class _$PickingProductCWProxy {
   /// PickingProduct(...).copyWith(id: 12, name: "My name")
   /// ````
   PickingProduct call({
-    String? barcode,
-    ProductDescription? description,
-    String? image,
-    String? name,
-    int? productBarcodeId,
-    ProductType? productType,
+    int? productId,
     int? quantity,
-    List<String>? storageCodes,
+    dynamic? s,
+    String? serial,
+    String? sku,
+    String? typeLabel,
     int? unitId,
   });
 }
@@ -51,35 +45,25 @@ class _$PickingProductCWProxyImpl implements _$PickingProductCWProxy {
   const _$PickingProductCWProxyImpl(this._value);
 
   @override
-  PickingProduct barcode(String? barcode) => this(barcode: barcode);
-
-  @override
-  PickingProduct description(ProductDescription? description) =>
-      this(description: description);
-
-  @override
-  PickingProduct image(String? image) => this(image: image);
-
-  @override
-  PickingProduct name(String? name) => this(name: name);
-
-  @override
-  PickingProduct productBarcodeId(int? productBarcodeId) =>
-      this(productBarcodeId: productBarcodeId);
-
-  @override
-  PickingProduct productType(ProductType? productType) =>
-      this(productType: productType);
+  PickingProduct productId(int? productId) => this(productId: productId);
 
   @override
   PickingProduct quantity(int? quantity) => this(quantity: quantity);
 
   @override
-  PickingProduct storageCodes(List<String> storageCodes) =>
-      this(storageCodes: storageCodes);
+  PickingProduct s(dynamic s) => this(s: s);
 
   @override
-  PickingProduct unitId(int unitId) => this(unitId: unitId);
+  PickingProduct serial(String? serial) => this(serial: serial);
+
+  @override
+  PickingProduct sku(String? sku) => this(sku: sku);
+
+  @override
+  PickingProduct typeLabel(String? typeLabel) => this(typeLabel: typeLabel);
+
+  @override
+  PickingProduct unitId(int? unitId) => this(unitId: unitId);
 
   @override
 
@@ -90,54 +74,43 @@ class _$PickingProductCWProxyImpl implements _$PickingProductCWProxy {
   /// PickingProduct(...).copyWith(id: 12, name: "My name")
   /// ````
   PickingProduct call({
-    Object? barcode = const $CopyWithPlaceholder(),
-    Object? description = const $CopyWithPlaceholder(),
-    Object? image = const $CopyWithPlaceholder(),
-    Object? name = const $CopyWithPlaceholder(),
-    Object? productBarcodeId = const $CopyWithPlaceholder(),
-    Object? productType = const $CopyWithPlaceholder(),
+    Object? productId = const $CopyWithPlaceholder(),
     Object? quantity = const $CopyWithPlaceholder(),
-    Object? storageCodes = const $CopyWithPlaceholder(),
+    Object? s = const $CopyWithPlaceholder(),
+    Object? serial = const $CopyWithPlaceholder(),
+    Object? sku = const $CopyWithPlaceholder(),
+    Object? typeLabel = const $CopyWithPlaceholder(),
     Object? unitId = const $CopyWithPlaceholder(),
   }) {
     return PickingProduct(
-      barcode: barcode == const $CopyWithPlaceholder()
-          ? _value.barcode
+      productId: productId == const $CopyWithPlaceholder()
+          ? _value.productId
           // ignore: cast_nullable_to_non_nullable
-          : barcode as String?,
-      description: description == const $CopyWithPlaceholder()
-          ? _value.description
-          // ignore: cast_nullable_to_non_nullable
-          : description as ProductDescription?,
-      image: image == const $CopyWithPlaceholder()
-          ? _value.image
-          // ignore: cast_nullable_to_non_nullable
-          : image as String?,
-      name: name == const $CopyWithPlaceholder()
-          ? _value.name
-          // ignore: cast_nullable_to_non_nullable
-          : name as String?,
-      productBarcodeId: productBarcodeId == const $CopyWithPlaceholder()
-          ? _value.productBarcodeId
-          // ignore: cast_nullable_to_non_nullable
-          : productBarcodeId as int?,
-      productType: productType == const $CopyWithPlaceholder()
-          ? _value.productType
-          // ignore: cast_nullable_to_non_nullable
-          : productType as ProductType?,
+          : productId as int?,
       quantity: quantity == const $CopyWithPlaceholder()
           ? _value.quantity
           // ignore: cast_nullable_to_non_nullable
           : quantity as int?,
-      storageCodes:
-          storageCodes == const $CopyWithPlaceholder() || storageCodes == null
-              ? _value.storageCodes
-              // ignore: cast_nullable_to_non_nullable
-              : storageCodes as List<String>,
-      unitId: unitId == const $CopyWithPlaceholder() || unitId == null
+      s: s == const $CopyWithPlaceholder() || s == null
+          ? _value.s
+          // ignore: cast_nullable_to_non_nullable
+          : s as dynamic,
+      serial: serial == const $CopyWithPlaceholder()
+          ? _value.serial
+          // ignore: cast_nullable_to_non_nullable
+          : serial as String?,
+      sku: sku == const $CopyWithPlaceholder()
+          ? _value.sku
+          // ignore: cast_nullable_to_non_nullable
+          : sku as String?,
+      typeLabel: typeLabel == const $CopyWithPlaceholder()
+          ? _value.typeLabel
+          // ignore: cast_nullable_to_non_nullable
+          : typeLabel as String?,
+      unitId: unitId == const $CopyWithPlaceholder()
           ? _value.unitId
           // ignore: cast_nullable_to_non_nullable
-          : unitId as int,
+          : unitId as int?,
     );
   }
 }
@@ -154,39 +127,20 @@ extension $PickingProductCopyWith on PickingProduct {
 
 PickingProduct _$PickingProductFromJson(Map<String, dynamic> json) =>
     PickingProduct(
-      productBarcodeId: json['productBarcodeId'] as int?,
-      barcode: json['barcode'] as String?,
-      productType:
-          $enumDecodeNullable(_$ProductTypeEnumMap, json['productType']),
-      quantity: json['quantity'] as int?,
-      description: json['productDescription'] == null
-          ? null
-          : ProductDescription.fromJson(
-              json['productDescription'] as Map<String, dynamic>),
-      name: json['productName'] as String?,
-      image: json['avatarURL'] as String?,
-      storageCodes: (json['storageCodes'] as List<dynamic>?)
-              ?.map((e) => e as String)
-              .toList() ??
-          const [],
-      unitId: json['unitId'] as int? ?? 0,
+      productId: json['productId'] as int?,
+      sku: json['sku'] as String?,
+      quantity: json['qty'] as int?,
+      typeLabel: json['typeLabel'] as String?,
+      unitId: json['unitId'] as int?,
+      serial: json['serial'] as String?,
     );
 
 Map<String, dynamic> _$PickingProductToJson(PickingProduct instance) =>
     <String, dynamic>{
-      'productBarcodeId': instance.productBarcodeId,
-      'barcode': instance.barcode,
-      'productType': _$ProductTypeEnumMap[instance.productType],
-      'quantity': instance.quantity,
-      'productDescription': instance.description,
-      'productName': instance.name,
-      'avatarURL': instance.image,
-      'storageCodes': instance.storageCodes,
+      'productId': instance.productId,
+      'sku': instance.sku,
+      'qty': instance.quantity,
+      'typeLabel': instance.typeLabel,
       'unitId': instance.unitId,
+      'serial': instance.serial,
     };
-
-const _$ProductTypeEnumMap = {
-  ProductType.serial: 1,
-  ProductType.nonSerial: 2,
-  ProductType.cargo: 3,
-};

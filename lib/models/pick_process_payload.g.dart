@@ -17,6 +17,8 @@ abstract class _$PickProcessPayloadCWProxy {
 
   PickProcessPayload pickUpLocationId(int? pickUpLocationId);
 
+  PickProcessPayload productBarcodeId(int? productBarcodeId);
+
   PickProcessPayload qty(int? qty);
 
   PickProcessPayload storageCode(String? storageCode);
@@ -33,6 +35,7 @@ abstract class _$PickProcessPayloadCWProxy {
     int? pickListId,
     int? pickSessionId,
     int? pickUpLocationId,
+    int? productBarcodeId,
     int? qty,
     String? storageCode,
   });
@@ -64,6 +67,10 @@ class _$PickProcessPayloadCWProxyImpl implements _$PickProcessPayloadCWProxy {
       this(pickUpLocationId: pickUpLocationId);
 
   @override
+  PickProcessPayload productBarcodeId(int? productBarcodeId) =>
+      this(productBarcodeId: productBarcodeId);
+
+  @override
   PickProcessPayload qty(int? qty) => this(qty: qty);
 
   @override
@@ -84,6 +91,7 @@ class _$PickProcessPayloadCWProxyImpl implements _$PickProcessPayloadCWProxy {
     Object? pickListId = const $CopyWithPlaceholder(),
     Object? pickSessionId = const $CopyWithPlaceholder(),
     Object? pickUpLocationId = const $CopyWithPlaceholder(),
+    Object? productBarcodeId = const $CopyWithPlaceholder(),
     Object? qty = const $CopyWithPlaceholder(),
     Object? storageCode = const $CopyWithPlaceholder(),
   }) {
@@ -108,6 +116,10 @@ class _$PickProcessPayloadCWProxyImpl implements _$PickProcessPayloadCWProxy {
           ? _value.pickUpLocationId
           // ignore: cast_nullable_to_non_nullable
           : pickUpLocationId as int?,
+      productBarcodeId: productBarcodeId == const $CopyWithPlaceholder()
+          ? _value.productBarcodeId
+          // ignore: cast_nullable_to_non_nullable
+          : productBarcodeId as int?,
       qty: qty == const $CopyWithPlaceholder()
           ? _value.qty
           // ignore: cast_nullable_to_non_nullable
@@ -137,6 +149,7 @@ PickProcessPayload _$PickProcessPayloadFromJson(Map<String, dynamic> json) =>
       pickSessionId: json['pickSessionId'] as int?,
       binLocationId: json['binLocationId'] as int?,
       pickUpLocationId: json['pickUpLocationId'] as int?,
+      productBarcodeId: json['productBarcodeId'] as int?,
       qty: json['qty'] as int?,
       storageCode: json['storageCode'] as String?,
       isRepick: json['isRepick'] as bool? ?? false,
@@ -148,6 +161,7 @@ Map<String, dynamic> _$PickProcessPayloadToJson(PickProcessPayload instance) =>
       'pickSessionId': instance.pickSessionId,
       'binLocationId': instance.binLocationId,
       'pickUpLocationId': instance.pickUpLocationId,
+      'productBarcodeId': instance.productBarcodeId,
       'qty': instance.qty,
       'storageCode': instance.storageCode,
       'isRepick': instance.isRepick,

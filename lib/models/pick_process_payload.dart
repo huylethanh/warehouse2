@@ -10,6 +10,7 @@ class PickProcessPayload {
   final int? pickSessionId;
   final int? binLocationId;
   final int? pickUpLocationId;
+  final int? productBarcodeId;
   final int? qty;
   final String? storageCode;
   final bool? isRepick;
@@ -19,6 +20,7 @@ class PickProcessPayload {
     this.pickSessionId,
     this.binLocationId,
     this.pickUpLocationId,
+    this.productBarcodeId,
     this.qty,
     this.storageCode,
     this.isRepick = false,

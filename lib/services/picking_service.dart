@@ -2,6 +2,7 @@ import 'package:chopper/chopper.dart';
 import 'package:warehouse_app/models/models.dart';
 import 'package:warehouse_app/services/service_base.dart';
 
+import '../models/pick_process_payload.dart';
 import '../models/req_transport_request.dart';
 import 'result_set.dart';
 
@@ -46,6 +47,37 @@ class PickingService extends ServiceBase {
     final request = RegTransportRequest(locationCodes: transports);
 
     final res = await client.registerTransport(pickId, request.toJson());
+
+    if (res.isSuccessful) {
+      return ResultSet.success(res.body!);
+    }
+
+    return ResultSet.error(res.error);
+  }
+
+  Future<ResultSet<ORPicking?>> singleOr(int pickId) async {
+    final res = await client.orPick(pickId);
+
+    if (res.isSuccessful) {
+      return ResultSet.success(res.body!);
+    }
+
+    return ResultSet.error(res.error);
+  }
+
+  Future<ResultSet<PickProcessResponse>> allInBin(
+      PickingLocation location) async {
+    final payload = PickProcessPayload(
+      pickListId: location.pickListId,
+      pickSessionId: location.pickSessionId,
+      binLocationId: location.binLocationId,
+      pickUpLocationId: location.pickUpLocationId,
+      productBarcodeId: 0,
+      qty: 0,
+      storageCode: null,
+    );
+
+    final res = await client.pickAllInBin(payload.toJson());
 
     if (res.isSuccessful) {
       return ResultSet.success(res.body!);
