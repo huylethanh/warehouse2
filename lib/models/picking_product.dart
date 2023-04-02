@@ -23,7 +23,7 @@ class PickingProduct {
   @JsonKey(name: "avatarURL")
   final String? image;
 
-  final List<String> storageCode;
+  final List<String> storageCodes;
   final int unitId;
 
   PickingProduct({
@@ -34,11 +34,11 @@ class PickingProduct {
     this.description,
     this.name,
     this.image,
-    this.storageCode = const [],
+    this.storageCodes = const [],
     this.unitId = 0,
   });
 
-  PickingProduct dummy() {
+  static PickingProduct dummy() {
     return PickingProduct(
       productBarcodeId: 0,
       barcode: "n/a",

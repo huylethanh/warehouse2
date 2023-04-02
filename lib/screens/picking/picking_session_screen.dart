@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:stacked/stacked.dart';
@@ -43,52 +44,66 @@ class PickingSessionScreen extends StatelessWidget {
           ),
           body: Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Column(children: [
-              RoundedContainer(
-                backgroundColor: AppColor.color3D3D3D,
-                child: Column(
+            child: Column(
+              children: [
+                RoundedContainer(
+                  backgroundColor: AppColor.color3D3D3D,
+                  child: Column(
+                    children: [
+                      FieldValue(
+                        fieldName: const Icon(
+                          FontAwesomeIcons.box,
+                          color: Colors.green,
+                          size: 15,
+                        ),
+                        value: Text(
+                          orPicking.code!,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 17,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 8,
+                      ),
+                      FieldValue(
+                        fieldName: const Text("Số lượng sản phẩm: "),
+                        value: Text(
+                          "${orPicking.productCount}",
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 17,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(
+                  height: 8,
+                ),
+                BarcodeScanner(
+                  finishScanned: (barcode) {
+                    viewModel.processInput(context, barcode);
+                  },
+                  labelText: "Nhập barcode",
+                  onBarcodeValueChanges: (value) {},
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    FieldValue(
-                      fieldName: const Icon(
-                        FontAwesomeIcons.box,
-                        color: Colors.green,
-                        size: 15,
-                      ),
-                      value: Text(
-                        orPicking.code!,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 17,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 8,
-                    ),
-                    FieldValue(
-                      fieldName: const Text("Số lượng sản phẩm: "),
-                      value: Text(
-                        "${orPicking.productCount}",
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 17,
-                        ),
-                      ),
+                    const Text("Hàng kiện"),
+                    CupertinoSwitch(
+                      onChanged: (bool value) {
+                        viewModel.cargoSelectedChanges(value);
+                      },
+                      value: viewModel.gettingCargo,
                     ),
                   ],
                 ),
-              ),
-              const SizedBox(
-                height: 8,
-              ),
-              BarcodeScanner(
-                finishScanned: (barcode) {
-                  //
-                },
-                labelText: "CHọn abc",
-                onBarcodeValueChanges: (value) {},
-              ),
-            ]),
+              ],
+            ),
           ),
         );
       },

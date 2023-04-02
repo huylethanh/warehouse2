@@ -21,7 +21,7 @@ abstract class _$PickingProductCWProxy {
 
   PickingProduct quantity(int? quantity);
 
-  PickingProduct storageCode(List<String> storageCode);
+  PickingProduct storageCodes(List<String> storageCodes);
 
   PickingProduct unitId(int unitId);
 
@@ -39,7 +39,7 @@ abstract class _$PickingProductCWProxy {
     int? productBarcodeId,
     ProductType? productType,
     int? quantity,
-    List<String>? storageCode,
+    List<String>? storageCodes,
     int? unitId,
   });
 }
@@ -75,8 +75,8 @@ class _$PickingProductCWProxyImpl implements _$PickingProductCWProxy {
   PickingProduct quantity(int? quantity) => this(quantity: quantity);
 
   @override
-  PickingProduct storageCode(List<String> storageCode) =>
-      this(storageCode: storageCode);
+  PickingProduct storageCodes(List<String> storageCodes) =>
+      this(storageCodes: storageCodes);
 
   @override
   PickingProduct unitId(int unitId) => this(unitId: unitId);
@@ -97,7 +97,7 @@ class _$PickingProductCWProxyImpl implements _$PickingProductCWProxy {
     Object? productBarcodeId = const $CopyWithPlaceholder(),
     Object? productType = const $CopyWithPlaceholder(),
     Object? quantity = const $CopyWithPlaceholder(),
-    Object? storageCode = const $CopyWithPlaceholder(),
+    Object? storageCodes = const $CopyWithPlaceholder(),
     Object? unitId = const $CopyWithPlaceholder(),
   }) {
     return PickingProduct(
@@ -129,11 +129,11 @@ class _$PickingProductCWProxyImpl implements _$PickingProductCWProxy {
           ? _value.quantity
           // ignore: cast_nullable_to_non_nullable
           : quantity as int?,
-      storageCode:
-          storageCode == const $CopyWithPlaceholder() || storageCode == null
-              ? _value.storageCode
+      storageCodes:
+          storageCodes == const $CopyWithPlaceholder() || storageCodes == null
+              ? _value.storageCodes
               // ignore: cast_nullable_to_non_nullable
-              : storageCode as List<String>,
+              : storageCodes as List<String>,
       unitId: unitId == const $CopyWithPlaceholder() || unitId == null
           ? _value.unitId
           // ignore: cast_nullable_to_non_nullable
@@ -165,7 +165,7 @@ PickingProduct _$PickingProductFromJson(Map<String, dynamic> json) =>
               json['productDescription'] as Map<String, dynamic>),
       name: json['productName'] as String?,
       image: json['avatarURL'] as String?,
-      storageCode: (json['storageCode'] as List<dynamic>?)
+      storageCodes: (json['storageCodes'] as List<dynamic>?)
               ?.map((e) => e as String)
               .toList() ??
           const [],
@@ -181,7 +181,7 @@ Map<String, dynamic> _$PickingProductToJson(PickingProduct instance) =>
       'productDescription': instance.description,
       'productName': instance.name,
       'avatarURL': instance.image,
-      'storageCode': instance.storageCode,
+      'storageCodes': instance.storageCodes,
       'unitId': instance.unitId,
     };
 

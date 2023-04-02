@@ -33,3 +33,6 @@ export 'picking_item.dart';
 export 'product_description.dart';
 export 'skip_item_request.dart';
 export 'pick_process_response.dart';
+export 'picking_transport.dart';
+export 'picking_product.dart';
+export 'finish_picking_payload.dart';

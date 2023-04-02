@@ -7,7 +7,7 @@ part of 'req_transport_request.dart';
 // **************************************************************************
 
 abstract class _$RegTransportRequestCWProxy {
-  RegTransportRequest locationCodes(List<String>? locationCodes);
+  RegTransportRequest locationCodes(List<String> locationCodes);
 
   /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `RegTransportRequest(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
   ///
@@ -27,7 +27,7 @@ class _$RegTransportRequestCWProxyImpl implements _$RegTransportRequestCWProxy {
   const _$RegTransportRequestCWProxyImpl(this._value);
 
   @override
-  RegTransportRequest locationCodes(List<String>? locationCodes) =>
+  RegTransportRequest locationCodes(List<String> locationCodes) =>
       this(locationCodes: locationCodes);
 
   @override
@@ -42,10 +42,11 @@ class _$RegTransportRequestCWProxyImpl implements _$RegTransportRequestCWProxy {
     Object? locationCodes = const $CopyWithPlaceholder(),
   }) {
     return RegTransportRequest(
-      locationCodes: locationCodes == const $CopyWithPlaceholder()
-          ? _value.locationCodes
-          // ignore: cast_nullable_to_non_nullable
-          : locationCodes as List<String>?,
+      locationCodes:
+          locationCodes == const $CopyWithPlaceholder() || locationCodes == null
+              ? _value.locationCodes
+              // ignore: cast_nullable_to_non_nullable
+              : locationCodes as List<String>,
     );
   }
 }
@@ -63,8 +64,8 @@ extension $RegTransportRequestCopyWith on RegTransportRequest {
 
 RegTransportRequest _$RegTransportRequestFromJson(Map<String, dynamic> json) =>
     RegTransportRequest(
-      locationCodes: (json['locationCodes'] as List<dynamic>?)
-          ?.map((e) => e as String)
+      locationCodes: (json['locationCodes'] as List<dynamic>)
+          .map((e) => e as String)
           .toList(),
     );
 

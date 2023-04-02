@@ -6,9 +6,9 @@ part 'req_transport_request.g.dart';
 @CopyWith()
 @JsonSerializable()
 class RegTransportRequest {
-  final List<String>? locationCodes;
+  final List<String> locationCodes;
 
-  RegTransportRequest({this.locationCodes});
+  RegTransportRequest({required this.locationCodes});
 
   factory RegTransportRequest.fromJson(Map<String, dynamic> json) =>
       _$RegTransportRequestFromJson(json);

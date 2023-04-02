@@ -1,6 +1,8 @@
+import 'package:chopper/chopper.dart';
 import 'package:warehouse_app/models/models.dart';
 import 'package:warehouse_app/services/service_base.dart';
 
+import '../models/req_transport_request.dart';
 import 'result_set.dart';
 
 class PickingService extends ServiceBase {
@@ -9,6 +11,44 @@ class PickingService extends ServiceBase {
 
     if (res.isSuccessful) {
       return ResultSet.success(res.body);
+    }
+
+    return ResultSet.error(res.error);
+  }
+
+  Future<ResultSet<bool>> abort(int pickId) async {
+    return ResultSet.success(false);
+  }
+
+  Future<ResultSet<bool>> finish(int pickId, int sessionId) async {
+    final response = await client.finishPickingUp(
+        sessionId, FinishPickingPayload(pickListId: pickId).toJson());
+
+    if (!response.isSuccessful) {
+      return ResultSet.success(true);
+    }
+
+    return ResultSet.error(response.error);
+  }
+
+  Future<ResultSet<PickingPath?>> getPath(int pickId) async {
+    final res = await client.getPickUpPath(pickId);
+
+    if (res.isSuccessful) {
+      return ResultSet.success(res.body!);
+    }
+
+    return ResultSet.error(res.error);
+  }
+
+  Future<ResultSet<PickingPath?>> registerTransport(
+      int pickId, List<String> transports) async {
+    final request = RegTransportRequest(locationCodes: transports);
+
+    final res = await client.registerTransport(pickId, request.toJson());
+
+    if (res.isSuccessful) {
+      return ResultSet.success(res.body!);
     }
 
     return ResultSet.error(res.error);
