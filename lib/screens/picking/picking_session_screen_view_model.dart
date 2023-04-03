@@ -5,6 +5,7 @@ import 'package:warehouse_app/base/view_models/index.dart';
 import 'package:warehouse_app/logics/logics.dart';
 import 'package:warehouse_app/models/models.dart';
 import 'package:warehouse_app/screens/views/views.dart';
+import 'package:warehouse_app/utils/colection.dart';
 import 'package:warehouse_app/widgets/widgets.dart';
 
 import 'helpers/bin_pick_controller.dart';
@@ -23,6 +24,8 @@ class PickingSessionScreenViewModel extends ViewModelBase {
   final registerPickingTransport = RegisterPickingTransport();
   final getSingleOr = GetSingleOr();
   final _pickAllInBin = PickAllInBin();
+  final skipProduct = SkipProduct();
+  final processPicking = ProcessPicking();
 
   bool gettingCargo = false;
   bool _enoughTransport = false;
@@ -278,275 +281,293 @@ class PickingSessionScreenViewModel extends ViewModelBase {
     }
   }
 
-  Future<void> skip() {
-    return Future.value();
-    // _process.value = Resource.Loading()
-    // task = TASK.PROCESS
+  Future<void> skip() async {
+    task = TASK.PROCESS;
 
-    // viewModelScope.launch(defaultHandler) {
+    final removing = pickController.processing;
 
-    //     val removing = pickController.processing
+    if (removing == null) {
+      DialogService.showErrorBotToast("Đã có lỗi");
+      return;
+    }
 
-    //     if (removing == null) {
-    //         _process.postValue(Resource.Error(App.errMessage))
-    //     } else {
+    final location = PickingLocation(
+        pickListId: orPicking.id!,
+        pickSessionId: getPath.sessionId(),
+        binLocationId: removing.binId,
+        pickUpLocationId: removing.transport.id!);
 
-    //         val location = PickingLocation(
-    //             pickListId = orPicking.id,
-    //             pickSessionId = getPath.sessionId(),
-    //             binLocationId = removing.binId,
-    //             pickUpLocationId = removing.transport.id
-    //         )
+    final product = PickingProduct(
+        productId: removing.product.productBarcodeId,
+        sku: removing.product.barcode,
+        quantity: removing.remaining(),
+        typeLabel: removing.product.isAttribute() ? "Nhãn lưu trữ" : "Serial",
+        unitId: removing.product.unitId,
+        serial: null);
 
-    //         val product = PickingProduct(
-    //             productId = removing.product.productBarcodeId,
-    //             sku = removing.product.barcode,
-    //             quantity = removing.remaining(),
-    //             typeLabel = if (removing.product.isAttribute()) getString(R.string.storage_code) else "Serial",
-    //             unitId = removing.product.unitId,
-    //             serial = null
-    //         )
+    final newPath = await skipProduct.execute(
+        orPicking.id!, getPath.sessionId(), location, product);
 
-    //         val newPath: PickingPath = skipProduct.execute(orPicking.id, getPath.sessionId(), location, product)
+    if (newPath == null) {
+      DialogService.showErrorBotToast("Đã có lỗi");
+      return;
+    }
 
-    //         orPicking = getPath.execute(newPath)
-    //         count = getPath.outCount
+    orPicking = await getPath.execute2(newPath);
+    count = getPath.outCount;
 
-    //         if (getPath.hasNext()) {
-    //             val next = getPath.next()
-    //             pickController.createNewPhase(next)
+    if (getPath.hasNext()) {
+      final next = getPath.next();
+      pickController.createNewPhase(next);
 
-    //             if (pickController.checkBin(removing.bin)) {
-    //                 pickController.processing?.let {
-    //                     _process.postValue(Resource.Success(Next(it)))
-    //                 }
-    //             } else {
-    //                 _process.postValue(
-    //                     Resource.Success(
-    //                         Bin(
-    //                             next.firstOrNull()?.bin ?: "n/a"
-    //                         )
-    //                     )
-    //                 )
-    //             }
-    //         } else {
-    //             allDone = true
-    //             _process.postValue(Resource.Success(AllDone(last = null)))
-    //         }
-    //     }
-    // }
+      if (pickController.checkBin(removing.bin)) {
+        if (pickController.processing != null) {
+          // _process.postValue(Resource.Success(Next(it)))
+        }
+      } else {
+        //TOTO: check here
+        //    _process.postValue(
+        //                       Resource.Success(
+        //                           Bin(
+        //                               next.firstOrNull()?.bin ?: "n/a"
+        //                           )
+        //                       )
+        //                   )
+        // }
+      }
+    } else {
+      //TOTO: check here
+      allDone = true;
+      // _process.postValue(Resource.Success(AllDone(last = null)))
+    }
   }
 
+  String? skuAwaitSerial;
   Future<void> scan(BuildContext context, String barcode) async {
     if (allDone) {
       return;
     }
 
     // _process.value = Resource.Loading()
-    // task = TASK.PROCESS
+    task = TASK.PROCESS;
 
-    // viewModelScope.launch(defaultHandler + CoroutineDispatchers.Computing) {
+    final normalize = barcode.trim();
 
-    //     val normalize = barcode.trim()
+    final parts = normalize.split("|");
 
-    //     val parts = normalize.split("|")
+    final code = parts[0];
 
-    //     val code = parts[0]
-    //     val quantity: Int? = (parts.getOrElse(1) { "1" }).toIntOrNull()
+    final quantityString = parts.getOrElse<String>(1, (index) {
+      return "1";
+    });
 
-    //     if (quantity == null) {
-    //         _process.postValue(Resource.Error(getString(R.string.err_invalid_data)))
-    //         return@launch
-    //     }
+    final quantity = int.tryParse(quantityString);
 
-    //     if (!pickController.binVerified()) {
-    //         if (pickController.checkBin(code)) {
+    if (quantity == null) {
+      //_process.postValue(Resource.Error(getString(R.string.err_invalid_data)))
+      return;
+    }
 
-    //             pickController.processing?.let {
-    //                 _process.postValue(Resource.Success(Next(it)))
-    //             }
+    if (!pickController.binVerified()) {
+      if (pickController.checkBin(code)) {
+        if (pickController.processing != null) {
+          //_process.postValue(Resource.Success(Next(it)))
+        }
+      } else {
+        DialogService.showErrorBotToast("Vị trí lưu kho không đúng");
+        return;
+        //_process.postValue(Resource.Error(getString(R.string.err_invalid_bin)))
+      }
+      return;
+    }
 
-    //         } else {
-    //             _process.postValue(Resource.Error(getString(R.string.err_invalid_bin)))
-    //         }
-    //         return@launch
-    //     }
+    if (skuAwaitSerial == null) {
+      if (code.toUpperCase() == pickController.processingBin!.toUpperCase()) {
+        /*if (orPicking.orderCount == 1) {
+                    _process.postValue(Resource.Success(AllInBin(code)))
+                } else if (!canPickAllInBin()) {
+                    _process.postValue(Resource.Error("Vị trí lấy hàng $code không hỗ trợ lấy toàn bộ sản phẩm"))
+                } else {
+                    _process.postValue(Resource.Error("Không hỗ trợ phiên lấy hàng có nhiều hơn 1 đơn hàng"))
+                }*/
+        if (canPickAllInBin()) {
+          // _process.postValue(Resource.Success(AllInBin(code)))
+        } else {
+          DialogService.showErrorBotToast(
+              "Vị trí lấy hàng $code không hỗ trợ lấy toàn bộ sản phẩm");
+          // _process.postValue(Resource.Error(getString(R.string.txt_pick_location_cant_pick_all, code)))
+        }
+        return;
+      }
 
-    //     if (skuAwaitSerial == null) {
+      if (quantity > 1 && pickController.isSerial()) {
+        DialogService.showErrorBotToast(
+            "Sản phẩm là serial không được lấy quá 1");
+        return;
+      }
 
-    //         if (code.equals(pickController.processingBin, true)) {
-    //             /*if (orPicking.orderCount == 1) {
-    //                 _process.postValue(Resource.Success(AllInBin(code)))
-    //             } else if (!canPickAllInBin()) {
-    //                 _process.postValue(Resource.Error("Vị trí lấy hàng $code không hỗ trợ lấy toàn bộ sản phẩm"))
-    //             } else {
-    //                 _process.postValue(Resource.Error("Không hỗ trợ phiên lấy hàng có nhiều hơn 1 đơn hàng"))
-    //             }*/
-    //             if (canPickAllInBin()) {
-    //                 _process.postValue(Resource.Success(AllInBin(code)))
-    //             } else {
-    //                 _process.postValue(Resource.Error(getString(R.string.txt_pick_location_cant_pick_all, code)))
-    //             }
-    //             return@launch
-    //         }
+      if (pickController.overQuantity(quantity)) {
+        DialogService.showErrorBotToast("Số lượng vượt quá số lượng cần lấy");
+        return;
+      }
 
-    //         if (quantity > 1 && pickController.isSerial()) {
-    //             _process.postValue(Resource.Error(getString(R.string.txt_pick_serial_exceed_qty)))
-    //             return@launch
-    //         }
+      if (pickController.containsStorageCode(code)) {
+        if (pickController.processing != null) {
+          process(pickController.processing!, quantity, code);
+        }
 
-    //         if (pickController.overQuantity(quantity)) {
-    //             _process.postValue(Resource.Error(getString(R.string.txt_pick_exceed_qty)))
-    //             return@launch
-    //         }
+        return;
+      }
 
-    //         if (pickController.containsStorageCode(code)) {
-    //             pickController.processing?.let {
-    //                 process(it, quantity, serial = code)
-    //             }
-    //             return@launch
-    //         }
+      final isSku = pickController.checkSku(code);
+      final maybeSerial =
+          pickController.isSerial() && pickController.notSkuInBin(code);
+      if (isSku || maybeSerial) {
+        if (isSku && pickController.isSerial()) {
+          skuAwaitSerial = code;
+          //     _process.postValue(Resource.Success(AwaitSerial))
+        } else {
+          if (pickController.emptyStorageCode()) {
+            if (pickController.processing != null) {
+              process(pickController.processing!, quantity,
+                  maybeSerial ? code : null);
+            }
+          } else {
+            // _process.postValue(Resource.Error(getString(R.string.err_wrong_sku)))
+            DialogService.showErrorBotToast("Barcode không đúng");
 
-    //         val isSku = pickController.checkSku(code)
-    //         val maybeSerial = pickController.isSerial() && pickController.notSkuInBin(code)
-    //         if (isSku || maybeSerial) {
-
-    //             if (isSku && pickController.isSerial()) {
-    //                 skuAwaitSerial = code
-    //                 _process.postValue(Resource.Success(AwaitSerial))
-    //             } else {
-    //                 if (pickController.emptyStorageCode()) {
-    //                     pickController.processing?.let {
-    //                         process(it, quantity, serial = if (maybeSerial) code else null)
-    //                     }
-    //                 } else {
-    //                     _process.postValue(Resource.Error(getString(R.string.err_wrong_sku)))
-    //                 }
-    //             }
-
-    //         } else {
-    //             _process.postValue(Resource.Error(getString(R.string.err_wrong_sku)))
-    //         }
-    //     } else {
-    //         if (pickController.notSkuInBin(code) && (pickController.emptyStorageCode() || pickController.containsStorageCode(code))) {
-    //             pickController.processing?.let {
-    //                 process(it, 1, serial = code)
-    //             }
-    //         } else {
-    //             _process.postValue(Resource.Error(getString(R.string.err_wrong_serial)))
-    //         }
-    //     }
-    // }
+            return;
+          }
+        }
+      } else {
+        //_process.postValue(Resource.Error(getString(R.string.err_wrong_sku)))
+        DialogService.showErrorBotToast("Barcode không đúng");
+      }
+    } else {
+      if (pickController.notSkuInBin(code) &&
+          (pickController.emptyStorageCode() ||
+              pickController.containsStorageCode(code))) {
+        if (pickController.processing != null) {
+          process(pickController.processing!, 1, code);
+        }
+      } else {
+        // _process.postValue(Resource.Error(getString(R.string.err_wrong_serial)))
+        DialogService.showErrorBotToast("SERIAL không đúng");
+      }
+    }
   }
 
-  Future<void> process(APick pick, int quantity, String? serial) {
-    return Future.value();
-    // val location = PickingLocation(
-    //     pickListId = orPicking.id,
-    //     pickSessionId = getPath.sessionId(),
-    //     binLocationId = pick.binId,
-    //     pickUpLocationId = pick.transport.id
-    // )
+  bool requestingChangePath = false;
 
-    // val product = PickingProduct(
-    //     productId = pick.product.productBarcodeId,
-    //     sku = pick.product.barcode,
-    //     quantity = quantity,
-    //     typeLabel = if (pick.product.isAttribute()) getString(R.string.storage_code) else "Serial",
-    //     unitId = 0,
-    //     serial = serial
-    // )
+  Future<void> process(APick pick, int quantity, String? serial) async {
+    final location = PickingLocation(
+        pickListId: orPicking.id!,
+        pickSessionId: getPath.sessionId(),
+        binLocationId: pick.binId,
+        pickUpLocationId: pick.transport.id!);
 
-    // val response: PickProcessResponse = processPicking.execute(location, product)
+    final product = PickingProduct(
+        productId: pick.product.productBarcodeId,
+        sku: pick.product.barcode,
+        quantity: quantity,
+        typeLabel: pick.product.isAttribute() ? "Nhãn lưu trữ" : "Serial",
+        unitId: 0,
+        serial: serial);
 
-    // skuAwaitSerial = null
+    final PickProcessResponse? response =
+        await processPicking.execute(location, product);
+    if (response == null) {
+      DialogService.showErrorBotToast("Có lỗi xảy ra");
+      return;
+    }
 
-    // if (serial == null) {
-    //     pickController.takeSku(quantity)
-    // } else {
-    //     pickController.takeSerial(serial)
-    // }
+    skuAwaitSerial = null;
 
-    // count += quantity
+    if (serial == null) {
+      pickController.takeSku(quantity);
+    } else {
+      pickController.takeSerial(serial);
+    }
 
-    // val last = LastPicked(
-    //     total = count,
-    //     need = pickController.remaining(),
-    //     bin = pick.bin,
-    //     transport = pick.transport,
-    //     product = product
-    // )
+    count += quantity;
 
-    // if (response.isAlternated()) {
-    //     alternate(response, last)
-    //     return
-    // }
+    final last = LastPicked(
+        total: count,
+        need: pickController.remaining(),
+        bin: pick.bin,
+        transport: pick.transport,
+        product: product);
 
-    // // at current BIN still have product to process
-    // if (pickController.shouldMoveNext()) {
-    //     // pick for another product at current BIN
-    //     val next = pickController.next()
-    //     if (next == null) {
+    if (response.isAlternated()) {
+      alternate(response, last);
+      return;
+    }
 
-    //         if (requestingChangePath) {
-    //             requestingChangePath = false
-    //             _process.postValue(Resource.Success(PathChanging(last = last)))
-    //             return
-    //         }
-    //         // all of products at current BIN was processed, move to next BIN
-    //         if (getPath.hasNext()) {
-    //             val nextBin = getPath.next()
-    //             pickController.createNewPhase(nextBin)
+    // at current BIN still have product to process
+    if (pickController.shouldMoveNext()) {
+      // pick for another product at current BIN
+      final next = pickController.next();
+      if (next == null) {
+        if (requestingChangePath) {
+          requestingChangePath = false;
+          //  _process.postValue(Resource.Success(PathChanging(last = last)))
+          return;
+        }
+        // all of products at current BIN was processed, move to next BIN
+        if (getPath.hasNext()) {
+          final nextBin = getPath.next();
+          pickController.createNewPhase(nextBin);
 
-    //             _process.postValue(Resource.Success(Bin(nextBin.firstOrNull()?.bin ?: "n/a", last)))
-    //         } else {
-    //             // travels to all BIN -> done
-    //             allDone = true
-    //             _process.postValue(Resource.Success(AllDone(last = last)))
-    //         }
-
-    //     } else {
-    //         // process next product, give info about last picked product
-    //         _process.postValue(Resource.Success(Next(next, last)))
-    //     }
-    // } else {
-    //     // keep processing current SKU (same order), give info about last picked product
-    //     _process.postValue(Resource.Success(last))
-    // }
+          // _process.postValue(Resource.Success(Bin(nextBin.firstOrNull()?.bin ?: "n/a", last)))
+        } else {
+          // travels to all BIN -> done
+          allDone = true;
+          //_process.postValue(Resource.Success(AllDone(last = last)))
+        }
+      } else {
+        // process next product, give info about last picked product
+        //   _process.postValue(Resource.Success(Next(next, last)))
+      }
+    } else {
+      // keep processing current SKU (same order), give info about last picked product
+      //   _process.postValue(Resource.Success(last))
+    }
   }
 
-  Future<void> alternate(PickProcessResponse response, LastPicked? last) {
-    return Future.value();
+  Future<void> alternate(PickProcessResponse response, LastPicked? last) async {
+    if (response.isFinished) {
+      if (last != null) {
+        //_process.postValue(Resource.Success(last))
+        //  delay(2100) // sync with last put-in location pop up
+      }
 
-    // if (response.isFinished) {
-    //     if (last != null) {
-    //         _process.postValue(Resource.Success(last))
-    //         delay(2100) // sync with last put-in location pop up
-    //     }
-    //     _process.postValue(Resource.Success(Cancelled(response.message ?: "n/a")))
-    //     return
-    // }
+      //  _process.postValue(Resource.Success(Cancelled(response.message ?: "n/a")))
+      return;
+    }
 
-    // if (response.isReload) {
-    //     orPicking = getPath.execute(orPicking.id)
-    //     count = getPath.outCount
+    if (response.isReload) {
+      final result = await getPath.execute(orPicking.id!);
+      orPicking = result!;
 
-    //     if (getPath.hasNext()) {
-    //         val next = getPath.next()
-    //         pickController.createNewPhase(next)
-    //         _process.postValue(Resource.Success(Bin(next.firstOrNull()?.bin ?: "n/a")))
-    //     } else {
-    //         allDone = true
-    //         _process.postValue(Resource.Success(AllDone(last = last)))
-    //     }
+      count = getPath.outCount;
 
-    //     delay(100)
+      if (getPath.hasNext()) {
+        final next = getPath.next();
+        pickController.createNewPhase(next);
+        // _process.postValue(Resource.Success(Bin(next.firstOrNull()?.bin ?: "n/a")))
+      } else {
+        allDone = true;
+        //_process.postValue(Resource.Success(AllDone(last = last)))
+      }
 
-    //     if (last != null) {
-    //         _process.postValue(Resource.Success(last))
-    //         delay(2100) // sync with last put-in location pop up
-    //     }
+      // delay(100);
 
-    //     _process.postValue(Resource.Success(PartiallyCancelled(orPicking.productCount, count, response.message ?: "n/a")))
+      if (last != null) {
+        //   _process.postValue(Resource.Success(last))
+        // delay(2100) // sync with last put-in location pop up
+      }
+
+      //  _process.postValue(Resource.Success(PartiallyCancelled(orPicking.productCount, count, response.message ?: "n/a")))
+    }
   }
 }

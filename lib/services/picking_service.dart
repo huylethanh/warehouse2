@@ -85,4 +85,43 @@ class PickingService extends ServiceBase {
 
     return ResultSet.error(res.error);
   }
+
+  Future<ResultSet<PickingPath?>> skip(int pickId, int sessionId,
+      PickingLocation location, PickingProduct product) async {
+    final request = SkipItemRequest(
+        pickSessionId: sessionId,
+        binLocationId: location.binLocationId,
+        productBarcodeId: product.productId,
+        unitId: product.unitId,
+        storageCode: null,
+        isRepick: false);
+
+    final res = await client.skipPick(pickId, request.toJson());
+
+    if (res.isSuccessful) {
+      return ResultSet.success(res.body!);
+    }
+
+    return ResultSet.error(res.error);
+  }
+
+  Future<ResultSet<PickProcessResponse>> process(
+      PickingLocation location, PickingProduct product) async {
+    final payload = PickProcessPayload(
+        pickListId: location.pickListId,
+        pickSessionId: location.pickSessionId,
+        binLocationId: location.binLocationId,
+        pickUpLocationId: location.pickUpLocationId,
+        productBarcodeId: product.productId,
+        qty: product.quantity,
+        storageCode: product.serial);
+
+    final res = await client.processPicking(payload.toJson());
+
+    if (res.isSuccessful) {
+      return ResultSet.success(res.body!);
+    }
+
+    return ResultSet.error(res.error);
+  }
 }

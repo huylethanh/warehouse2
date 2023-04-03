@@ -18,3 +18,5 @@ export 'check_transport_available.dart';
 export 'register_picking_transport.dart';
 export 'get_single_or.dart';
 export 'pick_all_in_bin.dart';
+export 'skip_product.dart';
+export 'process_picking.dart';
