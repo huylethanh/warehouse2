@@ -16,21 +16,23 @@ enum TASK { REG_SINGLE_TRANSPORT, REG_TRANSPORTS, GET_PATH, PROCESS }
 class PickingSessionScreenViewModel extends ViewModelBase {
   late ORPicking orPicking;
 
-  final pickController = BinPickController();
-  final abortPickingSession = AbortPickingSession();
-  final finishPickingUp = FinishPickingUp();
-  final getPath = GetPath();
-  final checkTransportAvailable = CheckTransportAvailable();
-  final registerPickingTransport = RegisterPickingTransport();
-  final getSingleOr = GetSingleOr();
+  final _pickController = BinPickController();
+  final _abortPickingSession = AbortPickingSession();
+  final _finishPickingUp = FinishPickingUp();
+  final _getPath = GetPath();
+  final _checkTransportAvailable = CheckTransportAvailable();
+  final _registerPickingTransport = RegisterPickingTransport();
+  final _getSingleOr = GetSingleOr();
   final _pickAllInBin = PickAllInBin();
-  final skipProduct = SkipProduct();
-  final processPicking = ProcessPicking();
+  final _skipProduct = SkipProduct();
+  final _processPicking = ProcessPicking();
 
+  int count = 0;
   bool gettingCargo = false;
   bool _enoughTransport = false;
-  int count = 0;
   bool allDone = false;
+  bool requestingChangePath = false;
+  String? skuAwaitSerial;
 
   TASK task = TASK.REG_SINGLE_TRANSPORT;
 
@@ -57,11 +59,11 @@ class PickingSessionScreenViewModel extends ViewModelBase {
   }
 
   bool isSku(String code) {
-    if (pickController.processing == null) {
+    if (_pickController.processing == null) {
       return false;
     }
 
-    final p = pickController.processing;
+    final p = _pickController.processing;
     return p!.checkSku(code) && !p.isSerial();
   }
 
@@ -84,18 +86,18 @@ class PickingSessionScreenViewModel extends ViewModelBase {
   }
 
   bool canPickAllInBin() {
-    return pickController.processing?.canPickAll == true;
+    return _pickController.processing?.canPickAll == true;
   }
 
   String currentSku() {
-    return pickController.processing?.product.barcode ?? "n/a";
+    return _pickController.processing?.product.barcode ?? "n/a";
   }
 
   Future<void> cancel() async {
     task = TASK.REG_SINGLE_TRANSPORT;
     setProcessing(true);
 
-    await abortPickingSession.execute(orPicking.id!);
+    await _abortPickingSession.execute(orPicking.id!);
 
 // might need to go back the list view
     setProcessing(false);
@@ -126,7 +128,7 @@ class PickingSessionScreenViewModel extends ViewModelBase {
     setProcessing(true);
     task = TASK.PROCESS;
 
-    await finishPickingUp.execute(orPicking.id!, getPath.sessionId());
+    await _finishPickingUp.execute(orPicking.id!, _getPath.sessionId());
     // might need to go back the list view
 
     setProcessing(false);
@@ -149,17 +151,17 @@ class PickingSessionScreenViewModel extends ViewModelBase {
 
     task = TASK.REG_SINGLE_TRANSPORT;
 
-    final checkTransport = await checkTransportAvailable.simpleCheck(code);
-    final regTrasport = registerPickingTransport.register(code);
+    final checkTransport = await _checkTransportAvailable.simpleCheck(code);
+    final regTrasport = _registerPickingTransport.register(code);
 
     if (checkTransport && regTrasport) {
       //  _registerTransport.postValue(Resource.Success(SingleAdded(code)))
 
-      if (registerPickingTransport.count() == orPicking.numOfTransport) {
+      if (_registerPickingTransport.count() == orPicking.numOfTransport) {
         setProcessing(true);
 
         task = TASK.REG_TRANSPORTS;
-        await registerPickingTransport.execute(orPicking.id!);
+        await _registerPickingTransport.execute(orPicking.id!);
 
         await getPickingPath();
         setProcessing(false);
@@ -176,12 +178,12 @@ class PickingSessionScreenViewModel extends ViewModelBase {
     setProcessing(true);
 
     if (orChanged) {
-      final data = await getSingleOr.execute(orPicking.id!);
+      final data = await _getSingleOr.execute(orPicking.id!);
       if (data != null) {
         orPicking = data;
       }
     } else {
-      registerPickingTransport.execute(orPicking.id!);
+      _registerPickingTransport.execute(orPicking.id!);
     }
 
     setProcessing(false);
@@ -191,11 +193,11 @@ class PickingSessionScreenViewModel extends ViewModelBase {
     task = TASK.GET_PATH;
 
     setProcessing(true);
-    final data = await getPath.execute(orPicking.id!);
+    final data = await _getPath.execute(orPicking.id!);
     if (data != null) {
       orPicking = data;
 
-      count = getPath.outCount;
+      count = _getPath.outCount;
 
       await start();
     }
@@ -208,9 +210,9 @@ class PickingSessionScreenViewModel extends ViewModelBase {
 
     setProcessing(true);
 
-    if (getPath.hasNext()) {
-      final next = getPath.next();
-      pickController.createNewPhase(next);
+    if (_getPath.hasNext()) {
+      final next = _getPath.next();
+      _pickController.createNewPhase(next);
 
       //final bin = Bin(next.firstOrNull()?.bin ?: "n/a")
     } else {
@@ -227,15 +229,15 @@ class PickingSessionScreenViewModel extends ViewModelBase {
 
     //return Future.value();
 
-    if (pickController.processing == null) {
+    if (_pickController.processing == null) {
       return;
     }
 
-    APick processing = pickController.processing!;
+    APick processing = _pickController.processing!;
 
     final location = PickingLocation(
         pickListId: orPicking.id!,
-        pickSessionId: getPath.sessionId(),
+        pickSessionId: _getPath.sessionId(),
         binLocationId: processing.binId,
         pickUpLocationId: processing.transport.id!);
 
@@ -251,7 +253,7 @@ class PickingSessionScreenViewModel extends ViewModelBase {
       return;
     }
 
-    final quantity = pickController.count();
+    final quantity = _pickController.count();
     count += quantity;
 
     final product = PickingProduct(
@@ -269,9 +271,9 @@ class PickingSessionScreenViewModel extends ViewModelBase {
         transport: processing.transport,
         product: product);
 
-    if (getPath.hasNext()) {
-      final nextBin = getPath.next();
-      pickController.createNewPhase(nextBin);
+    if (_getPath.hasNext()) {
+      final nextBin = _getPath.next();
+      _pickController.createNewPhase(nextBin);
 
       //    _process.postValue(Resource.Success(Bin(nextBin.firstOrNull()?.bin ?: "n/a", last)))
     } else {
@@ -284,7 +286,7 @@ class PickingSessionScreenViewModel extends ViewModelBase {
   Future<void> skip() async {
     task = TASK.PROCESS;
 
-    final removing = pickController.processing;
+    final removing = _pickController.processing;
 
     if (removing == null) {
       DialogService.showErrorBotToast("Đã có lỗi");
@@ -293,7 +295,7 @@ class PickingSessionScreenViewModel extends ViewModelBase {
 
     final location = PickingLocation(
         pickListId: orPicking.id!,
-        pickSessionId: getPath.sessionId(),
+        pickSessionId: _getPath.sessionId(),
         binLocationId: removing.binId,
         pickUpLocationId: removing.transport.id!);
 
@@ -305,23 +307,23 @@ class PickingSessionScreenViewModel extends ViewModelBase {
         unitId: removing.product.unitId,
         serial: null);
 
-    final newPath = await skipProduct.execute(
-        orPicking.id!, getPath.sessionId(), location, product);
+    final newPath = await _skipProduct.execute(
+        orPicking.id!, _getPath.sessionId(), location, product);
 
     if (newPath == null) {
       DialogService.showErrorBotToast("Đã có lỗi");
       return;
     }
 
-    orPicking = await getPath.execute2(newPath);
-    count = getPath.outCount;
+    orPicking = await _getPath.execute2(newPath);
+    count = _getPath.outCount;
 
-    if (getPath.hasNext()) {
-      final next = getPath.next();
-      pickController.createNewPhase(next);
+    if (_getPath.hasNext()) {
+      final next = _getPath.next();
+      _pickController.createNewPhase(next);
 
-      if (pickController.checkBin(removing.bin)) {
-        if (pickController.processing != null) {
+      if (_pickController.checkBin(removing.bin)) {
+        if (_pickController.processing != null) {
           // _process.postValue(Resource.Success(Next(it)))
         }
       } else {
@@ -342,7 +344,6 @@ class PickingSessionScreenViewModel extends ViewModelBase {
     }
   }
 
-  String? skuAwaitSerial;
   Future<void> scan(BuildContext context, String barcode) async {
     if (allDone) {
       return;
@@ -368,9 +369,9 @@ class PickingSessionScreenViewModel extends ViewModelBase {
       return;
     }
 
-    if (!pickController.binVerified()) {
-      if (pickController.checkBin(code)) {
-        if (pickController.processing != null) {
+    if (!_pickController.binVerified()) {
+      if (_pickController.checkBin(code)) {
+        if (_pickController.processing != null) {
           //_process.postValue(Resource.Success(Next(it)))
         }
       } else {
@@ -382,7 +383,7 @@ class PickingSessionScreenViewModel extends ViewModelBase {
     }
 
     if (skuAwaitSerial == null) {
-      if (code.toUpperCase() == pickController.processingBin!.toUpperCase()) {
+      if (code.toUpperCase() == _pickController.processingBin!.toUpperCase()) {
         /*if (orPicking.orderCount == 1) {
                     _process.postValue(Resource.Success(AllInBin(code)))
                 } else if (!canPickAllInBin()) {
@@ -400,36 +401,36 @@ class PickingSessionScreenViewModel extends ViewModelBase {
         return;
       }
 
-      if (quantity > 1 && pickController.isSerial()) {
+      if (quantity > 1 && _pickController.isSerial()) {
         DialogService.showErrorBotToast(
             "Sản phẩm là serial không được lấy quá 1");
         return;
       }
 
-      if (pickController.overQuantity(quantity)) {
+      if (_pickController.overQuantity(quantity)) {
         DialogService.showErrorBotToast("Số lượng vượt quá số lượng cần lấy");
         return;
       }
 
-      if (pickController.containsStorageCode(code)) {
-        if (pickController.processing != null) {
-          process(pickController.processing!, quantity, code);
+      if (_pickController.containsStorageCode(code)) {
+        if (_pickController.processing != null) {
+          process(_pickController.processing!, quantity, code);
         }
 
         return;
       }
 
-      final isSku = pickController.checkSku(code);
+      final isSku = _pickController.checkSku(code);
       final maybeSerial =
-          pickController.isSerial() && pickController.notSkuInBin(code);
+          _pickController.isSerial() && _pickController.notSkuInBin(code);
       if (isSku || maybeSerial) {
-        if (isSku && pickController.isSerial()) {
+        if (isSku && _pickController.isSerial()) {
           skuAwaitSerial = code;
           //     _process.postValue(Resource.Success(AwaitSerial))
         } else {
-          if (pickController.emptyStorageCode()) {
-            if (pickController.processing != null) {
-              process(pickController.processing!, quantity,
+          if (_pickController.emptyStorageCode()) {
+            if (_pickController.processing != null) {
+              process(_pickController.processing!, quantity,
                   maybeSerial ? code : null);
             }
           } else {
@@ -444,11 +445,11 @@ class PickingSessionScreenViewModel extends ViewModelBase {
         DialogService.showErrorBotToast("Barcode không đúng");
       }
     } else {
-      if (pickController.notSkuInBin(code) &&
-          (pickController.emptyStorageCode() ||
-              pickController.containsStorageCode(code))) {
-        if (pickController.processing != null) {
-          process(pickController.processing!, 1, code);
+      if (_pickController.notSkuInBin(code) &&
+          (_pickController.emptyStorageCode() ||
+              _pickController.containsStorageCode(code))) {
+        if (_pickController.processing != null) {
+          process(_pickController.processing!, 1, code);
         }
       } else {
         // _process.postValue(Resource.Error(getString(R.string.err_wrong_serial)))
@@ -457,12 +458,10 @@ class PickingSessionScreenViewModel extends ViewModelBase {
     }
   }
 
-  bool requestingChangePath = false;
-
   Future<void> process(APick pick, int quantity, String? serial) async {
     final location = PickingLocation(
         pickListId: orPicking.id!,
-        pickSessionId: getPath.sessionId(),
+        pickSessionId: _getPath.sessionId(),
         binLocationId: pick.binId,
         pickUpLocationId: pick.transport.id!);
 
@@ -475,7 +474,7 @@ class PickingSessionScreenViewModel extends ViewModelBase {
         serial: serial);
 
     final PickProcessResponse? response =
-        await processPicking.execute(location, product);
+        await _processPicking.execute(location, product);
     if (response == null) {
       DialogService.showErrorBotToast("Có lỗi xảy ra");
       return;
@@ -484,16 +483,16 @@ class PickingSessionScreenViewModel extends ViewModelBase {
     skuAwaitSerial = null;
 
     if (serial == null) {
-      pickController.takeSku(quantity);
+      _pickController.takeSku(quantity);
     } else {
-      pickController.takeSerial(serial);
+      _pickController.takeSerial(serial);
     }
 
     count += quantity;
 
     final last = LastPicked(
         total: count,
-        need: pickController.remaining(),
+        need: _pickController.remaining(),
         bin: pick.bin,
         transport: pick.transport,
         product: product);
@@ -504,9 +503,9 @@ class PickingSessionScreenViewModel extends ViewModelBase {
     }
 
     // at current BIN still have product to process
-    if (pickController.shouldMoveNext()) {
+    if (_pickController.shouldMoveNext()) {
       // pick for another product at current BIN
-      final next = pickController.next();
+      final next = _pickController.next();
       if (next == null) {
         if (requestingChangePath) {
           requestingChangePath = false;
@@ -514,9 +513,9 @@ class PickingSessionScreenViewModel extends ViewModelBase {
           return;
         }
         // all of products at current BIN was processed, move to next BIN
-        if (getPath.hasNext()) {
-          final nextBin = getPath.next();
-          pickController.createNewPhase(nextBin);
+        if (_getPath.hasNext()) {
+          final nextBin = _getPath.next();
+          _pickController.createNewPhase(nextBin);
 
           // _process.postValue(Resource.Success(Bin(nextBin.firstOrNull()?.bin ?: "n/a", last)))
         } else {
@@ -546,14 +545,14 @@ class PickingSessionScreenViewModel extends ViewModelBase {
     }
 
     if (response.isReload) {
-      final result = await getPath.execute(orPicking.id!);
+      final result = await _getPath.execute(orPicking.id!);
       orPicking = result!;
 
-      count = getPath.outCount;
+      count = _getPath.outCount;
 
-      if (getPath.hasNext()) {
-        final next = getPath.next();
-        pickController.createNewPhase(next);
+      if (_getPath.hasNext()) {
+        final next = _getPath.next();
+        _pickController.createNewPhase(next);
         // _process.postValue(Resource.Success(Bin(next.firstOrNull()?.bin ?: "n/a")))
       } else {
         allDone = true;
