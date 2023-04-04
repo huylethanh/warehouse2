@@ -95,7 +95,7 @@ class HomeScreenViewModel extends ViewModelBase {
     }
 
     final checked = true;
-    // _checkAction(context, name);
+    _checkAction(context, name);
 
     if (checked == null) {
       return;
@@ -163,7 +163,9 @@ class HomeScreenViewModel extends ViewModelBase {
       return _taskView(
         taskName: "Lấy hàng",
         taskCode: cast.code!,
-        onPressed: () {},
+        onPressed: () {
+          goToRemaining(context, _remaining!, picking);
+        },
       );
     }
 
@@ -251,6 +253,14 @@ class HomeScreenViewModel extends ViewModelBase {
     if (viewName == putAway) {
       if (task is PutAwayTask) {
         view = PutAwayScreen(
+          resumeTask: task,
+        );
+      }
+    }
+
+    if (viewName == picking) {
+      if (task is PickUpTask) {
+        view = PickingSessionScreen(
           resumeTask: task,
         );
       }

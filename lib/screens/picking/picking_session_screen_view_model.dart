@@ -1,5 +1,6 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'package:darq/darq.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:warehouse_app/base/view_models/index.dart';
 import 'package:warehouse_app/logics/logics.dart';
@@ -10,6 +11,8 @@ import 'package:warehouse_app/widgets/widgets.dart';
 
 import 'helpers/bin_pick_controller.dart';
 import 'models/A_pick.dart';
+import 'models/bin.dart';
+import 'models/models.dart';
 
 enum TASK { REG_SINGLE_TRANSPORT, REG_TRANSPORTS, GET_PATH, PROCESS }
 
@@ -27,6 +30,7 @@ class PickingSessionScreenViewModel extends ViewModelBase {
   final _skipProduct = SkipProduct();
   final _processPicking = ProcessPicking();
 
+  String? currentCode;
   int count = 0;
   bool gettingCargo = false;
   bool _enoughTransport = false;
@@ -35,8 +39,44 @@ class PickingSessionScreenViewModel extends ViewModelBase {
   String? skuAwaitSerial;
 
   TASK task = TASK.REG_SINGLE_TRANSPORT;
+  Map<TASK, TASK> tasksDone = {
+    TASK.REG_SINGLE_TRANSPORT: TASK.REG_SINGLE_TRANSPORT
+  };
 
-  PickingSessionScreenViewModel(this.orPicking);
+  PickingSessionScreenViewModel();
+
+  init(ORPicking orPicking) {
+    this.orPicking = orPicking;
+  }
+
+  String getStepName() {
+    switch (task) {
+      case TASK.REG_SINGLE_TRANSPORT:
+        return "Quét thiết bị chứa hàng";
+
+      case TASK.GET_PATH:
+        return "Quét vị trí lấy hàng";
+
+      default:
+        return "";
+    }
+  }
+
+  bool showSkip() {
+    return task != TASK.REG_SINGLE_TRANSPORT;
+  }
+
+  void doAction(BuildContext context, String barcode) {
+    switch (task) {
+      case TASK.REG_SINGLE_TRANSPORT:
+        registerTransport(barcode);
+
+        break;
+      default:
+        processInput(context, barcode);
+        return;
+    }
+  }
 
   Future<void> processInput(BuildContext context, String barcode) async {
     barcode = barcode.trim();
@@ -71,7 +111,7 @@ class PickingSessionScreenViewModel extends ViewModelBase {
     orPicking = or;
   }
 
-  resume(PickUpTask task) {
+  Future<void> resume(PickUpTask task) async {
     orPicking = ORPicking(
         id: task.id,
         code: "",
@@ -82,7 +122,14 @@ class PickingSessionScreenViewModel extends ViewModelBase {
         numOfTransport: 0,
         priority: 0);
 
-    _enoughTransport = true;
+    setProcessing(true);
+
+    await getPickingPath();
+
+    setProcessing(false);
+
+    //_enoughTransport = true;
+    //notifyListeners();
   }
 
   bool canPickAllInBin() {
@@ -150,7 +197,9 @@ class PickingSessionScreenViewModel extends ViewModelBase {
     String code = barcode.trim().toUpperCase();
 
     task = TASK.REG_SINGLE_TRANSPORT;
+    tasksDone[TASK.REG_SINGLE_TRANSPORT] = TASK.REG_SINGLE_TRANSPORT;
 
+    setProcessing(true);
     final checkTransport = await _checkTransportAvailable.simpleCheck(code);
     final regTrasport = _registerPickingTransport.register(code);
 
@@ -158,18 +207,17 @@ class PickingSessionScreenViewModel extends ViewModelBase {
       //  _registerTransport.postValue(Resource.Success(SingleAdded(code)))
 
       if (_registerPickingTransport.count() == orPicking.numOfTransport) {
-        setProcessing(true);
-
         task = TASK.REG_TRANSPORTS;
+        tasksDone[TASK.REG_TRANSPORTS] = TASK.REG_TRANSPORTS;
         await _registerPickingTransport.execute(orPicking.id!);
 
         await getPickingPath();
-        setProcessing(false);
       }
     } else {
       DialogService.showErrorBotToast(
           "Thiết bị chứa hàng $code không khả dụng");
     }
+    setProcessing(false);
   }
 
   Future<void> regTransports(bool orChanged) async {
@@ -190,8 +238,6 @@ class PickingSessionScreenViewModel extends ViewModelBase {
   }
 
   Future<void> getPickingPath() async {
-    task = TASK.GET_PATH;
-
     setProcessing(true);
     final data = await _getPath.execute(orPicking.id!);
     if (data != null) {
@@ -200,26 +246,26 @@ class PickingSessionScreenViewModel extends ViewModelBase {
       count = _getPath.outCount;
 
       await start();
+
+      setProcessing(false);
     }
 
+    tasksDone[TASK.GET_PATH] = TASK.GET_PATH;
     setProcessing(false);
   }
 
+  Bin? bin;
   Future<void> start() async {
     task = TASK.GET_PATH;
-
-    setProcessing(true);
 
     if (_getPath.hasNext()) {
       final next = _getPath.next();
       _pickController.createNewPhase(next);
 
-      //final bin = Bin(next.firstOrNull()?.bin ?: "n/a")
+      bin = Bin(next.firstOrDefault(defaultValue: null)?.bin ?? "N/A", null);
     } else {
       allDone = true;
     }
-
-    setProcessing(true);
   }
 
   Future<void> pickAllInBin() async {

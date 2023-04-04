@@ -11,8 +11,6 @@ abstract class _$PickingProductCWProxy {
 
   PickingProduct quantity(int? quantity);
 
-  PickingProduct s(dynamic s);
-
   PickingProduct serial(String? serial);
 
   PickingProduct sku(String? sku);
@@ -30,7 +28,6 @@ abstract class _$PickingProductCWProxy {
   PickingProduct call({
     int? productId,
     int? quantity,
-    dynamic? s,
     String? serial,
     String? sku,
     String? typeLabel,
@@ -49,9 +46,6 @@ class _$PickingProductCWProxyImpl implements _$PickingProductCWProxy {
 
   @override
   PickingProduct quantity(int? quantity) => this(quantity: quantity);
-
-  @override
-  PickingProduct s(dynamic s) => this(s: s);
 
   @override
   PickingProduct serial(String? serial) => this(serial: serial);
@@ -76,7 +70,6 @@ class _$PickingProductCWProxyImpl implements _$PickingProductCWProxy {
   PickingProduct call({
     Object? productId = const $CopyWithPlaceholder(),
     Object? quantity = const $CopyWithPlaceholder(),
-    Object? s = const $CopyWithPlaceholder(),
     Object? serial = const $CopyWithPlaceholder(),
     Object? sku = const $CopyWithPlaceholder(),
     Object? typeLabel = const $CopyWithPlaceholder(),
@@ -91,10 +84,6 @@ class _$PickingProductCWProxyImpl implements _$PickingProductCWProxy {
           ? _value.quantity
           // ignore: cast_nullable_to_non_nullable
           : quantity as int?,
-      s: s == const $CopyWithPlaceholder() || s == null
-          ? _value.s
-          // ignore: cast_nullable_to_non_nullable
-          : s as dynamic,
       serial: serial == const $CopyWithPlaceholder()
           ? _value.serial
           // ignore: cast_nullable_to_non_nullable

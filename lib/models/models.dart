@@ -38,4 +38,3 @@ export 'pick_product.dart';
 export 'picking_product.dart';
 export 'finish_picking_payload.dart';
 export 'picking_location.dart';
-export 'last_pick.dart';

@@ -38,7 +38,7 @@ class BarcodeScanner extends StatelessWidget {
         ),
         Expanded(
           child: TextFormField(
-            key: UniqueKey(),
+            key: Key(scannedValue),
             //   controller: viewModel.controller,
             initialValue: scannedValue,
             decoration: InputDecoration(
@@ -53,6 +53,7 @@ class BarcodeScanner extends StatelessWidget {
             ),
             onChanged: (value) {
               onBarcodeValueChanges(value);
+              scannedValue = value;
             },
           ),
         ),

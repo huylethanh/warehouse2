@@ -16,14 +16,14 @@ class PickingProduct {
   final int? unitId;
   final String? serial;
 
-  PickingProduct(
-      {this.productId,
-      this.sku,
-      this.quantity,
-      this.typeLabel,
-      this.unitId,
-      this.serial,
-      s});
+  PickingProduct({
+    this.productId,
+    this.sku,
+    this.quantity,
+    this.typeLabel,
+    this.unitId,
+    this.serial,
+  });
 
   factory PickingProduct.fromJson(Map<String, dynamic> json) =>
       _$PickingProductFromJson(json);
