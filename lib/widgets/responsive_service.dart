@@ -142,23 +142,36 @@ class DialogService {
     return confirm ?? false;
   }
 
-  static showSuccessBotToast(String text) {
-    showBotToast(text, Colors.green);
+  static showSuccessBotToast(String text, {Duration? duration}) {
+    showBotToast(
+      text,
+      Colors.green,
+      duration: duration,
+    );
   }
 
-  static showErrorBotToast(String text) {
-    showBotToast(text, Colors.red);
+  static showErrorBotToast(String text, {Duration? duration}) {
+    showBotToast(
+      text,
+      Colors.red,
+      duration: duration,
+    );
   }
 
-  static showWarningBotToast(String text) {
-    showBotToast(text, Colors.orange);
+  static showWarningBotToast(String text, {Duration? duration}) {
+    showBotToast(
+      text,
+      Colors.orange,
+      duration: duration,
+    );
   }
 
-  static showBotToast(String text, Color color) {
+  static showBotToast(String text, Color color, {Duration? duration}) {
     BotToast.showText(
       text: text,
       contentColor: color,
       align: Alignment.topCenter,
+      duration: duration,
     );
   }
 }

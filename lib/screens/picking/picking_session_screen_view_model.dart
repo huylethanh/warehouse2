@@ -579,6 +579,10 @@ class PickingSessionScreenViewModel extends ViewModelBase {
       // keep processing current SKU (same order), give info about last picked product
       //   _process.postValue(Resource.Success(last))
 
+      final transport = last!.transport!;
+      DialogService.showSuccessBotToast(
+          "Vị trí sản phẩm vừa lấy: ${transport.index} - ${transport.code}",
+          duration: const Duration(seconds: 1));
       setProcessing(false);
     }
   }
