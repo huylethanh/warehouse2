@@ -58,7 +58,7 @@ class BinPickController {
   }
 
   bool checkBin(String code) {
-    if (code == processing?.bin) {
+    if (code.toUpperCase() == processing?.bin.toUpperCase()) {
       processingBin = processing?.bin;
       return processingBin != null;
     }

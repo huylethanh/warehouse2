@@ -10,11 +10,9 @@ import 'package:warehouse_app/utils/colection.dart';
 import 'package:warehouse_app/widgets/widgets.dart';
 
 import 'helpers/bin_pick_controller.dart';
-import 'models/A_pick.dart';
-import 'models/bin.dart';
 import 'models/models.dart';
 
-enum TASK { REG_SINGLE_TRANSPORT, REG_TRANSPORTS, GET_PATH, PROCESS }
+enum TASK { REG_SINGLE_TRANSPORT, REG_TRANSPORTS, GET_PATH, PRODUCT, PROCESS }
 
 class PickingSessionScreenViewModel extends ViewModelBase {
   late ORPicking orPicking;
@@ -39,6 +37,7 @@ class PickingSessionScreenViewModel extends ViewModelBase {
   String? skuAwaitSerial;
 
   TASK task = TASK.REG_SINGLE_TRANSPORT;
+
   Map<TASK, TASK> tasksDone = {
     TASK.REG_SINGLE_TRANSPORT: TASK.REG_SINGLE_TRANSPORT
   };
@@ -56,6 +55,9 @@ class PickingSessionScreenViewModel extends ViewModelBase {
 
       case TASK.GET_PATH:
         return "Quét vị trí lấy hàng";
+
+      case TASK.PRODUCT:
+        return "Vị trí lấy hàng hiện tại";
 
       default:
         return "";
@@ -80,17 +82,14 @@ class PickingSessionScreenViewModel extends ViewModelBase {
 
   Future<void> processInput(BuildContext context, String barcode) async {
     barcode = barcode.trim();
-    if (_enoughTransport) {
-      if (gettingCargo && !barcode.contains("|") && isSku(barcode)) {
-        _inputQuantityDialog(context, barcode.trim());
-      } else {
-        await scan(context, barcode);
-      }
 
-      return;
+    if (gettingCargo && !barcode.contains("|") && isSku(barcode)) {
+      _inputQuantityDialog(context, barcode.trim());
+    } else {
+      await scan(context, barcode);
     }
 
-    await registerTransport(barcode);
+    return;
   }
 
   void cargoSelectedChanges(bool value) {
@@ -272,9 +271,6 @@ class PickingSessionScreenViewModel extends ViewModelBase {
     setProcessing(true);
 
     task = TASK.PROCESS;
-
-    //return Future.value();
-
     if (_pickController.processing == null) {
       return;
     }
@@ -310,7 +306,7 @@ class PickingSessionScreenViewModel extends ViewModelBase {
         unitId: 0,
         serial: null);
 
-    final last = LastPicked(
+    last = LastPicked(
         total: count,
         need: 0,
         bin: processing.bin,
@@ -390,12 +386,13 @@ class PickingSessionScreenViewModel extends ViewModelBase {
     }
   }
 
+  APick? pickedProduct;
+
   Future<void> scan(BuildContext context, String barcode) async {
     if (allDone) {
       return;
     }
 
-    // _process.value = Resource.Loading()
     task = TASK.PROCESS;
 
     final normalize = barcode.trim();
@@ -411,7 +408,7 @@ class PickingSessionScreenViewModel extends ViewModelBase {
     final quantity = int.tryParse(quantityString);
 
     if (quantity == null) {
-      //_process.postValue(Resource.Error(getString(R.string.err_invalid_data)))
+      DialogService.showErrorBotToast("Dữ liệu không đúng");
       return;
     }
 
@@ -419,12 +416,14 @@ class PickingSessionScreenViewModel extends ViewModelBase {
       if (_pickController.checkBin(code)) {
         if (_pickController.processing != null) {
           //_process.postValue(Resource.Success(Next(it)))
+
+          pickedProduct = _pickController.processing!;
         }
       } else {
         DialogService.showErrorBotToast("Vị trí lưu kho không đúng");
-        return;
-        //_process.postValue(Resource.Error(getString(R.string.err_invalid_bin)))
       }
+
+      notifyListeners();
       return;
     }
 
@@ -504,6 +503,8 @@ class PickingSessionScreenViewModel extends ViewModelBase {
     }
   }
 
+  LastPicked? last;
+
   Future<void> process(APick pick, int quantity, String? serial) async {
     final location = PickingLocation(
         pickListId: orPicking.id!,
@@ -519,6 +520,7 @@ class PickingSessionScreenViewModel extends ViewModelBase {
         unitId: 0,
         serial: serial);
 
+    setProcessing(true);
     final PickProcessResponse? response =
         await _processPicking.execute(location, product);
     if (response == null) {
@@ -536,7 +538,7 @@ class PickingSessionScreenViewModel extends ViewModelBase {
 
     count += quantity;
 
-    final last = LastPicked(
+    last = LastPicked(
         total: count,
         need: _pickController.remaining(),
         bin: pick.bin,
@@ -576,6 +578,8 @@ class PickingSessionScreenViewModel extends ViewModelBase {
     } else {
       // keep processing current SKU (same order), give info about last picked product
       //   _process.postValue(Resource.Success(last))
+
+      setProcessing(false);
     }
   }
 

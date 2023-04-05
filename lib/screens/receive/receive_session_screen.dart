@@ -348,25 +348,11 @@ class ReceiveSessionScreen extends StatelessWidget {
               "SKU:",
             ),
             value: Text(
-              isNullOrEmpty("lslslslsl") ? "NA" : item.name!,
+              isNullOrEmpty(item.name) ? "NA" : item.name!,
             ),
           ),
         ],
       ),
     );
   }
-
-  // Future<void> scanBarcodeByCamera(
-  //     BuildContext context, ReceiveSessionScreenViewModel viewModel) async {
-  //   String barcodeScanRes;
-  //   // Platform messages may fail, so we use a try/catch PlatformException.
-  //   try {
-  //     barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
-  //         '#ff6666', 'Cancel', true, ScanMode.BARCODE);
-  //     // ignore: use_build_context_synchronously
-  //     viewModel.processInput(context, barcodeScanRes);
-  //   } on PlatformException {
-  //     barcodeScanRes = 'Failed to get platform version.';
-  //   }
-  // }
 }

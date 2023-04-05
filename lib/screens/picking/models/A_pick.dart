@@ -13,7 +13,9 @@ class APick {
     required this.canPickAll,
     required this.transport,
     required this.product,
-  });
+  }) {
+    init();
+  }
 
   int count = 0;
 

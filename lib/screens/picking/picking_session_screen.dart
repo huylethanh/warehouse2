@@ -117,7 +117,11 @@ class PickingSessionScreen extends StatelessWidget {
                         ),
                       ],
                     ),
-                    _bin(context, viewModel)
+                    _process(context, viewModel),
+                    const Expanded(
+                      child: SizedBox(),
+                    ),
+                    _recentlyPicking(context, viewModel)
                   ],
                 ),
               ),
@@ -129,12 +133,13 @@ class PickingSessionScreen extends StatelessWidget {
     );
   }
 
-  //TODO: this name is temporary
   Widget _pickingQuantity(
       BuildContext context, PickingSessionScreenViewModel viewModel) {
     if (!viewModel.tasksDone.containsKey(TASK.GET_PATH)) {
       return const SizedBox();
     }
+
+    final last = viewModel.last;
 
     return RoundedContainer(
       margin: const EdgeInsets.symmetric(vertical: 8),
@@ -149,9 +154,9 @@ class PickingSessionScreen extends StatelessWidget {
           text: TextSpan(
             style: const TextStyle(fontSize: 24),
             children: [
-              const TextSpan(
-                  text: "0 ",
-                  style: TextStyle(
+              TextSpan(
+                  text: "${last?.total ?? viewModel.count}",
+                  style: const TextStyle(
                     color: Colors.deepOrange,
                   )),
               TextSpan(text: "/ ${viewModel.orPicking.productCount ?? 'N/A'}"),
@@ -162,9 +167,14 @@ class PickingSessionScreen extends StatelessWidget {
     );
   }
 
-  Widget _bin(BuildContext context, PickingSessionScreenViewModel viewModel) {
+  Widget _process(
+      BuildContext context, PickingSessionScreenViewModel viewModel) {
     if (!viewModel.tasksDone.containsKey(TASK.GET_PATH)) {
       return const SizedBox();
+    }
+
+    if (viewModel.pickedProduct != null) {
+      return _product(context, viewModel);
     }
 
     return RoundedContainer(
@@ -190,6 +200,185 @@ class PickingSessionScreen extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+
+  Widget _product(
+      BuildContext context, PickingSessionScreenViewModel viewModel) {
+    final product = viewModel.pickedProduct!.product;
+    final lastPick = viewModel.last;
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: Column(
+        children: [
+          RoundedContainer(
+            backgroundColor: AppColor.color3D3D3D,
+            child: FieldValue(
+              fieldName: Text("Vị trí lấy hàng hiện tại:"),
+              expanedFieldName: true,
+              value: Text(
+                viewModel.pickedProduct!.bin,
+                style: const TextStyle(color: Colors.green, fontSize: 20),
+              ),
+            ),
+          ),
+          const SizedBox(
+            height: 16,
+          ),
+          RoundedContainer(
+            backgroundColor: AppColor.color3D3D3D,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                RoundedContainer(
+                  backgroundColor: AppColor.color636366,
+                  height: 70,
+                  width: 70,
+                  child: Image.network(
+                    product.image ?? "",
+                    errorBuilder: (context, error, stackTrace) {
+                      return const Icon(
+                        FontAwesomeIcons.image,
+                        size: 40,
+                      );
+                    },
+                  ),
+                ),
+                const SizedBox(
+                  width: 16,
+                ),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Text(
+                        product.name ?? "N/A",
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      const SizedBox(
+                        height: 8,
+                      ),
+                      Text(
+                        product.barcode ?? "N/A",
+                        style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.orange,
+                            fontSize: 20),
+                      ),
+                      const Divider(),
+                      FieldValue(
+                        fieldName: Text("Số lượng:"),
+                        value: Text(
+                          "${lastPick?.need ?? product.quantity}",
+                          style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.orange,
+                              fontSize: 20),
+                        ),
+                      )
+                    ],
+                  ),
+                )
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _recentlyPicking(
+      BuildContext context, PickingSessionScreenViewModel viewModel) {
+    final last = viewModel.last;
+
+    if (last == null) {
+      return SizedBox();
+    }
+
+    final product = last.product;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text("Sản phẩm vừa lấy"),
+        const SizedBox(
+          height: 8,
+        ),
+        RoundedContainer(
+          backgroundColor: AppColor.color3D3D3D,
+          child: Row(
+            children: [
+              Text(
+                '${last.transport?.index ?? "N/A"}',
+                style: const TextStyle(
+                    color: Colors.orange,
+                    fontSize: 32,
+                    fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(
+                width: 16,
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    '${last.transport?.code ?? "N/A"} ',
+                    style: const TextStyle(
+                      color: Colors.blue,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18,
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 4,
+                  ),
+                  Text(
+                    "${last.bin}",
+                    style: const TextStyle(
+                      color: Colors.green,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18,
+                    ),
+                  ),
+                ],
+              ),
+              const Expanded(
+                child: SizedBox(),
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  FieldValue(
+                    fieldName: const Text(
+                      "Barcode:",
+                    ),
+                    value: Text(
+                      '${product!.sku!} ',
+                      style: const TextStyle(
+                        color: Colors.blue,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 4,
+                  ),
+                  Text(
+                    "${product.typeLabel!}: ${product.serial ?? "N/A"}",
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18,
+                    ),
+                  ),
+                ],
+              )
+            ],
+          ),
+        )
+      ],
     );
   }
 }
