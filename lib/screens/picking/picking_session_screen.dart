@@ -31,6 +31,7 @@ class PickingSessionScreen extends StatelessWidget {
       builder:
           (BuildContext context, PickingSessionScreenViewModel viewModel, _) {
         return Scaffold(
+          resizeToAvoidBottomInset: false,
           appBar: AppBar(
             title: const Text("Nhận Hàng"),
             centerTitle: true,

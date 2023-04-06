@@ -171,7 +171,7 @@ class DialogService {
       text: text,
       contentColor: color,
       align: Alignment.topCenter,
-      duration: duration ?? const Duration(seconds: 1),
+      duration: duration ?? const Duration(milliseconds: 2500),
     );
   }
 }
