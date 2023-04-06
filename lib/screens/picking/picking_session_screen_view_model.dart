@@ -31,7 +31,6 @@ class PickingSessionScreenViewModel extends ViewModelBase {
   String? currentCode;
   int count = 0;
   bool gettingCargo = false;
-  bool _enoughTransport = false;
   bool allDone = false;
   bool requestingChangePath = false;
   String? skuAwaitSerial;
@@ -65,7 +64,7 @@ class PickingSessionScreenViewModel extends ViewModelBase {
   }
 
   bool showSkip() {
-    return task != TASK.REG_SINGLE_TRANSPORT;
+    return pickedProduct != null;
   }
 
   void doAction(BuildContext context, String barcode) {
@@ -149,11 +148,11 @@ class PickingSessionScreenViewModel extends ViewModelBase {
     setProcessing(false);
   }
 
-  Future<void> finish(BuildContext context) async {
+  Future<void> skip(BuildContext context) async {
     const title = "Bỏ qua";
     var message = "";
 
-    if (_enoughTransport) {
+    if (tasksDone.containsKey(TASK.REG_SINGLE_TRANSPORT)) {
       message = "Bạn có chắc muốn bỏ qua sản phẩm ${currentSku()}?";
     } else {
       message = "Bạn có chắc muốn hủy phiên pick-up hiện tại?";
@@ -161,16 +160,16 @@ class PickingSessionScreenViewModel extends ViewModelBase {
 
     final confirmed = await DialogService.confirmDialog(context,
         title: title, message: message);
-    if (!confirmed) {
-      if (_enoughTransport) {
-        skip();
+    if (confirmed) {
+      if (tasksDone.containsKey(TASK.REG_SINGLE_TRANSPORT)) {
+        _skip(context);
       } else {
         // cancel();
       }
     }
   }
 
-  Future<void> _finish() async {
+  Future<void> finish(BuildContext context) async {
     setProcessing(true);
     task = TASK.PROCESS;
 
@@ -178,6 +177,7 @@ class PickingSessionScreenViewModel extends ViewModelBase {
     // might need to go back the list view
 
     setProcessing(false);
+    Navigator.pop(context);
   }
 
   Future<void> _inputQuantityDialog(
@@ -267,7 +267,7 @@ class PickingSessionScreenViewModel extends ViewModelBase {
     }
   }
 
-  Future<void> pickAllInBin() async {
+  Future<void> pickAllInBin(BuildContext context) async {
     setProcessing(true);
 
     task = TASK.PROCESS;
@@ -291,7 +291,7 @@ class PickingSessionScreenViewModel extends ViewModelBase {
     }
 
     if (response.isAlternated()) {
-      alternate(response, null);
+      alternate(context, response, null);
       return;
     }
 
@@ -325,7 +325,7 @@ class PickingSessionScreenViewModel extends ViewModelBase {
     }
   }
 
-  Future<void> skip() async {
+  Future<void> _skip(BuildContext context) async {
     task = TASK.PROCESS;
 
     final removing = _pickController.processing;
@@ -349,11 +349,14 @@ class PickingSessionScreenViewModel extends ViewModelBase {
         unitId: removing.product.unitId,
         serial: null);
 
+    setProcessing(true);
+
     final newPath = await _skipProduct.execute(
         orPicking.id!, _getPath.sessionId(), location, product);
 
     if (newPath == null) {
-      DialogService.showErrorBotToast("Đã có lỗi");
+      // DialogService.showErrorBotToast("Đã có lỗi");
+      setProcessing(false);
       return;
     }
 
@@ -382,6 +385,7 @@ class PickingSessionScreenViewModel extends ViewModelBase {
     } else {
       //TOTO: check here
       allDone = true;
+      setProcessing(false);
       // _process.postValue(Resource.Success(AllDone(last = null)))
     }
   }
@@ -459,7 +463,7 @@ class PickingSessionScreenViewModel extends ViewModelBase {
 
       if (_pickController.containsStorageCode(code)) {
         if (_pickController.processing != null) {
-          process(_pickController.processing!, quantity, code);
+          process(context, _pickController.processing!, quantity, code);
         }
 
         return;
@@ -475,7 +479,7 @@ class PickingSessionScreenViewModel extends ViewModelBase {
         } else {
           if (_pickController.emptyStorageCode()) {
             if (_pickController.processing != null) {
-              process(_pickController.processing!, quantity,
+              process(context, _pickController.processing!, quantity,
                   maybeSerial ? code : null);
             }
           } else {
@@ -494,7 +498,7 @@ class PickingSessionScreenViewModel extends ViewModelBase {
           (_pickController.emptyStorageCode() ||
               _pickController.containsStorageCode(code))) {
         if (_pickController.processing != null) {
-          process(_pickController.processing!, 1, code);
+          process(context, _pickController.processing!, 1, code);
         }
       } else {
         // _process.postValue(Resource.Error(getString(R.string.err_wrong_serial)))
@@ -505,7 +509,8 @@ class PickingSessionScreenViewModel extends ViewModelBase {
 
   LastPicked? last;
 
-  Future<void> process(APick pick, int quantity, String? serial) async {
+  Future<void> process(
+      BuildContext context, APick pick, int quantity, String? serial) async {
     final location = PickingLocation(
         pickListId: orPicking.id!,
         pickSessionId: _getPath.sessionId(),
@@ -546,7 +551,7 @@ class PickingSessionScreenViewModel extends ViewModelBase {
         product: product);
 
     if (response.isAlternated()) {
-      alternate(response, last);
+      alternate(context, response, last);
       return;
     }
 
@@ -587,14 +592,17 @@ class PickingSessionScreenViewModel extends ViewModelBase {
     }
   }
 
-  Future<void> alternate(PickProcessResponse response, LastPicked? last) async {
+  Future<void> alternate(BuildContext context, PickProcessResponse response,
+      LastPicked? last) async {
     if (response.isFinished) {
-      if (last != null) {
-        //_process.postValue(Resource.Success(last))
-        //  delay(2100) // sync with last put-in location pop up
-      }
+      await DialogService.confirmDialog(context,
+          title: "Thay đổi",
+          message: response.message,
+          oneOption: true,
+          noLabel: "Đóng");
 
-      //  _process.postValue(Resource.Success(Cancelled(response.message ?: "n/a")))
+      await finish(context);
+
       return;
     }
 

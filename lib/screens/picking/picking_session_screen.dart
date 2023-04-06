@@ -38,7 +38,7 @@ class PickingSessionScreen extends StatelessWidget {
               if (viewModel.showSkip())
                 TextButton(
                   onPressed: () {
-                    //
+                    viewModel.skip(context);
                   },
                   child: const Text(
                     "Bỏ qua",
