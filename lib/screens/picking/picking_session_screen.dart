@@ -88,36 +88,6 @@ class PickingSessionScreen extends StatelessWidget {
                               ),
                             ),
                           ),
-                          const SizedBox(
-                            height: 8,
-                          ),
-                          FieldValue(
-                            fieldName: RichText(
-                              text: TextSpan(
-                                  style: const TextStyle(
-                                      fontWeight: FontWeight.bold),
-                                  children: [
-                                    const TextSpan(
-                                        text:
-                                            "Số lượng thiết bị chứa hàng cần đăng kí:"),
-                                    TextSpan(
-                                        style: const TextStyle(
-                                          color: Colors.blue,
-                                          fontSize: 24,
-                                        ),
-                                        text:
-                                            " ${viewModel.registerPickingTransport.registeredTransport.length} /")
-                                  ]),
-                            ),
-                            value: Text(
-                              "${viewModel.orPicking.numOfTransport}",
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.orange,
-                                fontSize: 24,
-                              ),
-                            ),
-                          ),
                         ],
                       ),
                     ),
@@ -176,33 +146,70 @@ class PickingSessionScreen extends StatelessWidget {
       return const SizedBox();
     }
 
+    if (viewModel.task != TASK.REG_SINGLE_TRANSPORT) {
+      return const SizedBox();
+    }
+
     final registeredTransport =
         viewModel.registerPickingTransport.registeredTransport;
 
-    return ListView.builder(
-      shrinkWrap: true,
-      itemCount: registeredTransport.length,
-      itemBuilder: (context, index) {
-        return RoundedContainer(
-          margin: const EdgeInsets.only(top: 8),
-          backgroundColor: AppColor.color3D3D3D,
-          child: Row(
-            children: [
-              Expanded(
-                child: FieldValue(
-                    fieldName: Text("${registeredTransport.length - index}. "),
-                    value: Text(registeredTransport[index])),
-              ),
-              InkWell(
-                onTap: () {
-                  viewModel.removeTransport(registeredTransport[index]);
-                },
-                child: const Icon(FontAwesomeIcons.xmark),
-              )
-            ],
+    return Column(
+      children: [
+        FieldValue(
+          fieldName: RichText(
+            text: TextSpan(
+                style: const TextStyle(fontWeight: FontWeight.bold),
+                children: [
+                  const TextSpan(
+                      text: "Số lượng thiết bị chứa hàng cần đăng kí:"),
+                  TextSpan(
+                      style: const TextStyle(
+                        color: Colors.blue,
+                        fontSize: 24,
+                      ),
+                      text:
+                          " ${viewModel.registerPickingTransport.registeredTransport.length} /")
+                ]),
           ),
-        );
-      },
+          value: Text(
+            "${viewModel.orPicking.numOfTransport}",
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+              color: Colors.orange,
+              fontSize: 24,
+            ),
+          ),
+        ),
+        // const SizedBox(
+        //   height: 4,
+        // ),
+        ListView.builder(
+          shrinkWrap: true,
+          itemCount: registeredTransport.length,
+          itemBuilder: (context, index) {
+            return RoundedContainer(
+              margin: const EdgeInsets.only(top: 8),
+              backgroundColor: AppColor.color3D3D3D,
+              child: Row(
+                children: [
+                  Expanded(
+                    child: FieldValue(
+                        fieldName:
+                            Text("${registeredTransport.length - index}. "),
+                        value: Text(registeredTransport[index])),
+                  ),
+                  InkWell(
+                    onTap: () {
+                      viewModel.removeTransport(registeredTransport[index]);
+                    },
+                    child: const Icon(FontAwesomeIcons.xmark),
+                  )
+                ],
+              ),
+            );
+          },
+        ),
+      ],
     );
   }
 
