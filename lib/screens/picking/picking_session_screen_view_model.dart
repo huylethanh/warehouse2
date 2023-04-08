@@ -22,7 +22,7 @@ class PickingSessionScreenViewModel extends ViewModelBase {
   final _finishPickingUp = FinishPickingUp();
   final _getPath = GetPath();
   final _checkTransportAvailable = CheckTransportAvailable();
-  final _registerPickingTransport = RegisterPickingTransport();
+  final registerPickingTransport = RegisterPickingTransport();
   final _getSingleOr = GetSingleOr();
   final _pickAllInBin = PickAllInBin();
   final _skipProduct = SkipProduct();
@@ -30,6 +30,7 @@ class PickingSessionScreenViewModel extends ViewModelBase {
 
   String? currentCode;
   int count = 0;
+
   bool gettingCargo = false;
   bool allDone = false;
   bool requestingChangePath = false;
@@ -200,15 +201,15 @@ class PickingSessionScreenViewModel extends ViewModelBase {
 
     setProcessing(true);
     final checkTransport = await _checkTransportAvailable.simpleCheck(code);
-    final regTrasport = _registerPickingTransport.register(code);
+    final regTrasport = registerPickingTransport.register(code);
 
     if (checkTransport && regTrasport) {
       //  _registerTransport.postValue(Resource.Success(SingleAdded(code)))
 
-      if (_registerPickingTransport.count() == orPicking.numOfTransport) {
+      if (registerPickingTransport.count() == orPicking.numOfTransport) {
         task = TASK.REG_TRANSPORTS;
         tasksDone[TASK.REG_TRANSPORTS] = TASK.REG_TRANSPORTS;
-        await _registerPickingTransport.execute(orPicking.id!);
+        await registerPickingTransport.execute(orPicking.id!);
 
         await getPickingPath();
       }
@@ -230,7 +231,22 @@ class PickingSessionScreenViewModel extends ViewModelBase {
         orPicking = data;
       }
     } else {
-      _registerPickingTransport.execute(orPicking.id!);
+      registerPickingTransport.execute(orPicking.id!);
+    }
+
+    setProcessing(false);
+  }
+
+  void removeTransport(String code) {
+    setProcessing(true);
+
+    final removed = registerPickingTransport.removeByName(code);
+    if (removed) {
+      if (registerPickingTransport.count() == orPicking.numOfTransport) {
+        task = TASK.REG_TRANSPORTS;
+        registerPickingTransport.execute(orPicking.id!);
+        //_enoughTransport.postValue(true)
+      }
     }
 
     setProcessing(false);

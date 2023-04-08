@@ -4,6 +4,7 @@ class FieldValue extends StatelessWidget {
   final Widget fieldName;
   final Widget value;
   final bool expanedFieldName;
+
   const FieldValue(
       {super.key,
       required this.fieldName,

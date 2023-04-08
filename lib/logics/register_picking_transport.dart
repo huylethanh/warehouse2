@@ -35,6 +35,18 @@ class RegisterPickingTransport {
     registeredTransport.removeAt(pos);
   }
 
+  bool removeByName(String name) {
+    final foundIndex =
+        registeredTransport.indexWhere((element) => element == name);
+
+    if (foundIndex < 0) {
+      return false;
+    }
+
+    registeredTransport.removeAt(foundIndex);
+    return true;
+  }
+
   int count() {
     return registeredTransport.length;
   }
