@@ -31,9 +31,11 @@ class BinPickController {
 
   APick? next() {
     processing = null;
+
     if (path.isNotEmpty) {
       processing = path.removeAt(0);
     }
+
     return processing;
   }
 

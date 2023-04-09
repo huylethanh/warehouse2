@@ -253,7 +253,7 @@ class PickingSessionScreen extends StatelessWidget {
       return const SizedBox();
     }
 
-    if (viewModel.pickedProduct != null) {
+    if (viewModel.pickController.processing != null) {
       return _product(context, viewModel);
     }
 
@@ -285,10 +285,16 @@ class PickingSessionScreen extends StatelessWidget {
 
   Widget _product(
       BuildContext context, PickingSessionScreenViewModel viewModel) {
-    final product = viewModel.pickedProduct!.product;
-    final lastPick = viewModel.last;
+    if (viewModel.pickController.processing == null) {
+      return SizedBox();
+    }
+
+    final product = viewModel.pickController.processing!.product;
+    final pick = viewModel.pickController.processing;
+    //   final lastPick = viewModel.last;
 
     return Padding(
+      key: UniqueKey(),
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Column(
         children: [
@@ -298,7 +304,7 @@ class PickingSessionScreen extends StatelessWidget {
               fieldName: Text("Vị trí lấy hàng hiện tại:"),
               expanedFieldName: true,
               value: Text(
-                viewModel.pickedProduct!.bin,
+                pick!.bin,
                 style: const TextStyle(color: Colors.green, fontSize: 20),
               ),
             ),
@@ -351,7 +357,7 @@ class PickingSessionScreen extends StatelessWidget {
                       FieldValue(
                         fieldName: Text("Số lượng:"),
                         value: Text(
-                          "${lastPick?.need ?? product.quantity}",
+                          "${pick.count}",
                           style: const TextStyle(
                               fontWeight: FontWeight.bold,
                               color: Colors.orange,
