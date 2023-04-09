@@ -604,8 +604,9 @@ class PickingSessionScreenViewModel extends ViewModelBase {
       DialogService.showSuccessBotToast(
           "Vị trí sản phẩm vừa lấy: ${transport.index} - ${transport.code}",
           duration: const Duration(seconds: 1));
-      setProcessing(false);
     }
+
+    setProcessing(false);
   }
 
   Future<void> alternate(BuildContext context, PickProcessResponse response,
