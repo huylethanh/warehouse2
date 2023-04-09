@@ -94,7 +94,8 @@ class GetPath {
 
     final List<APick> result = [];
 
-    final picks = bin.pickList!.orderBy((element) => element.locationIndex);
+    final picks =
+        bin.pickList!.orderBy((element) => element.locationIndex!).toList();
 
     for (final pick in picks) {
       result.add(APick(
