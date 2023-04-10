@@ -91,32 +91,34 @@ abstract class AppClient extends ChopperService {
   Future<Response<ORPicking>> orPick(@Path("id") int pickListId);
 
   @Put(path: "/PickLists/{id}/register-transports")
-  Future<Response<PickingPath>> registerTransport(@Path("id") int pickListId,
-      @Body() Map<String, dynamic> request); // body: RegTransportRequest
+  Future<Response<PickingPath>> registerTransport(
+      @Path("id") int pickListId, @Body() Map<String, dynamic> request);
 
   @Get(path: "/PickLists/{id}/picking-actions")
   Future<Response<PickingPath>> getPickUpPath(@Path("id") int pickListId);
 
   @Put(path: "/PickLists/{id}/skip-item")
-  Future<Response<PickingPath>> skipPick(@Path("id") int pickListId,
-      @Body() Map<String, dynamic> request); // @Body body: SkipItemRequest
+  Future<Response<PickingPath>> skipPick(
+      @Path("id") int pickListId, @Body() Map<String, dynamic> request);
 
   @Post(path: "/PickLists/pick-item")
   Future<Response<PickProcessResponse>> processPicking(
-      @Body() Map<String, dynamic> request); //@Body body: PickProcessPayload);
+      @Body() Map<String, dynamic> request);
 
   @Post(path: "/PickLists/pick-bin")
   Future<Response<PickProcessResponse>> pickAllInBin(
-      @Body() Map<String, dynamic> request); //@Body body: PickProcessPayload);
+      @Body() Map<String, dynamic> request);
 
   @Post(path: "/PickLists/repick")
-  Future<Response<PickingPath>> repick(
-      @Body() Map<String, dynamic> request); //@Body body: RepickRequest);
+  Future<Response<PickingPath>> repick(@Body() Map<String, dynamic> request);
 
   @Put(path: "/PickingSessions/{id}/finish")
   Future<Response> finishPickingUp(
-      @Path("id")
-          int sessionId,
-      @Body()
-          Map<String, dynamic> request); // @Body body: FinishPickingPayload);
+      @Path("id") int sessionId, @Body() Map<String, dynamic> request);
+
+  //=============================
+
+  @Put(path: "/PickingSessions/{id}/finish-repick")
+  Future<Response> finishRepickingUp(
+      @Path("id") int sessionId, @Body() Map<String, dynamic> request);
 }

@@ -1,4 +1,3 @@
-import 'package:chopper/chopper.dart';
 import 'package:warehouse_app/models/models.dart';
 import 'package:warehouse_app/services/service_base.dart';
 

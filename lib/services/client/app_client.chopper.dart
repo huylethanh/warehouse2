@@ -396,4 +396,20 @@ class _$AppClient extends AppClient {
     );
     return client.send<dynamic, dynamic>($request);
   }
+
+  @override
+  Future<Response<dynamic>> finishRepickingUp(
+    int sessionId,
+    Map<String, dynamic> request,
+  ) {
+    final Uri $url = Uri.parse('/PickingSessions/${sessionId}/finish-repick');
+    final $body = request;
+    final Request $request = Request(
+      'PUT',
+      $url,
+      client.baseUrl,
+      body: $body,
+    );
+    return client.send<dynamic, dynamic>($request);
+  }
 }

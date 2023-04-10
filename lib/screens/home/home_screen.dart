@@ -79,7 +79,7 @@ class HomeScreen extends StatelessWidget {
                 child: viewModel.showTaskView(context),
               ),
               SliverGrid.count(
-                crossAxisCount: 2,
+                crossAxisCount: 3,
                 crossAxisSpacing: 10,
                 children: viewModel.views.map((e) {
                   return SplashButtonWidget(
@@ -99,7 +99,7 @@ class HomeScreen extends StatelessWidget {
                           child: Center(
                             child: Icon(
                               e["icon"],
-                              size: 70,
+                              size: 35,
                             ),
                           ),
                         ),
@@ -107,7 +107,7 @@ class HomeScreen extends StatelessWidget {
                           viewModel.getName(
                             e["name"],
                           ),
-                          style: TextStyle(fontSize: 23),
+                          style: TextStyle(fontSize: 15),
                         ),
                       ],
                     ),

@@ -3,12 +3,14 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:warehouse_app/base/view_models/index.dart';
 import 'package:warehouse_app/models/models.dart';
 import 'package:warehouse_app/screens/picking/picking.dart';
+import 'package:warehouse_app/screens/repick/repick_screen_view_model.dart';
 import 'package:warehouse_app/services/task_status_service.dart';
 import 'package:warehouse_app/utils/utils.dart';
 import 'package:warehouse_app/widgets/widgets.dart';
 
 import '../put_away/put_away_screen.dart';
 import '../receive/receive.dart';
+import '../repick/repick.dart';
 
 class HomeScreenViewModel extends ViewModelBase {
   final _service = TaskStatusService();
@@ -16,7 +18,8 @@ class HomeScreenViewModel extends ViewModelBase {
 
   static const String receive = "receive"; // 1
   static const String putAway = "putAway"; //2
-  static const String picking = "pickUp"; //3
+  static const String picking = "picking"; //3
+  static const String repicking = "repicking"; //3
   static const String transfer = "transfer"; //4
   static const String audit = "audit";
   static const String handOver = "handOver";
@@ -52,6 +55,13 @@ class HomeScreenViewModel extends ViewModelBase {
         "name": picking,
         "icon": FontAwesomeIcons.truckFast,
         "color": Colors.indigoAccent
+      },
+    );
+    views.add(
+      {
+        "name": repicking,
+        "icon": FontAwesomeIcons.truckFast,
+        "color": Colors.grey
       },
     );
     views.add(
@@ -92,6 +102,10 @@ class HomeScreenViewModel extends ViewModelBase {
       case picking:
         page = const PickingListScreen();
         break;
+
+      case repicking:
+        page = const RepickScreen();
+        break;
     }
 
     final checked = true;
@@ -126,6 +140,9 @@ class HomeScreenViewModel extends ViewModelBase {
 
       case picking:
         return "Lấy Hàng";
+
+      case repicking:
+        return "Lấy Lại Hàng";
 
       case transfer:
         return "Luân Chuyển";
