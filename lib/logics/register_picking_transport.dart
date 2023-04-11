@@ -27,6 +27,7 @@ class RegisterPickingTransport {
     if (registeredTransport.contains(code)) {
       return false;
     }
+
     registeredTransport.insert(0, code);
     return true;
   }

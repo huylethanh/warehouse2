@@ -12,7 +12,7 @@ import 'package:warehouse_app/widgets/widgets.dart';
 import 'helpers/bin_pick_controller.dart';
 import 'models/models.dart';
 
-enum TASK { REG_SINGLE_TRANSPORT, REG_TRANSPORTS, GET_PATH, PRODUCT, PROCESS }
+enum TASK { begin, registeredTransport, registerBin, finish }
 
 class PickingSessionScreenViewModel extends ViewModelBase {
   late ORPicking orPicking;
@@ -36,11 +36,8 @@ class PickingSessionScreenViewModel extends ViewModelBase {
   bool requestingChangePath = false;
   String? skuAwaitSerial;
   Bin? bin;
-  TASK task = TASK.REG_SINGLE_TRANSPORT;
 
-  Map<TASK, TASK> tasksDone = {
-    TASK.REG_SINGLE_TRANSPORT: TASK.REG_SINGLE_TRANSPORT
-  };
+  TASK task = TASK.begin;
 
   LastPicked? last;
 
@@ -52,14 +49,14 @@ class PickingSessionScreenViewModel extends ViewModelBase {
 
   String getStepName() {
     switch (task) {
-      case TASK.REG_SINGLE_TRANSPORT:
+      case TASK.begin:
         return "Quét thiết bị chứa hàng";
 
-      case TASK.GET_PATH:
+      case TASK.registeredTransport:
         return "Quét vị trí lấy hàng";
 
-      case TASK.PRODUCT:
-        return "Vị trí lấy hàng hiện tại";
+      case TASK.registerBin:
+        return "Quét sản phẩm";
 
       default:
         return "";
@@ -72,7 +69,7 @@ class PickingSessionScreenViewModel extends ViewModelBase {
 
   void doAction(BuildContext context, String barcode) {
     switch (task) {
-      case TASK.REG_SINGLE_TRANSPORT:
+      case TASK.begin:
         registerTransport(barcode);
 
         break;
@@ -127,7 +124,27 @@ class PickingSessionScreenViewModel extends ViewModelBase {
 
     await getPickingPath();
 
-    setProcessing(false);
+    // if (bin != null) {
+    //   if (!pickController.binVerified()) {
+    //     if (pickController.checkBin(bin!.code)) {
+    //       if (pickController.processing != null) {
+    //         //_process.postValue(Resource.Success(Next(it)))
+
+    //         //    pickedProduct = pickController.processing!;
+    //         // do nothing  hrere will change the logic
+    //       }
+    //     } else {
+    //       DialogService.showErrorBotToast("Vị trí lưu kho không đúng");
+    //     }
+
+    //     setProcessing(false);
+    //     return;
+    //   }
+    // }
+
+    // setProcessing(false);
+    // DialogService.showErrorBotToast("Vị trí lưu kho không đúng");
+    // return;
 
     //_enoughTransport = true;
     //notifyListeners();
@@ -142,11 +159,11 @@ class PickingSessionScreenViewModel extends ViewModelBase {
   }
 
   Future<void> cancel() async {
-    task = TASK.REG_SINGLE_TRANSPORT;
     setProcessing(true);
 
     await _abortPickingSession.execute(orPicking.id!);
 
+    task = TASK.begin;
 // might need to go back the list view
     setProcessing(false);
   }
@@ -155,7 +172,7 @@ class PickingSessionScreenViewModel extends ViewModelBase {
     const title = "Bỏ qua";
     var message = "";
 
-    if (tasksDone.containsKey(TASK.REG_SINGLE_TRANSPORT)) {
+    if (task == TASK.registeredTransport) {
       message = "Bạn có chắc muốn bỏ qua sản phẩm ${currentSku()}?";
     } else {
       message = "Bạn có chắc muốn hủy phiên pick-up hiện tại?";
@@ -164,7 +181,7 @@ class PickingSessionScreenViewModel extends ViewModelBase {
     final confirmed = await DialogService.confirmDialog(context,
         title: title, message: message);
     if (confirmed) {
-      if (tasksDone.containsKey(TASK.REG_SINGLE_TRANSPORT)) {
+      if (task == TASK.registeredTransport) {
         _skip(context);
       } else {
         // cancel();
@@ -174,11 +191,11 @@ class PickingSessionScreenViewModel extends ViewModelBase {
 
   Future<void> finish(BuildContext context) async {
     setProcessing(true);
-    task = TASK.PROCESS;
 
     await _finishPickingUp.execute(orPicking.id!, _getPath.sessionId());
     // might need to go back the list view
 
+    task = TASK.finish;
     setProcessing(false);
     Navigator.pop(context);
   }
@@ -198,46 +215,47 @@ class PickingSessionScreenViewModel extends ViewModelBase {
   Future<void> registerTransport(String barcode) async {
     String code = barcode.trim().toUpperCase();
 
-    task = TASK.REG_SINGLE_TRANSPORT;
-    tasksDone[TASK.REG_SINGLE_TRANSPORT] = TASK.REG_SINGLE_TRANSPORT;
-
     setProcessing(true);
+
     final checkTransport = await _checkTransportAvailable.simpleCheck(code);
-    final regTrasport = registerPickingTransport.register(code);
 
-    if (checkTransport && regTrasport) {
-      //  _registerTransport.postValue(Resource.Success(SingleAdded(code)))
+    if (checkTransport) {
+      final regTrasport = registerPickingTransport.register(code);
 
-      if (registerPickingTransport.count() == orPicking.numOfTransport) {
-        task = TASK.REG_TRANSPORTS;
-        tasksDone[TASK.REG_TRANSPORTS] = TASK.REG_TRANSPORTS;
-        await registerPickingTransport.execute(orPicking.id!);
+      if (regTrasport) {
+        //registeredTrasport = checkTransport;
 
-        await getPickingPath();
+        if (registerPickingTransport.count() == orPicking.numOfTransport) {
+          await registerPickingTransport.execute(orPicking.id!);
+
+          await getPickingPath();
+        }
+
+        setProcessing(false);
+        return;
       }
-    } else {
-      DialogService.showErrorBotToast(
-          "Thiết bị chứa hàng $code không khả dụng");
     }
+
+    DialogService.showErrorBotToast("Thiết bị chứa hàng $code không khả dụng");
     setProcessing(false);
   }
 
-  Future<void> regTransports(bool orChanged) async {
-    task = TASK.REG_TRANSPORTS;
+  // Future<void> regTransports(bool orChanged) async {
+  //   task = TASK.REG_TRANSPORTS;
 
-    setProcessing(true);
+  //   setProcessing(true);
 
-    if (orChanged) {
-      final data = await _getSingleOr.execute(orPicking.id!);
-      if (data != null) {
-        orPicking = data;
-      }
-    } else {
-      registerPickingTransport.execute(orPicking.id!);
-    }
+  //   if (orChanged) {
+  //     final data = await _getSingleOr.execute(orPicking.id!);
+  //     if (data != null) {
+  //       orPicking = data;
+  //     }
+  //   } else {
+  //     registerPickingTransport.execute(orPicking.id!);
+  //   }
 
-    setProcessing(false);
-  }
+  //   setProcessing(false);
+  // }
 
   void removeTransport(String code) {
     setProcessing(true);
@@ -245,7 +263,6 @@ class PickingSessionScreenViewModel extends ViewModelBase {
     final removed = registerPickingTransport.removeByName(code);
     if (removed) {
       if (registerPickingTransport.count() == orPicking.numOfTransport) {
-        task = TASK.REG_TRANSPORTS;
         registerPickingTransport.execute(orPicking.id!);
         //_enoughTransport.postValue(true)
       }
@@ -259,45 +276,22 @@ class PickingSessionScreenViewModel extends ViewModelBase {
     final data = await _getPath.execute(orPicking.id!);
     if (data != null) {
       orPicking = data;
-
       count = _getPath.outCount;
 
       await start();
 
-      setProcessing(false);
+      task = TASK.registeredTransport;
     }
 
-    tasksDone[TASK.GET_PATH] = TASK.GET_PATH;
     setProcessing(false);
   }
 
   Future<void> start() async {
-    task = TASK.GET_PATH;
-
     if (_getPath.hasNext()) {
       final next = _getPath.next();
       pickController.createNewPhase(next);
 
       bin = Bin(next.firstOrDefault(defaultValue: null)?.bin ?? "N/A", null);
-      if (bin != null) {
-        if (!pickController.binVerified()) {
-          if (pickController.checkBin(bin!.code)) {
-            if (pickController.processing != null) {
-              //_process.postValue(Resource.Success(Next(it)))
-
-              //    pickedProduct = pickController.processing!;
-              // do nothing  hrere will change the logic
-            }
-          } else {
-            DialogService.showErrorBotToast("Vị trí lưu kho không đúng");
-          }
-
-          notifyListeners();
-          return;
-        }
-      }
-      DialogService.showErrorBotToast("Vị trí lưu kho không đúng");
-      return;
     } else {
       allDone = true;
     }
@@ -306,7 +300,6 @@ class PickingSessionScreenViewModel extends ViewModelBase {
   Future<void> pickAllInBin(BuildContext context) async {
     setProcessing(true);
 
-    task = TASK.PROCESS;
     if (pickController.processing == null) {
       return;
     }
@@ -355,15 +348,19 @@ class PickingSessionScreenViewModel extends ViewModelBase {
 
       //    _process.postValue(Resource.Success(Bin(nextBin.firstOrNull()?.bin ?: "n/a", last)))
     } else {
-      // travels to all BIN -> done
-      allDone = true;
-      //  _process.postValue(Resource.Success(AllDone(last = last)))
+      await DialogService.confirmDialog(context,
+          title: "Thay đổi",
+          message: "Sản phẩm cuối cùng đã được lấy, kết thúc công việc.",
+          oneOption: true,
+          noLabel: "OK");
+
+      await finish(context);
     }
+
+    setProcessing(false);
   }
 
   Future<void> _skip(BuildContext context) async {
-    task = TASK.PROCESS;
-
     final removing = pickController.processing;
 
     if (removing == null) {
@@ -431,8 +428,6 @@ class PickingSessionScreenViewModel extends ViewModelBase {
       return;
     }
 
-    task = TASK.PROCESS;
-
     final normalize = barcode.trim();
 
     final parts = normalize.split("|");
@@ -451,13 +446,12 @@ class PickingSessionScreenViewModel extends ViewModelBase {
     }
 
     if (!pickController.binVerified()) {
-      if (pickController.checkBin(code)) {
-        if (pickController.processing != null) {
-          //_process.postValue(Resource.Success(Next(it)))
+      if (pickController.processing != null && pickController.checkBin(code)) {
+        task = TASK.registerBin;
+        //_process.postValue(Resource.Success(Next(it)))
 
-          //    pickedProduct = pickController.processing!;
-          // do nothing  hrere will change the logic
-        }
+        //    pickedProduct = pickController.processing!;
+        // do nothing  hrere will change the logic
       } else {
         DialogService.showErrorBotToast("Vị trí lưu kho không đúng");
       }
@@ -468,15 +462,14 @@ class PickingSessionScreenViewModel extends ViewModelBase {
 
     if (skuAwaitSerial == null) {
       if (code.toUpperCase() == pickController.processingBin!.toUpperCase()) {
-        /*if (orPicking.orderCount == 1) {
-                    _process.postValue(Resource.Success(AllInBin(code)))
-                } else if (!canPickAllInBin()) {
-                    _process.postValue(Resource.Error("Vị trí lấy hàng $code không hỗ trợ lấy toàn bộ sản phẩm"))
-                } else {
-                    _process.postValue(Resource.Error("Không hỗ trợ phiên lấy hàng có nhiều hơn 1 đơn hàng"))
-                }*/
         if (canPickAllInBin()) {
-          // _process.postValue(Resource.Success(AllInBin(code)))
+          final confirmed = await DialogService.confirmDialog(context,
+              title: "Lấy toàn bộ"
+                  "Bạn có muốn lấy toàn bộ sản phẩm tại vị trí lấy hàng $code");
+
+          if (confirmed) {
+            pickAllInBin(context);
+          }
         } else {
           DialogService.showErrorBotToast(
               "Vị trí lấy hàng $code không hỗ trợ lấy toàn bộ sản phẩm");

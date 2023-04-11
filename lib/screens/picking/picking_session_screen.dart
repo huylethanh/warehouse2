@@ -142,11 +142,7 @@ class PickingSessionScreen extends StatelessWidget {
 
   Widget _registeredTransport(
       BuildContext context, PickingSessionScreenViewModel viewModel) {
-    if (viewModel.registerPickingTransport.registeredTransport.isEmpty) {
-      return const SizedBox();
-    }
-
-    if (viewModel.task != TASK.REG_SINGLE_TRANSPORT) {
+    if (viewModel.registerPickingTransport.registeredTransport.length <= 1) {
       return const SizedBox();
     }
 
@@ -215,7 +211,11 @@ class PickingSessionScreen extends StatelessWidget {
 
   Widget _pickingQuantity(
       BuildContext context, PickingSessionScreenViewModel viewModel) {
-    if (!viewModel.tasksDone.containsKey(TASK.GET_PATH)) {
+    // if (!viewModel.tasksDone.containsKey(TASK.GET_PATH)) {
+    //   return const SizedBox();
+    // }
+
+    if (viewModel.last == null) {
       return const SizedBox();
     }
 
@@ -249,11 +249,16 @@ class PickingSessionScreen extends StatelessWidget {
 
   Widget _process(
       BuildContext context, PickingSessionScreenViewModel viewModel) {
-    if (!viewModel.tasksDone.containsKey(TASK.GET_PATH)) {
+    // if (!viewModel.tasksDone.containsKey(TASK.GET_PATH)) {
+    //   return const SizedBox();
+    // }
+
+    if (viewModel.task == TASK.begin) {
       return const SizedBox();
     }
 
-    if (viewModel.pickController.processing != null) {
+    if (viewModel.task == TASK.registerBin &&
+        viewModel.pickController.processing != null) {
       return _product(context, viewModel);
     }
 
