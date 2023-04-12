@@ -1,7 +1,7 @@
 import '../models/models.dart';
 import 'service_base.dart';
 
-class TranferService extends ServiceBase {
+class TransferService extends ServiceBase {
   Future<int> checkMaxQuantityQuickPacking(
       String srcLocation, String destLocation, int productBarcodeId) async {
     final result = await client.checkMaxQuantityQuickPacking(
