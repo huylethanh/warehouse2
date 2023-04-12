@@ -412,4 +412,79 @@ class _$AppClient extends AppClient {
     );
     return client.send<dynamic, dynamic>($request);
   }
+
+  @override
+  Future<Response<int>> checkMaxQuantityQuickPacking(
+    String sourceLocationCode,
+    String destLocationCode,
+    int productBarcodeId,
+  ) {
+    final Uri $url = Uri.parse('/Transfers/validate-max-quantity');
+    final Map<String, dynamic> $params = <String, dynamic>{
+      'SrcLocationCode': sourceLocationCode,
+      'DestLocationCode': destLocationCode,
+      'ProductBarcodeId': productBarcodeId,
+    };
+    final Request $request = Request(
+      'GET',
+      $url,
+      client.baseUrl,
+      parameters: $params,
+    );
+    return client.send<int, int>($request);
+  }
+
+  @override
+  Future<Response<TransferResponse>> startTransferring(String locationCode) {
+    final Uri $url = Uri.parse('/Locations/${locationCode}/transfer');
+    final Request $request = Request(
+      'POST',
+      $url,
+      client.baseUrl,
+    );
+    return client.send<TransferResponse, TransferResponse>($request);
+  }
+
+  @override
+  Future<Response<dynamic>> regDest(
+    int sessionId,
+    Map<String, dynamic> request,
+  ) {
+    final Uri $url = Uri.parse('/Transfers/${sessionId}/register');
+    final $body = request;
+    final Request $request = Request(
+      'POST',
+      $url,
+      client.baseUrl,
+      body: $body,
+    );
+    return client.send<dynamic, dynamic>($request);
+  }
+
+  @override
+  Future<Response<dynamic>> processTransfer(
+    int sessionId,
+    Map<String, dynamic> request,
+  ) {
+    final Uri $url = Uri.parse('/Transfers/${sessionId}/process');
+    final $body = request;
+    final Request $request = Request(
+      'POST',
+      $url,
+      client.baseUrl,
+      body: $body,
+    );
+    return client.send<dynamic, dynamic>($request);
+  }
+
+  @override
+  Future<Response<dynamic>> finishTransferring(int sessionId) {
+    final Uri $url = Uri.parse('/Transfers/${sessionId}/finish');
+    final Request $request = Request(
+      'POST',
+      $url,
+      client.baseUrl,
+    );
+    return client.send<dynamic, dynamic>($request);
+  }
 }

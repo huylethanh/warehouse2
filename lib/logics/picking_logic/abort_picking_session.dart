@@ -1,4 +1,4 @@
-import '../services/services.dart';
+import '../../services/services.dart';
 
 class AbortPickingSession {
   final _service = PickingService();

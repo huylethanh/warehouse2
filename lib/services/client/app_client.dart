@@ -121,4 +121,26 @@ abstract class AppClient extends ChopperService {
   @Put(path: "/PickingSessions/{id}/finish-repick")
   Future<Response> finishRepickingUp(
       @Path("id") int sessionId, @Body() Map<String, dynamic> request);
+
+  //============ TRANSFER =======================================
+  @Get(path: "/Transfers/validate-max-quantity")
+  Future<Response<int>> checkMaxQuantityQuickPacking(
+      @Query("SrcLocationCode") String sourceLocationCode,
+      @Query("DestLocationCode") String destLocationCode,
+      @Query("ProductBarcodeId") int productBarcodeId);
+
+  @Post(path: "/Locations/{code}/transfer")
+  Future<Response<TransferResponse>> startTransferring(
+      @Path("code") String locationCode);
+
+  @Post(path: "/Transfers/{id}/register")
+  Future<Response> regDest(
+      @Path("id") int sessionId, @Body() Map<String, dynamic> request);
+
+  @Post(path: "/Transfers/{id}/process")
+  Future<Response> processTransfer(
+      @Path("id") int sessionId, @Body() Map<String, dynamic> request);
+
+  @Post(path: "/Transfers/{id}/finish")
+  Future<Response> finishTransferring(@Path("id") int sessionId);
 }

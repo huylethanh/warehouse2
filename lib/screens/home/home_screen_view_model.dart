@@ -4,6 +4,7 @@ import 'package:warehouse_app/base/view_models/index.dart';
 import 'package:warehouse_app/models/models.dart';
 import 'package:warehouse_app/screens/picking/picking.dart';
 import 'package:warehouse_app/screens/repick/repick_screen_view_model.dart';
+import 'package:warehouse_app/screens/transfer/transfer.dart';
 import 'package:warehouse_app/services/task_status_service.dart';
 import 'package:warehouse_app/utils/utils.dart';
 import 'package:warehouse_app/widgets/widgets.dart';
@@ -24,11 +25,11 @@ class HomeScreenViewModel extends ViewModelBase {
   static const String audit = "audit";
   static const String handOver = "handOver";
 
-  static const String view5 = "Eqc";
-  static const String view6 = "Return";
-  static const String view7 = "Repick";
-  static const String view8 = "RandomCount";
-  static const String view9 = "VerifyCycleCount";
+  static const String eqc = "Eqc";
+  static const String returnProdcut = "Return";
+  static const String repick = "Repick";
+  static const String randomCount = "RandomCount";
+  static const String verifyCycleCount = "VerifyCycleCount";
 
   int selectedIndex = 0;
 
@@ -105,6 +106,10 @@ class HomeScreenViewModel extends ViewModelBase {
 
       case repicking:
         page = const RepickScreen();
+        break;
+
+      case transfer:
+        page = const TransferScreen();
         break;
     }
 
@@ -307,16 +312,17 @@ class HomeScreenViewModel extends ViewModelBase {
 
     var actionCycleCount = "";
     if (task is CycleCountTask) {
-      actionCycleCount = task.isVerify() ? view9 : view8; // magic number here
+      actionCycleCount =
+          task.isVerify() ? verifyCycleCount : randomCount; // magic number here
     }
 
-    final continueable =
-        ((viewName == receive || viewName == view6) && task is ReceiveTask) ||
-            (viewName == putAway && task is PutAwayTask) ||
-            ((viewName == actionCycleCount) && task is CycleCountTask) ||
-            (viewName == picking && task is PickUpTask) ||
-            (viewName == transfer && task is TransferTask) ||
-            (viewName == view5 && task is EqcTask);
+    final continueable = ((viewName == receive || viewName == returnProdcut) &&
+            task is ReceiveTask) ||
+        (viewName == putAway && task is PutAwayTask) ||
+        ((viewName == actionCycleCount) && task is CycleCountTask) ||
+        (viewName == picking && task is PickUpTask) ||
+        (viewName == transfer && task is TransferTask) ||
+        (viewName == eqc && task is EqcTask);
 
     if (continueable) {
       goToRemaining(context, task, viewName);

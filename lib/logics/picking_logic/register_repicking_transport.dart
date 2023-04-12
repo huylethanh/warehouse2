@@ -1,6 +1,6 @@
 import 'package:warehouse_app/models/models.dart';
 
-import '../services/services.dart';
+import '../../services/repicking_service.dart';
 
 class RegisterRepickingTransport {
   final _service = RepickingService();

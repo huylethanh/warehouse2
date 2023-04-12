@@ -1,4 +1,4 @@
-import '../services/metadata_service.dart';
+import '../../services/metadata_service.dart';
 
 class CheckTransportAvailable {
   final _service = MetadataService();

@@ -1,6 +1,6 @@
 import 'package:warehouse_app/services/services.dart';
 
-import '../models/models.dart';
+import '../../models/models.dart';
 
 class ProcessRepick {
   final service = RepickingService();

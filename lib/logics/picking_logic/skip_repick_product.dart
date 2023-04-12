@@ -1,9 +1,9 @@
 import 'package:warehouse_app/models/models.dart';
 
-import '../services/picking_service.dart';
+import '../../services/services.dart';
 
-class SkipProduct {
-  final service = PickingService();
+class SkipRepickProduct {
+  final service = RepickingService();
 
   Future<PickingPath?> execute(int pickId, int sessionId,
       PickingLocation location, PickingProduct product) async {

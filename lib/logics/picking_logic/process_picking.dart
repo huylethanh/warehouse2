@@ -1,5 +1,5 @@
-import '../models/models.dart';
-import '../services/picking_service.dart';
+import '../../models/models.dart';
+import '../../services/services.dart';
 
 class ProcessPicking {
   final service = PickingService();

@@ -38,3 +38,7 @@ export 'pick_product.dart';
 export 'picking_product.dart';
 export 'finish_picking_payload.dart';
 export 'picking_location.dart';
+export 'transfer_response.dart';
+export 'transfer_reg_dest_body.dart';
+export 'transfer_product.dart';
+export 'transfer_request.dart';

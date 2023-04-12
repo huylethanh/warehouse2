@@ -1,8 +1,8 @@
 import 'package:darq/darq.dart';
-import 'package:warehouse_app/services/services.dart';
 
-import '../models/models.dart';
-import '../screens/picking/models/A_pick.dart';
+import '../../models/models.dart';
+import '../../screens/picking/models/models.dart';
+import '../../services/services.dart';
 
 class GetRepickPath {
   final _service = RepickingService();

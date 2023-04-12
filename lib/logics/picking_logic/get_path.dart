@@ -1,8 +1,8 @@
 import 'package:darq/darq.dart';
 
-import '../models/models.dart';
-import '../screens/picking/models/A_pick.dart';
-import '../services/picking_service.dart';
+import '../../models/models.dart';
+import '../../screens/picking/models/models.dart';
+import '../../services/services.dart';
 
 class GetPath {
   final _service = PickingService();

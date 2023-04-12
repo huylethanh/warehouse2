@@ -1,7 +1,7 @@
-import '../services/services.dart';
+import '../../services/services.dart';
 
-class FinishPickingUp {
-  final _service = PickingService();
+class FinishRepick {
+  final _service = RepickingService();
 
   Future<bool> execute(int pickId, int sessionId) async {
     final result = await _service.finish(pickId, sessionId);

@@ -1,5 +1,5 @@
-import '../models/models.dart';
-import '../services/services.dart';
+import '../../models/models.dart';
+import '../../services/services.dart';
 
 class GetSingleOr {
   final service = PickingService();
