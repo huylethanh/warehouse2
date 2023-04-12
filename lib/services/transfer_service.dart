@@ -12,12 +12,12 @@ class TranferService extends ServiceBase {
 
   Future<int> openSourceLocation(String code) async {
     final result = await client.startTransferring(code);
-    return result.body!.id;
+    return result.body!.id ?? 0;
   }
 
   Future<bool> regDestLocation(int sessionId, String code) async {
-    final response =
-        await client.regDest(sessionId, TransferRegDestBody(code).toJson());
+    final response = await client.regDest(
+        sessionId, TransferRegDestBody(destLocationCode: code).toJson());
 
     return response.isSuccessful;
   }
