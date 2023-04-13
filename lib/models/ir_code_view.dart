@@ -1,8 +1,10 @@
+import 'package:copy_with_extension/copy_with_extension.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'ir_code_view.g.dart';
 
 @JsonSerializable()
+@CopyWith()
 class IrCodeView {
   final String? irCode;
   final int? qty;

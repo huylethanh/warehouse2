@@ -116,6 +116,13 @@ abstract class AppClient extends ChopperService {
   Future<Response> finishPickingUp(
       @Path("id") int sessionId, @Body() Map<String, dynamic> request);
 
+  @Get(path: "/Products/{id}/suggested-locations")
+  Future<Response<SuggestLocation>> fetchSuggestLocations(
+    @Path("id") int productId,
+    @Query("unitId") int unitId,
+    @Query("conditionTypeId") int conditionTypeId,
+  );
+
   //=============================
 
   @Put(path: "/PickingSessions/{id}/finish-repick")

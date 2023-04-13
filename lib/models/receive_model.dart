@@ -1,8 +1,10 @@
+import 'package:copy_with_extension/copy_with_extension.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'receive_model.g.dart';
 
 @JsonSerializable()
+@CopyWith()
 class ReceiveModel {
   final int? irId;
   final String? code;

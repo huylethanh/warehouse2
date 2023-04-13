@@ -38,4 +38,19 @@ class PutAwayService extends ServiceBase {
 
     return ResultSet.error(res.error);
   }
+
+  Future<ResultSet<SuggestLocation?>> fetchSuggestLocations(
+    int productId,
+    int unitId,
+    int conditionTypeId,
+  ) async {
+    final res =
+        await client.fetchSuggestLocations(productId, unitId, conditionTypeId);
+
+    if (res.isSuccessful) {
+      return ResultSet.success(res.body);
+    }
+
+    return ResultSet.error(res.error);
+  }
 }

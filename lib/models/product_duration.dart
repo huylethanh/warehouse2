@@ -1,8 +1,10 @@
+import 'package:copy_with_extension/copy_with_extension.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'product_duration.g.dart';
 
 @JsonSerializable()
+@CopyWith()
 class ProductDuration {
   final DateTime? expireD;
   final DateTime? issueD;

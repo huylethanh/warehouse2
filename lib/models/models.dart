@@ -42,3 +42,5 @@ export 'transfer_response.dart';
 export 'transfer_reg_dest_body.dart';
 export 'transfer_product.dart';
 export 'transfer_request.dart';
+export 'diff_bin_transfer_source_product.dart';
+export 'suggest_location.dart';

@@ -398,6 +398,26 @@ class _$AppClient extends AppClient {
   }
 
   @override
+  Future<Response<SuggestLocation>> fetchSuggestLocations(
+    int productId,
+    int unitId,
+    int conditionTypeId,
+  ) {
+    final Uri $url = Uri.parse('/Products/${productId}/suggested-locations');
+    final Map<String, dynamic> $params = <String, dynamic>{
+      'unitId': unitId,
+      'conditionTypeId': conditionTypeId,
+    };
+    final Request $request = Request(
+      'GET',
+      $url,
+      client.baseUrl,
+      parameters: $params,
+    );
+    return client.send<SuggestLocation, SuggestLocation>($request);
+  }
+
+  @override
   Future<Response<dynamic>> finishRepickingUp(
     int sessionId,
     Map<String, dynamic> request,

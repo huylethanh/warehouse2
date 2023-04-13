@@ -1,9 +1,11 @@
+import 'package:copy_with_extension/copy_with_extension.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:warehouse_app/models/models.dart';
 
 part 'inbound_response.g.dart';
 
 @JsonSerializable()
+@CopyWith()
 class InboundResponse {
   final int? irId;
   final int? orId;
