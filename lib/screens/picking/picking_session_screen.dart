@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:stacked/stacked.dart';
@@ -111,18 +110,8 @@ class PickingSessionScreen extends StatelessWidget {
                       onBarcodeValueChanges: (value) {
                         viewModel.currentCode = value;
                       },
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text("Hàng kiện"),
-                        CupertinoSwitch(
-                          onChanged: (bool value) {
-                            viewModel.cargoSelectedChanges(value);
-                          },
-                          value: viewModel.gettingCargo,
-                        ),
-                      ],
+                      cargoSelectedChanges: viewModel.cargoSelectedChanges,
+                      cargoSelected: viewModel.gettingCargo,
                     ),
                     _process(context, viewModel),
                     Expanded(

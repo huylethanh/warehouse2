@@ -70,7 +70,8 @@ class ReceiveSessionScreenViewModel extends ViewModelBase {
     }
   }
 
-  void scan(BuildContext context, String barcode) async {
+  @override
+  Future<void> scan(BuildContext context, String barcode) async {
     if (originalResponse == null) {
       print("show error here");
       return;
@@ -358,18 +359,6 @@ class ReceiveSessionScreenViewModel extends ViewModelBase {
     }
   }
 
-  void processInput(BuildContext context, String barcode) {
-    scannedBarcode = barcode;
-    controller.text = scannedBarcode;
-
-    if (cargoSelected && !barcode.contains("|") && _isSku(barcode.trim())) {
-      _showInputQuantityDialog(context, barcode.trim());
-      return;
-    }
-
-    scan(context, barcode);
-  }
-
   void resume() {
     if (receiveTask == null) {
       return;
@@ -491,11 +480,8 @@ class ReceiveSessionScreenViewModel extends ViewModelBase {
 //
   }
 
-  void _showInputQuantityDialog(BuildContext context, String code) {
-    //
-  }
-
-  bool _isSku(String code) {
+  @override
+  bool isSku(String code) {
     if (_isAwaitingSku) {
       final inboundRespond = _getInboundRequest.originalResponse;
       if (inboundRespond.detail == null) {

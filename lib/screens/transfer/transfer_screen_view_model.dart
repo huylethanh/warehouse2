@@ -1,4 +1,5 @@
 import 'package:darq/darq.dart';
+import 'package:flutter/material.dart';
 import 'package:warehouse_app/base/view_models/index.dart';
 import 'package:warehouse_app/utils/utils.dart';
 import 'package:warehouse_app/widgets/widgets.dart';
@@ -6,6 +7,7 @@ import 'package:warehouse_app/widgets/widgets.dart';
 import '../../logics/transfer_logic/transfer_logic.dart';
 import '../../models/models.dart';
 import 'models/resume.dart';
+import 'models/source_bin_registered.dart';
 
 class TransferScreenViewModel extends ViewModelBase {
   final checkQuantityPacking = CheckQuantityPacking();
@@ -27,11 +29,13 @@ class TransferScreenViewModel extends ViewModelBase {
   int totalCount = 0;
   int processedCount = 0;
   StoringProduct? processingItem;
+  String? currentCode;
 
   Map<int, int> mapsBarcodeQty = {};
   Map<int, List<IrCodeView>> mapsIrCode = {};
 
   Resume? resumeData;
+  SourceBinRegistered? sourceBinRegistered;
 
   Future<void> loadSuggestLocation(
       int productId, int conditionTypeId, int unitId) async {
@@ -46,6 +50,7 @@ class TransferScreenViewModel extends ViewModelBase {
     return openTransferSession.sessionId;
   }
 
+  @override
   bool isSku(String code) {
     return destBin != null && skus.contains(code);
   }
@@ -101,11 +106,12 @@ class TransferScreenViewModel extends ViewModelBase {
     storingProducts.addAll(list);
 
     resumeData = Resume(
-        srcLocation: src!,
-        totalProductCount: totalCount,
-        dstLocation: destBin,
-        allOut: list.isEmpty,
-        listSourceProduct: listSourceProduct);
+      src!,
+      totalCount,
+      destBin,
+      list.isEmpty,
+      listSourceProduct,
+    );
 
     setProcessing(false);
   }
@@ -141,7 +147,8 @@ class TransferScreenViewModel extends ViewModelBase {
     //  _process.postfinalue(Resource.Success(AllOut(skuCount, total, destLocation)))
   }
 
-  scan(String barcode) {
+  @override
+  Future<void> scan(BuildContext context, String barcode) async {
     final normalize = barcode.trim();
 
     final parts = normalize.split("|");
@@ -161,7 +168,7 @@ class TransferScreenViewModel extends ViewModelBase {
     }
 
     if (openTransferSession.sessionId == 0) {
-      registerSource(code);
+      await registerSource(code);
       return;
     }
 
@@ -367,9 +374,9 @@ class TransferScreenViewModel extends ViewModelBase {
     cleanData();
     final registered = await registerSourceLogic.execute(code);
     if (registered) {
-      final list = await queryLocation.listWithIrLocation(code);
+      final listProduct = await queryLocation.listWithIrLocation(code);
 
-      if (list == null || list.isEmpty) {
+      if (listProduct == null || listProduct.isEmpty) {
         //throw Exception(getString(R.string.txt_transfer_err, code))
 
         DialogService.showErrorBotToast(
@@ -379,7 +386,7 @@ class TransferScreenViewModel extends ViewModelBase {
 
       int pendingOut = 0;
 
-      for (final it in list) {
+      for (final it in listProduct) {
         // count pendingOut
         pendingOut += it.pendingOutQty ?? 0;
         // collecting list of non-serial SKUs
@@ -418,7 +425,8 @@ class TransferScreenViewModel extends ViewModelBase {
 
       await openTransferSession.execute(code);
 
-      storingProducts.addAll(list);
+      storingProducts.addAll(listProduct);
+      SourceBinRegistered(code, totalCount, listSourceProduct);
 
 //TODO run here
       // _process.postfinalue(
@@ -436,14 +444,14 @@ class TransferScreenViewModel extends ViewModelBase {
     }
   }
 
-  confirmNewDestination(String code) {
-    registerDestination(code);
+  Future<void> confirmNewDestination(String code) async {
+    await registerDestination(code);
   }
 
-  registerDestination(String bin) {
+  Future<void> registerDestination(String bin) async {
     setProcessing(true);
 
-    registerDestLocation.execute(openTransferSession.sessionId, bin);
+    await registerDestLocation.execute(openTransferSession.sessionId, bin);
     destBin = bin;
 
     setProcessing(false);

@@ -1,17 +1,12 @@
+import 'package:warehouse_app/screens/transfer/models/source_bin_registered.dart';
+
 import '../../../models/models.dart';
 
-class Resume {
-  final String srcLocation;
-  final int totalProductCount;
+class Resume extends SourceBinRegistered {
   final String? dstLocation;
   final bool allOut;
-  final List<DiffBinTransferSourceProduct> listSourceProduct;
 
-  Resume({
-    required this.srcLocation,
-    required this.totalProductCount,
-    this.dstLocation,
-    required this.allOut,
-    required this.listSourceProduct,
-  });
+  Resume(String srcLocation, int totalProductCount, this.dstLocation,
+      this.allOut, List<DiffBinTransferSourceProduct> listSourceProduct)
+      : super(srcLocation, totalProductCount, listSourceProduct);
 }

@@ -79,23 +79,12 @@ class PickingSessionScreenViewModel extends ViewModelBase {
     }
   }
 
-  Future<void> processInput(BuildContext context, String barcode) async {
-    barcode = barcode.trim();
-
-    if (gettingCargo && !barcode.contains("|") && isSku(barcode)) {
-      _inputQuantityDialog(context, barcode.trim());
-    } else {
-      await scan(context, barcode);
-    }
-
-    return;
-  }
-
   void cargoSelectedChanges(bool value) {
     gettingCargo = true;
     notifyListeners();
   }
 
+  @override
   bool isSku(String code) {
     if (pickController.processing == null) {
       return false;
@@ -198,18 +187,6 @@ class PickingSessionScreenViewModel extends ViewModelBase {
     task = TASK.finish;
     setProcessing(false);
     Navigator.pop(context);
-  }
-
-  Future<void> _inputQuantityDialog(
-      BuildContext context, String barCode) async {
-    final result = await DialogService.showBottomSheet<int>(context,
-        chid: const QuantityInput(), title: "Nhận số lượng cho SKU");
-
-    if (result == null) {
-      return;
-    }
-
-    scan(context, "$barCode|$result");
   }
 
   Future<void> registerTransport(String barcode) async {
@@ -423,6 +400,7 @@ class PickingSessionScreenViewModel extends ViewModelBase {
     }
   }
 
+  @override
   Future<void> scan(BuildContext context, String barcode) async {
     if (allDone) {
       return;

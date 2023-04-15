@@ -43,7 +43,7 @@ class QueryInfoAtLocation {
             condition: it.storageTypeString(),
             unitId: it.unitId!,
             partnerSku: it.partnerSKU,
-            conditionTypeId: it.conditionTypeId,
+            conditionTypeId: int.tryParse(it.conditionTypeId ?? ""),
             partnerName: it.partnerName,
             productBrandId: it.productBrandId,
             productBrandName: it.productBrandName));
@@ -61,7 +61,7 @@ class QueryInfoAtLocation {
               condition: it.storageTypeString(),
               unitId: it.unitId ?? 0,
               partnerSku: it.partnerSKU,
-              conditionTypeId: it.conditionTypeId,
+              conditionTypeId: int.tryParse(it.conditionTypeId ?? ""),
               partnerName: it.partnerName,
               productBrandId: it.productBrandId,
               productBrandName: it.productBrandName));

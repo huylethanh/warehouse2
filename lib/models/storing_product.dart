@@ -17,7 +17,7 @@ class StoringProduct {
   final String? productName;
   final String? avatarURL;
   final int? pendingOutQty;
-  final int? conditionTypeId;
+  final String? conditionTypeId;
   final String? conditionTypeName;
   final int? unitId;
   final String? unitName;
@@ -117,7 +117,7 @@ class StoringProduct {
         advances: advances?.map((it) => it.toView()).toList(),
         partnerName: partnerName,
         partnerSku: partnerSKU,
-        conditionTypeId: conditionTypeId,
+        conditionTypeId: int.tryParse(conditionTypeId ?? ""),
         unitId: unitId,
         productBrandId: productBrandId,
         productBrandName: productBrandName,

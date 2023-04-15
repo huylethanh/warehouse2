@@ -28,6 +28,8 @@ class JsonToTypeConverter extends JsonConverter {
     ORPicking: (json) => ORPicking.fromJson(json),
     PickingPath: (json) => PickingPath.fromJson(json),
     PickProcessResponse: (json) => PickProcessResponse.fromJson(json),
+    StoringProduct: (json) => StoringProduct.fromJson(json),
+    IrCodeView: (json) => IrCodeView.fromJson(json),
   };
 
   JsonToTypeConverter();

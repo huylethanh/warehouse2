@@ -17,7 +17,7 @@ abstract class _$StoringProductCWProxy {
 
   StoringProduct bestBeforeDate(String? bestBeforeDate);
 
-  StoringProduct conditionTypeId(int? conditionTypeId);
+  StoringProduct conditionTypeId(String? conditionTypeId);
 
   StoringProduct conditionTypeName(String? conditionTypeName);
 
@@ -73,7 +73,7 @@ abstract class _$StoringProductCWProxy {
     String? avatarURL,
     String? barcode,
     String? bestBeforeDate,
-    int? conditionTypeId,
+    String? conditionTypeId,
     String? conditionTypeName,
     List<ProductAttributes>? details,
     String? expiredDate,
@@ -122,7 +122,7 @@ class _$StoringProductCWProxyImpl implements _$StoringProductCWProxy {
       this(bestBeforeDate: bestBeforeDate);
 
   @override
-  StoringProduct conditionTypeId(int? conditionTypeId) =>
+  StoringProduct conditionTypeId(String? conditionTypeId) =>
       this(conditionTypeId: conditionTypeId);
 
   @override
@@ -263,7 +263,7 @@ class _$StoringProductCWProxyImpl implements _$StoringProductCWProxy {
       conditionTypeId: conditionTypeId == const $CopyWithPlaceholder()
           ? _value.conditionTypeId
           // ignore: cast_nullable_to_non_nullable
-          : conditionTypeId as int?,
+          : conditionTypeId as String?,
       conditionTypeName: conditionTypeName == const $CopyWithPlaceholder()
           ? _value.conditionTypeName
           // ignore: cast_nullable_to_non_nullable
@@ -373,7 +373,7 @@ StoringProduct _$StoringProductFromJson(Map<String, dynamic> json) =>
       productName: json['productName'] as String?,
       avatarURL: json['avatarURL'] as String?,
       pendingOutQty: json['pendingOutQty'] as int?,
-      conditionTypeId: json['conditionTypeId'] as int?,
+      conditionTypeId: json['conditionTypeId'] as String?,
       conditionTypeName: json['conditionTypeName'] as String?,
       unitId: json['unitId'] as int?,
       unitName: json['unitName'] as String?,
