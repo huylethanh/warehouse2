@@ -476,4 +476,20 @@ class TransferScreenViewModel extends ViewModelBase {
     mapsBarcodeQty.clear();
     mapsIrCode.clear();
   }
+
+  String getIrCode(DiffBinTransferSourceProduct item) {
+    String irCode = "";
+    if (item.advances != null) {
+      for (final it in item.advances!) {
+        String qty = (it.qty ?? 0).toRadixString(2);
+        if (it.irCode != null && it.irCode != "N/A" && it.irCode != "n/a") {
+          irCode += "${it.irCode} - Số lượng : ${qty}";
+        } else {
+          irCode = "";
+        }
+      }
+    }
+
+    return irCode;
+  }
 }

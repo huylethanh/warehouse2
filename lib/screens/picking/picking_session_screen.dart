@@ -360,7 +360,7 @@ class PickingSessionScreen extends StatelessWidget {
                       )
                     ],
                   ),
-                )
+                ),
               ],
             ),
           ),

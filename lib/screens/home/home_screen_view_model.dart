@@ -220,7 +220,9 @@ class HomeScreenViewModel extends ViewModelBase {
       return _taskView(
         taskName: "Luân chuyển",
         taskCode: cast.startTime ?? "N/A",
-        onPressed: () {},
+        onPressed: () {
+          goToRemaining(context, _remaining!, transfer);
+        },
       );
     }
 
@@ -261,31 +263,46 @@ class HomeScreenViewModel extends ViewModelBase {
       BuildContext context, RemainingTask task, String viewName) async {
     Widget? view;
 
-    if (viewName == receive) {
-      if (task is ReceiveTask) {
-        final converted = task;
-        view = ReceiveSessionScreen(
-          conditionType: converted.conditionType!,
-          receiveModel: converted.toReceiveModel(),
-          receiveTask: task,
-        );
-      }
-    }
+    switch (viewName) {
+      case receive:
+        if (task is ReceiveTask) {
+          final converted = task;
+          view = ReceiveSessionScreen(
+            conditionType: converted.conditionType!,
+            receiveModel: converted.toReceiveModel(),
+            receiveTask: task,
+          );
+        }
+        break;
 
-    if (viewName == putAway) {
-      if (task is PutAwayTask) {
-        view = PutAwayScreen(
-          resumeTask: task,
-        );
-      }
-    }
+      case putAway:
+        if (task is PutAwayTask) {
+          view = PutAwayScreen(
+            resumeTask: task,
+          );
+        }
+        break;
 
-    if (viewName == picking) {
-      if (task is PickUpTask) {
-        view = PickingSessionScreen(
-          resumeTask: task,
-        );
-      }
+      case picking:
+        if (task is PickUpTask) {
+          view = PickingSessionScreen(
+            resumeTask: task,
+          );
+        }
+        break;
+
+      case transfer:
+        if (task is TransferTask) {
+          view = TransferScreen(
+            resumeTask: task,
+          );
+        }
+        break;
+
+      //    case picking:
+
+      // break;
+      default:
     }
 
     // check more view here
