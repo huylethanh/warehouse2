@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:darq/darq.dart';
 import 'package:flutter/material.dart';
 import 'package:warehouse_app/base/view_models/index.dart';
@@ -53,6 +55,14 @@ class TransferScreenViewModel extends ViewModelBase {
   @override
   bool isSku(String code) {
     return destBin != null && skus.contains(code);
+  }
+
+  String getScanTitle() {
+    if (resumeData != null || sourceBinRegistered != null) {
+      return "Quét vị trí chứa hàng";
+    }
+
+    return "Vị trí nguồn hiện tại";
   }
 
   Future<void> resume(TransferTask task) async {
@@ -371,6 +381,7 @@ class TransferScreenViewModel extends ViewModelBase {
   }
 
   Future<void> registerSource(String code) async {
+    setProcessing(true);
     cleanData();
     final registered = await registerSourceLogic.execute(code);
     if (registered) {
@@ -381,6 +392,7 @@ class TransferScreenViewModel extends ViewModelBase {
 
         DialogService.showErrorBotToast(
             "Không có sản phẩm trong vị trí nguồn $code");
+        setProcessing(false);
         return;
       }
 
@@ -426,7 +438,8 @@ class TransferScreenViewModel extends ViewModelBase {
       await openTransferSession.execute(code);
 
       storingProducts.addAll(listProduct);
-      SourceBinRegistered(code, totalCount, listSourceProduct);
+      sourceBinRegistered =
+          SourceBinRegistered(code, totalCount, listSourceProduct);
 
 //TODO run here
       // _process.postfinalue(
@@ -442,6 +455,8 @@ class TransferScreenViewModel extends ViewModelBase {
       //throw Exception(getString(R.string.err_infinalid_location))
       DialogService.showErrorBotToast("Mã vị trí không hợp lệ");
     }
+
+    setProcessing(false);
   }
 
   Future<void> confirmNewDestination(String code) async {
@@ -491,5 +506,31 @@ class TransferScreenViewModel extends ViewModelBase {
     }
 
     return irCode;
+  }
+
+  Future<void> finish(BuildContext context) async {
+    if (sessionId() == 0) {
+      Navigator.pop(context);
+      return;
+    }
+
+    final confirmed = await DialogService.confirmDialog(
+      context,
+      title: "Kêt thúc",
+      message: "Bạn có muốn kết thúc công việc?",
+    );
+
+    if (!confirmed) {
+      return;
+    }
+
+    setProcessing(true);
+
+    await closeTransportSession.execute(sessionId());
+    await openTransferSession.close();
+
+    setProcessing(false);
+
+    Navigator.pop(context);
   }
 }

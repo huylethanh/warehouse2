@@ -1,5 +1,6 @@
 import 'package:copy_with_extension/copy_with_extension.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:warehouse_app/utils/string_format.dart';
 import 'ir_code_view.dart';
 
 part 'diff_bin_transfer_source_product.g.dart';
@@ -13,7 +14,7 @@ class DiffBinTransferSourceProduct {
   final String? productName;
   final String? avatarUrl;
   final int? qty;
-  final String? receivedDate;
+  final DateTime? receivedDate;
   final String? barcode;
   final List<String>? details;
   final List<IrCodeView>? advances;
@@ -79,6 +80,10 @@ class DiffBinTransferSourceProduct {
   @override
   bool operator ==(Object other) {
     return super == other;
+  }
+
+  String get displayReceivedDate {
+    return StringFormat.shortDate(receivedDate);
   }
 
   // companion object {

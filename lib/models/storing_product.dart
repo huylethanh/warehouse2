@@ -22,7 +22,7 @@ class StoringProduct {
   final int? unitId;
   final String? unitName;
   final int? partnerId;
-  final String? receivedDate;
+  final DateTime? receivedDate;
   final String? expiredDate;
   final String? manufactureDate;
   final String? bestBeforeDate;

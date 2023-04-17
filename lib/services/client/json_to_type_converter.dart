@@ -30,6 +30,7 @@ class JsonToTypeConverter extends JsonConverter {
     PickProcessResponse: (json) => PickProcessResponse.fromJson(json),
     StoringProduct: (json) => StoringProduct.fromJson(json),
     IrCodeView: (json) => IrCodeView.fromJson(json),
+    TransferResponse: (json) => TransferResponse.fromJson(json),
   };
 
   JsonToTypeConverter();

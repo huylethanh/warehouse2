@@ -35,7 +35,7 @@ abstract class _$DiffBinTransferSourceProductCWProxy {
 
   DiffBinTransferSourceProduct qty(int? qty);
 
-  DiffBinTransferSourceProduct receivedDate(String? receivedDate);
+  DiffBinTransferSourceProduct receivedDate(DateTime? receivedDate);
 
   DiffBinTransferSourceProduct storageTypeName(String? storageTypeName);
 
@@ -62,7 +62,7 @@ abstract class _$DiffBinTransferSourceProductCWProxy {
     int? productId,
     String? productName,
     int? qty,
-    String? receivedDate,
+    DateTime? receivedDate,
     String? storageTypeName,
     int? unitId,
   });
@@ -131,7 +131,7 @@ class _$DiffBinTransferSourceProductCWProxyImpl
   DiffBinTransferSourceProduct qty(int? qty) => this(qty: qty);
 
   @override
-  DiffBinTransferSourceProduct receivedDate(String? receivedDate) =>
+  DiffBinTransferSourceProduct receivedDate(DateTime? receivedDate) =>
       this(receivedDate: receivedDate);
 
   @override
@@ -228,7 +228,7 @@ class _$DiffBinTransferSourceProductCWProxyImpl
       receivedDate: receivedDate == const $CopyWithPlaceholder()
           ? _value.receivedDate
           // ignore: cast_nullable_to_non_nullable
-          : receivedDate as String?,
+          : receivedDate as DateTime?,
       storageTypeName: storageTypeName == const $CopyWithPlaceholder()
           ? _value.storageTypeName
           // ignore: cast_nullable_to_non_nullable
@@ -273,7 +273,9 @@ DiffBinTransferSourceProduct _$DiffBinTransferSourceProductFromJson(
       productId: json['productId'] as int?,
       productName: json['productName'] as String?,
       qty: json['qty'] as int?,
-      receivedDate: json['receivedDate'] as String?,
+      receivedDate: json['receivedDate'] == null
+          ? null
+          : DateTime.parse(json['receivedDate'] as String),
       storageTypeName: json['storageTypeName'] as String?,
       unitId: json['unitId'] as int?,
     );
@@ -287,7 +289,7 @@ Map<String, dynamic> _$DiffBinTransferSourceProductToJson(
       'productName': instance.productName,
       'avatarUrl': instance.avatarUrl,
       'qty': instance.qty,
-      'receivedDate': instance.receivedDate,
+      'receivedDate': instance.receivedDate?.toIso8601String(),
       'barcode': instance.barcode,
       'details': instance.details,
       'advances': instance.advances,

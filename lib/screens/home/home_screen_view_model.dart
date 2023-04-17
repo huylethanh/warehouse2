@@ -353,6 +353,13 @@ class HomeScreenViewModel extends ViewModelBase {
       {required String taskName,
       required String taskCode,
       required void Function() onPressed}) {
+    var display = taskCode;
+    DateTime? tried = DateTime.tryParse(taskCode);
+
+    if (tried != null) {
+      display = StringFormat.shortDate(tried);
+    }
+
     return RoundedContainer(
       backgroundColor: AppColor.colorF6931D,
       innerPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
@@ -374,7 +381,7 @@ class HomeScreenViewModel extends ViewModelBase {
                   height: 6,
                 ),
                 Text(
-                  taskCode,
+                  display,
                   style: const TextStyle(color: Colors.black54),
                 ),
               ],

@@ -26,34 +26,45 @@ class TransferScreen extends StatelessWidget {
       },
       builder: (BuildContext context, TransferScreenViewModel viewModel, _) {
         return Scaffold(
-            appBar: AppBar(
-              title: const Text("Luân Chuyển"),
-              centerTitle: true,
+          appBar: AppBar(
+            title: const Text("Luân Chuyển"),
+            centerTitle: true,
+            leading: BackButton(
+              onPressed: () {
+                viewModel.finish(context);
+              },
             ),
-            body: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                children: [
-                  BarcodeScanner(
-                    finishScanned: (barcode) {
-                      if (isNullOrEmpty(barcode)) {
-                        return;
-                      }
+          ),
+          body: Stack(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  children: [
+                    BarcodeScanner(
+                      finishScanned: (barcode) {
+                        if (isNullOrEmpty(barcode)) {
+                          return;
+                        }
 
-                      viewModel.processInput(context, barcode);
-                    },
-                    value: viewModel.currentCode,
-                    labelText: "Quét vị trí nguồn",
-                    onBarcodeValueChanges: (value) {
-                      viewModel.currentCode = value;
-                    },
-                    cargoSelectedChanges: viewModel.cargoSelectedChanges,
-                    cargoSelected: viewModel.gettingCargo,
-                  ),
-                  Expanded(child: _sourceBinRegistered(context, viewModel)),
-                ],
+                        viewModel.processInput(context, barcode);
+                      },
+                      value: viewModel.currentCode,
+                      labelText: viewModel.getScanTitle(),
+                      onBarcodeValueChanges: (value) {
+                        viewModel.currentCode = value;
+                      },
+                      cargoSelectedChanges: viewModel.cargoSelectedChanges,
+                      cargoSelected: viewModel.gettingCargo,
+                    ),
+                    Expanded(child: _sourceBinRegistered(context, viewModel)),
+                  ],
+                ),
               ),
-            ));
+              if (viewModel.isProcessing) const BlurLoadingWidget(),
+            ],
+          ),
+        );
       },
     );
   }
@@ -94,8 +105,27 @@ class TransferScreen extends StatelessWidget {
           ),
         ),
         mainGap,
-        const Text(
-          "Sản phẩm tại vị trí nguồn",
+        FieldValue(
+          expanedFieldName: true,
+          fieldName: const Text(
+            "Sản phẩm tại vị trí nguồn",
+          ),
+          value: RichText(
+            text: TextSpan(
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
+              children: [
+                const TextSpan(text: "Số lượng còn lại: "),
+                TextSpan(
+                  text: "${data.totalProductCount}/${data.totalProductCount}",
+                  style: const TextStyle(
+                    color: Colors.grey,
+                  ),
+                )
+              ],
+            ),
+          ),
         ),
         mainGap,
         Expanded(
@@ -149,16 +179,27 @@ class TransferScreen extends StatelessWidget {
                                       maxLines: 2,
                                       softWrap: true,
                                     ),
-                                    FieldValue(
-                                      expanedFieldName: true,
-                                      fieldName: Text(product.barcode ?? ''),
-                                      value: TextButton(
-                                        onPressed: () {
-                                          //
-                                        },
-                                        child: const Text(
-                                          "Khu vực gợi ý",
-                                          style: TextStyle(color: Colors.blue),
+                                    itemHgap,
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 4.0),
+                                      child: FieldValue(
+                                        expanedFieldName: true,
+                                        fieldName: Text(product.barcode ?? ''),
+                                        value: SplashButtonWidget(
+                                          innerPadding: const EdgeInsets.all(6),
+                                          borderRadius:
+                                              const Radius.circular(5),
+                                          onPressed: () {
+                                            //
+                                          },
+                                          child: const Text(
+                                            "Khu vực gợi ý",
+                                            style: TextStyle(
+                                              color: Colors.blue,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
                                         ),
                                       ),
                                     ),
@@ -177,11 +218,19 @@ class TransferScreen extends StatelessWidget {
                                       ),
                                     itemHgap,
                                     Text(
-                                      "Ngày nhận hàng: ${product.receivedDate}",
+                                      "Ngày nhận hàng: ${product.displayReceivedDate}",
                                       maxLines: 2,
                                       softWrap: true,
                                     ),
                                     itemHgap,
+                                    if (!isNullOrEmpty(product.storageTypeName))
+                                      Text(
+                                        product.storageTypeName!,
+                                        style: const TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color: AppColor.colorB4B4B3,
+                                        ),
+                                      ),
                                     if (!isNullOrEmpty(irCode))
                                       Text(
                                         irCode,

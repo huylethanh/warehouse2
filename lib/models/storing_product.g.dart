@@ -53,7 +53,7 @@ abstract class _$StoringProductCWProxy {
 
   StoringProduct qty(int? qty);
 
-  StoringProduct receivedDate(String? receivedDate);
+  StoringProduct receivedDate(DateTime? receivedDate);
 
   StoringProduct storageTypeName(String? storageTypeName);
 
@@ -91,7 +91,7 @@ abstract class _$StoringProductCWProxy {
     String? productSize,
     ProductType? productType,
     int? qty,
-    String? receivedDate,
+    DateTime? receivedDate,
     String? storageTypeName,
     int? unitId,
     String? unitName,
@@ -189,7 +189,7 @@ class _$StoringProductCWProxyImpl implements _$StoringProductCWProxy {
   StoringProduct qty(int? qty) => this(qty: qty);
 
   @override
-  StoringProduct receivedDate(String? receivedDate) =>
+  StoringProduct receivedDate(DateTime? receivedDate) =>
       this(receivedDate: receivedDate);
 
   @override
@@ -335,7 +335,7 @@ class _$StoringProductCWProxyImpl implements _$StoringProductCWProxy {
       receivedDate: receivedDate == const $CopyWithPlaceholder()
           ? _value.receivedDate
           // ignore: cast_nullable_to_non_nullable
-          : receivedDate as String?,
+          : receivedDate as DateTime?,
       storageTypeName: storageTypeName == const $CopyWithPlaceholder()
           ? _value.storageTypeName
           // ignore: cast_nullable_to_non_nullable
@@ -378,7 +378,9 @@ StoringProduct _$StoringProductFromJson(Map<String, dynamic> json) =>
       unitId: json['unitId'] as int?,
       unitName: json['unitName'] as String?,
       partnerId: json['partnerId'] as int?,
-      receivedDate: json['receivedDate'] as String?,
+      receivedDate: json['receivedDate'] == null
+          ? null
+          : DateTime.parse(json['receivedDate'] as String),
       expiredDate: json['expiredDate'] as String?,
       manufactureDate: json['manufactureDate'] as String?,
       bestBeforeDate: json['bestBeforeDate'] as String?,
@@ -413,7 +415,7 @@ Map<String, dynamic> _$StoringProductToJson(StoringProduct instance) =>
       'unitId': instance.unitId,
       'unitName': instance.unitName,
       'partnerId': instance.partnerId,
-      'receivedDate': instance.receivedDate,
+      'receivedDate': instance.receivedDate?.toIso8601String(),
       'expiredDate': instance.expiredDate,
       'manufactureDate': instance.manufactureDate,
       'bestBeforeDate': instance.bestBeforeDate,
