@@ -221,7 +221,7 @@ class TransferScreenViewModel extends ViewModelBase {
       final check = await checkTransportAvailable.tranferable(code);
       if (code != destBin && check) {
         // _process.postValue(Resource.Success(NewDestLocation(code)))
-        // return@launch
+        return;
       } else {
         //throw Exception(getString(R.string.err_product_not_found))
         DialogService.showErrorBotToast("Không tìm thấy sản phẩm");
@@ -229,7 +229,7 @@ class TransferScreenViewModel extends ViewModelBase {
       }
     }
 
-    if (found!.barcode == code) {
+    if (found.barcode == code) {
       if (found.serials.isEmpty) {
         if (quantity > found.qty!) {
           //  throw Exception(getString(R.string.txt_transfer_err_3))
