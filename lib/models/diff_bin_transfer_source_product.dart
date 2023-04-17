@@ -1,5 +1,6 @@
 import 'package:copy_with_extension/copy_with_extension.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:warehouse_app/models/models.dart';
 import 'package:warehouse_app/utils/string_format.dart';
 import 'ir_code_view.dart';
 
@@ -25,6 +26,7 @@ class DiffBinTransferSourceProduct {
   final int? unitId;
   final int? productBrandId;
   final String? productBrandName;
+  final StoringProduct product;
 
   DiffBinTransferSourceProduct({
     this.advances,
@@ -44,6 +46,7 @@ class DiffBinTransferSourceProduct {
     this.receivedDate,
     this.storageTypeName,
     this.unitId,
+    required this.product,
   });
 
   bool equals(dynamic other) {

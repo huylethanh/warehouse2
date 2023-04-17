@@ -56,6 +56,28 @@ class TransferScreen extends StatelessWidget {
                       },
                       cargoSelectedChanges: viewModel.cargoSelectedChanges,
                       cargoSelected: viewModel.gettingCargo,
+                      moreInfo: viewModel.hasDesBin()
+                          ? RichText(
+                              text: const TextSpan(
+                                children: [
+                                  WidgetSpan(
+                                    alignment: PlaceholderAlignment.middle,
+                                    child: Icon(
+                                      FontAwesomeIcons.circleInfo,
+                                      size: 15,
+                                      color: Colors.red,
+                                    ),
+                                  ),
+                                  TextSpan(
+                                      text:
+                                          "  Quét vị trí nguồn để lấy toàn bộ",
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                      ))
+                                ],
+                              ),
+                            )
+                          : null,
                     ),
                     Expanded(child: _sourceBinRegistered(context, viewModel)),
                   ],
@@ -76,8 +98,17 @@ class TransferScreen extends StatelessWidget {
     }
 
     final data = viewModel.sourceBinRegistered ?? viewModel.resumeData;
-
     final List<DiffBinTransferSourceProduct> list = data!.listSourceProduct;
+
+    String? dstLocation = viewModel.resumeData?.dstLocation;
+
+    if (viewModel.resumeData != null) {
+      dstLocation = viewModel.resumeData?.dstLocation;
+    } else {
+      dstLocation = viewModel.destBin;
+    }
+
+    int remaining = data.totalProductCount - viewModel.processedCount;
 
     const itemHgap = SizedBox(
       height: 8,
@@ -104,6 +135,19 @@ class TransferScreen extends StatelessWidget {
             ),
           ),
         ),
+        if (!isNullOrEmpty(dstLocation))
+          RoundedContainer(
+            margin: const EdgeInsets.only(top: 8),
+            backgroundColor: AppColor.color3D3D3D,
+            child: FieldValue(
+              expanedFieldName: true,
+              fieldName: const Text("Vị trí chứa hàng"),
+              value: Text(
+                dstLocation!,
+                style: const TextStyle(color: Colors.blue),
+              ),
+            ),
+          ),
         mainGap,
         FieldValue(
           expanedFieldName: true,
@@ -118,7 +162,7 @@ class TransferScreen extends StatelessWidget {
               children: [
                 const TextSpan(text: "Số lượng còn lại: "),
                 TextSpan(
-                  text: "${data.totalProductCount}/${data.totalProductCount}",
+                  text: "$remaining/${data.totalProductCount}",
                   style: const TextStyle(
                     color: Colors.grey,
                   ),

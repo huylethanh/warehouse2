@@ -179,6 +179,7 @@ class TransferScreenViewModel extends ViewModelBase {
 
     if (openTransferSession.sessionId == 0) {
       await registerSource(code);
+
       return;
     }
 
@@ -188,7 +189,7 @@ class TransferScreenViewModel extends ViewModelBase {
         //  _process.finalue = Resource.Error(getString(R.string.err_infinalid_location))
         return;
       }
-      registerDestination(code);
+      await registerDestination(code);
       return;
     }
 
@@ -208,11 +209,11 @@ class TransferScreenViewModel extends ViewModelBase {
     if (isAwaitingSerial) {
       lookForSerial(code);
     } else {
-      process1(code, quantity);
+      doProcess(code, quantity);
     }
   }
 
-  Future<void> process1(String code, int quantity) async {
+  Future<void> doProcess(String code, int quantity) async {
     StoringProduct? found = storingProducts.firstWhereOrDefault(
         (it) => it.barcode == code || it.serials.contains(code));
 
@@ -272,6 +273,8 @@ class TransferScreenViewModel extends ViewModelBase {
     if (this.destBin == null) {
       return;
     }
+
+    setProcessing(true);
     final srcBin = registerSourceLogic.current();
     final destBin = this.destBin;
 
@@ -281,6 +284,7 @@ class TransferScreenViewModel extends ViewModelBase {
 
       if (quantityPacking == 0) {
         DialogService.showErrorBotToast("Không thể luân chuyển");
+        setProcessing(false);
         return;
       }
     }
@@ -289,17 +293,32 @@ class TransferScreenViewModel extends ViewModelBase {
         productId: product.productBarcodeId,
         sku: product.barcode,
         serial: serial);
-    await transferBINToBIN.execute(sessionId(), srcBin!, destBin!, p, quantity);
+    final result = await transferBINToBIN.execute(
+        sessionId(), srcBin!, destBin!, p, quantity);
+    if (!result) {
+      setProcessing(false);
+      return;
+    }
 
     processingItem = null;
     int qty = product.qty!;
+    final indexFound = storingProducts
+        .indexWhere((element) => element.productId == product.productId);
+
     if (serial == null) {
       qty -= quantity;
       product = product.copyWith(qty: qty);
 
       if (product.qty == 0) {
-        storingProducts.remove(product);
+        storingProducts.removeAt(indexFound);
         skus.remove(product.barcode);
+      } else {
+        final indexFound = storingProducts
+            .indexWhere((element) => element.productId == product.productId);
+
+        if (indexFound > -1) {
+          storingProducts[indexFound] = product;
+        }
       }
     } else {
       qty -= 1;
@@ -307,12 +326,12 @@ class TransferScreenViewModel extends ViewModelBase {
       product.serials.remove(serial);
 
       if (product.serials.isEmpty) {
-        storingProducts.remove(product);
+        storingProducts.removeAt(indexFound);
       }
     }
 
     processedCount += quantity;
-    final remain = totalCount - processedCount;
+    //final remain = totalCount - processedCount;
 
     if (storingProducts.isEmpty) {
       //TODOrun here
@@ -344,17 +363,20 @@ class TransferScreenViewModel extends ViewModelBase {
       //     )
       // )
     }
+
+    setProcessing(false);
   }
 
   newTransferUpdateList(StoringProduct product, int quantity) {
     final srcProduct = product.toViewBinTransferProduct();
     final qty = mapsBarcodeQty[srcProduct.productBarcodeId]! - quantity;
 
-    if (listSourceProduct.contains(srcProduct)) {
+    final index = listSourceProduct
+        .indexWhere((element) => element.productId == srcProduct.productId);
+    if (index > -1) {
       if (qty == 0) {
-        listSourceProduct.removeAt(listSourceProduct.indexOf(srcProduct));
+        listSourceProduct.removeAt(index);
       } else {
-        final index = listSourceProduct.indexOf(srcProduct);
         final listIrTemp =
             mapsIrCode[listSourceProduct[index].productBarcodeId];
 
@@ -440,7 +462,7 @@ class TransferScreenViewModel extends ViewModelBase {
       storingProducts.addAll(listProduct);
       sourceBinRegistered =
           SourceBinRegistered(code, totalCount, listSourceProduct);
-
+      currentCode = null;
 //TODO run here
       // _process.postfinalue(
       //     Resource.Success(
@@ -468,7 +490,7 @@ class TransferScreenViewModel extends ViewModelBase {
 
     await registerDestLocation.execute(openTransferSession.sessionId, bin);
     destBin = bin;
-
+    currentCode = null;
     setProcessing(false);
     // TODO: debug to see
     //    _process.postfinalue(Resource.Success(DestBinRegistered(bin)))
@@ -532,5 +554,13 @@ class TransferScreenViewModel extends ViewModelBase {
     setProcessing(false);
 
     Navigator.pop(context);
+  }
+
+  bool hasDesBin() {
+    if (!isNullOrEmpty(destBin) || !isNullOrEmpty(resumeData?.dstLocation)) {
+      return true;
+    }
+
+    return false;
   }
 }

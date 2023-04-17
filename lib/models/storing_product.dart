@@ -121,7 +121,8 @@ class StoringProduct {
         unitId: unitId,
         productBrandId: productBrandId,
         productBrandName: productBrandName,
-        storageTypeName: storageTypeName);
+        storageTypeName: storageTypeName,
+        product: this);
 
     return item;
   }

@@ -14,15 +14,18 @@ class BarcodeScanner extends StatelessWidget {
   final String? Function(String barcode) onBarcodeValueChanges;
   final void Function(bool)? cargoSelectedChanges;
   final bool? cargoSelected;
+  final Widget? moreInfo;
 
-  const BarcodeScanner(
-      {super.key,
-      required this.finishScanned,
-      required this.labelText,
-      required this.onBarcodeValueChanges,
-      this.cargoSelectedChanges,
-      this.cargoSelected,
-      this.value});
+  const BarcodeScanner({
+    super.key,
+    required this.finishScanned,
+    required this.labelText,
+    required this.onBarcodeValueChanges,
+    this.cargoSelectedChanges,
+    this.cargoSelected,
+    this.moreInfo,
+    this.value,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -64,13 +67,22 @@ class BarcodeScanner extends StatelessWidget {
                 },
               ),
             ),
-            TextButton(
+            const SizedBox(
+              width: 8,
+            ),
+            ElevatedButton(
                 onPressed: () {
                   finishScanned(scannedValue);
                 },
                 child: const Icon(FontAwesomeIcons.arrowRight))
           ],
         ),
+        if (moreInfo != null) ...[
+          const SizedBox(
+            height: 4,
+          ),
+          moreInfo!
+        ],
         if (cargoSelectedChanges != null)
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
