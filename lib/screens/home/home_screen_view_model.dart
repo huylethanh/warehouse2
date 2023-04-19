@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:warehouse_app/base/view_models/index.dart';
 import 'package:warehouse_app/models/models.dart';
+import 'package:warehouse_app/screens/cycle_counts/cycle_count_selection_view.dart';
 import 'package:warehouse_app/screens/picking/picking.dart';
 import 'package:warehouse_app/screens/repick/repick_screen_view_model.dart';
 import 'package:warehouse_app/screens/transfer/transfer.dart';
@@ -28,8 +29,8 @@ class HomeScreenViewModel extends ViewModelBase {
   static const String eqc = "Eqc";
   static const String returnProdcut = "Return";
   static const String repick = "Repick";
-  static const String randomCount = "RandomCount";
-  static const String verifyCycleCount = "VerifyCycleCount";
+  static const String randomCount = "RandomCount"; //8
+  static const String verifyCycleCount = "VerifyCycleCount"; //9
 
   int selectedIndex = 0;
 
@@ -75,7 +76,7 @@ class HomeScreenViewModel extends ViewModelBase {
 
     views.add(
       {
-        "name": audit,
+        "name": randomCount,
         "icon": FontAwesomeIcons.checkToSlot,
         "color": Colors.blueGrey
       },
@@ -90,6 +91,17 @@ class HomeScreenViewModel extends ViewModelBase {
   }
 
   onSelectedView(BuildContext context, String name) {
+    final checked = _checkAction(context, name);
+
+    if (checked == null) {
+      return;
+    }
+
+    if (checked == false) {
+      DialogService.showWarningBotToast("Bạn còn công việc chưa hoàn thành.");
+      return;
+    }
+
     late Widget page;
     switch (name) {
       case receive:
@@ -111,18 +123,11 @@ class HomeScreenViewModel extends ViewModelBase {
       case transfer:
         page = const TransferScreen();
         break;
-    }
 
-    final checked = true;
-    _checkAction(context, name);
-
-    if (checked == null) {
-      return;
-    }
-
-    if (checked == false) {
-      DialogService.showWarningBotToast("Bạn còn công việc chưa hoàn thành.");
-      return;
+      case randomCount:
+      case verifyCycleCount:
+        _showBottomsheet(context, name);
+        return;
     }
 
     Navigator.push(
@@ -133,6 +138,25 @@ class HomeScreenViewModel extends ViewModelBase {
         },
       ),
     );
+  }
+
+  void _showBottomsheet(BuildContext context, String name) {
+    late Widget content;
+    late String title;
+    switch (name) {
+      case randomCount:
+        content = const CycleCountSelectionView();
+        title = "Vui lòng chòn loại kiểm kê";
+        break;
+
+      case verifyCycleCount:
+        title = "Vui lòng chòn loại xác nhận";
+        break;
+      default:
+    }
+
+    DialogService.showBottomSheet(context,
+        chid: content, title: title, canDismiss: false);
   }
 
   String getName(String name) {
@@ -152,7 +176,7 @@ class HomeScreenViewModel extends ViewModelBase {
       case transfer:
         return "Luân Chuyển";
 
-      case audit:
+      case randomCount:
         return "Kiểm Kê";
 
       case handOver:
