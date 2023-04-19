@@ -23,6 +23,8 @@ abstract class _$DiffBinTransferSourceProductCWProxy {
 
   DiffBinTransferSourceProduct partnerSku(String? partnerSku);
 
+  DiffBinTransferSourceProduct product(StoringProduct product);
+
   DiffBinTransferSourceProduct productBarcodeId(int? productBarcodeId);
 
   DiffBinTransferSourceProduct productBrandId(int? productBrandId);
@@ -56,6 +58,7 @@ abstract class _$DiffBinTransferSourceProductCWProxy {
     int? partnerId,
     String? partnerName,
     String? partnerSku,
+    StoringProduct? product,
     int? productBarcodeId,
     int? productBrandId,
     String? productBrandName,
@@ -108,6 +111,10 @@ class _$DiffBinTransferSourceProductCWProxyImpl
       this(partnerSku: partnerSku);
 
   @override
+  DiffBinTransferSourceProduct product(StoringProduct product) =>
+      this(product: product);
+
+  @override
   DiffBinTransferSourceProduct productBarcodeId(int? productBarcodeId) =>
       this(productBarcodeId: productBarcodeId);
 
@@ -158,6 +165,7 @@ class _$DiffBinTransferSourceProductCWProxyImpl
     Object? partnerId = const $CopyWithPlaceholder(),
     Object? partnerName = const $CopyWithPlaceholder(),
     Object? partnerSku = const $CopyWithPlaceholder(),
+    Object? product = const $CopyWithPlaceholder(),
     Object? productBarcodeId = const $CopyWithPlaceholder(),
     Object? productBrandId = const $CopyWithPlaceholder(),
     Object? productBrandName = const $CopyWithPlaceholder(),
@@ -201,6 +209,10 @@ class _$DiffBinTransferSourceProductCWProxyImpl
           ? _value.partnerSku
           // ignore: cast_nullable_to_non_nullable
           : partnerSku as String?,
+      product: product == const $CopyWithPlaceholder() || product == null
+          ? _value.product
+          // ignore: cast_nullable_to_non_nullable
+          : product as StoringProduct,
       productBarcodeId: productBarcodeId == const $CopyWithPlaceholder()
           ? _value.productBarcodeId
           // ignore: cast_nullable_to_non_nullable
@@ -278,6 +290,7 @@ DiffBinTransferSourceProduct _$DiffBinTransferSourceProductFromJson(
           : DateTime.parse(json['receivedDate'] as String),
       storageTypeName: json['storageTypeName'] as String?,
       unitId: json['unitId'] as int?,
+      product: StoringProduct.fromJson(json['product'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$DiffBinTransferSourceProductToJson(
@@ -300,4 +313,5 @@ Map<String, dynamic> _$DiffBinTransferSourceProductToJson(
       'unitId': instance.unitId,
       'productBrandId': instance.productBrandId,
       'productBrandName': instance.productBrandName,
+      'product': instance.product,
     };

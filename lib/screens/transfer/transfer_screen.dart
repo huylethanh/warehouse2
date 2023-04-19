@@ -22,7 +22,7 @@ class TransferScreen extends StatelessWidget {
           return;
         }
 
-        viewModel.resume(resumeTask!);
+        viewModel.resume(context, resumeTask!);
       },
       builder: (BuildContext context, TransferScreenViewModel viewModel, _) {
         return Scaffold(
@@ -172,148 +172,147 @@ class TransferScreen extends StatelessWidget {
           ),
         ),
         mainGap,
-        Expanded(
-          child: RoundedContainer(
-            backgroundColor: AppColor.color3D3D3D,
-            child: SingleChildScrollView(
-              child: Column(
-                //  mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  const SizedBox(
-                    height: 12,
-                  ),
-                  ...list.map<Widget>((product) {
-                    index++;
-                    final irCode = viewModel.getIrCode(product);
+        if (list.isNotEmpty)
+          Expanded(
+            child: RoundedContainer(
+              backgroundColor: AppColor.color3D3D3D,
+              child: SingleChildScrollView(
+                child: Column(
+                  //  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    const SizedBox(
+                      height: 12,
+                    ),
+                    ...list.map<Widget>((product) {
+                      index++;
+                      final irCode = viewModel.getIrCode(product);
 
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 8.0),
-                      child: Column(
-                        children: [
-                          if (index != 0) const Divider(),
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              RoundedContainer(
-                                backgroundColor: AppColor.color636366,
-                                height: 70,
-                                width: 70,
-                                child: Image.network(
-                                  product.avatarUrl ?? "",
-                                  errorBuilder: (context, error, stackTrace) {
-                                    return const Icon(
-                                      FontAwesomeIcons.image,
-                                      size: 40,
-                                    );
-                                  },
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8.0),
+                        child: Column(
+                          children: [
+                            if (index != 0) const Divider(),
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                RoundedContainer(
+                                  backgroundColor: AppColor.color636366,
+                                  height: 70,
+                                  width: 70,
+                                  child: Image.network(
+                                    product.avatarUrl ?? "",
+                                    errorBuilder: (context, error, stackTrace) {
+                                      return const Icon(
+                                        FontAwesomeIcons.image,
+                                        size: 40,
+                                      );
+                                    },
+                                  ),
                                 ),
-                              ),
-                              const SizedBox(
-                                width: 16,
-                              ),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      product.productName ?? "",
-                                      maxLines: 2,
-                                      softWrap: true,
-                                    ),
-                                    itemHgap,
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          vertical: 4.0),
-                                      child: FieldValue(
-                                        expanedFieldName: true,
-                                        fieldName: Text(product.barcode ?? ''),
-                                        value: SplashButtonWidget(
-                                          innerPadding: const EdgeInsets.all(6),
-                                          borderRadius:
-                                              const Radius.circular(5),
-                                          onPressed: () {
-                                            //
-                                          },
-                                          child: const Text(
-                                            "Khu vực gợi ý",
-                                            style: TextStyle(
-                                              color: Colors.blue,
-                                              fontWeight: FontWeight.bold,
+                                const SizedBox(
+                                  width: 16,
+                                ),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        product.productName ?? "",
+                                        maxLines: 2,
+                                        softWrap: true,
+                                      ),
+                                      itemHgap,
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 4.0),
+                                        child: FieldValue(
+                                          expanedFieldName: true,
+                                          fieldName:
+                                              Text(product.barcode ?? ''),
+                                          value: SplashButtonWidget(
+                                            innerPadding:
+                                                const EdgeInsets.all(6),
+                                            borderRadius:
+                                                const Radius.circular(5),
+                                            onPressed: () {
+                                              viewModel
+                                                  .showSuggestLocationsDialog(
+                                                      context, product);
+                                            },
+                                            child: const Text(
+                                              "Khu vực gợi ý",
+                                              style: TextStyle(
+                                                color: Colors.blue,
+                                                fontWeight: FontWeight.bold,
+                                              ),
                                             ),
                                           ),
                                         ),
                                       ),
-                                    ),
-                                    itemHgap,
-                                    Text(
-                                      product.partnerName ?? "",
-                                      maxLines: 2,
-                                      softWrap: true,
-                                    ),
-                                    if (!isNullOrEmpty(
-                                        product.productBrandName))
+                                      itemHgap,
                                       Text(
-                                        product.productBrandName ?? "",
+                                        product.partnerName ?? "",
                                         maxLines: 2,
                                         softWrap: true,
                                       ),
-                                    itemHgap,
-                                    Text(
-                                      "Ngày nhận hàng: ${product.displayReceivedDate}",
-                                      maxLines: 2,
-                                      softWrap: true,
-                                    ),
-                                    itemHgap,
-                                    if (!isNullOrEmpty(product.storageTypeName))
-                                      Text(
-                                        product.storageTypeName!,
-                                        style: const TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          color: AppColor.colorB4B4B3,
+                                      if (!isNullOrEmpty(
+                                          product.productBrandName))
+                                        Text(
+                                          product.productBrandName ?? "",
+                                          maxLines: 2,
+                                          softWrap: true,
                                         ),
-                                      ),
-                                    if (!isNullOrEmpty(irCode))
+                                      itemHgap,
                                       Text(
-                                        irCode,
+                                        "Ngày nhận hàng: ${product.displayReceivedDate}",
                                         maxLines: 2,
                                         softWrap: true,
                                       ),
-                                  ],
+                                      itemHgap,
+                                      if (!isNullOrEmpty(
+                                          product.storageTypeName))
+                                        Text(
+                                          product.storageTypeName!,
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: AppColor.colorB4B4B3,
+                                          ),
+                                        ),
+                                      if (!isNullOrEmpty(irCode))
+                                        Text(
+                                          irCode,
+                                          maxLines: 2,
+                                          softWrap: true,
+                                        ),
+                                    ],
+                                  ),
                                 ),
-                              ),
-                              const SizedBox(
-                                width: 16,
-                              ),
-                              Text(
-                                "${product.qty}",
-                                style: const TextStyle(
-                                  color: Colors.amber,
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
+                                const SizedBox(
+                                  width: 16,
                                 ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    );
-                  }).toList(),
-                  // ListView.builder(
-                  //   shrinkWrap: true,
-                  //   itemCount: list.length,
-                  //   itemBuilder: (context, index) {
-                  //     final product = list[index];
-
-                  //   },
-                  // ),
-                ],
+                                Text(
+                                  "${product.qty}",
+                                  style: const TextStyle(
+                                    color: Colors.amber,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      );
+                    }).toList(),
+                  ],
+                ),
               ),
             ),
           ),
-        ),
       ],
     );
   }

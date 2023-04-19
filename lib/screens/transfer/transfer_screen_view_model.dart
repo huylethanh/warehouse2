@@ -3,6 +3,7 @@
 import 'package:darq/darq.dart';
 import 'package:flutter/material.dart';
 import 'package:warehouse_app/base/view_models/index.dart';
+import 'package:warehouse_app/screens/transfer/suggest_location_view.dart';
 import 'package:warehouse_app/utils/utils.dart';
 import 'package:warehouse_app/widgets/widgets.dart';
 
@@ -65,7 +66,7 @@ class TransferScreenViewModel extends ViewModelBase {
     return "Vị trí nguồn hiện tại";
   }
 
-  Future<void> resume(TransferTask task) async {
+  Future<void> resume(BuildContext context, TransferTask task) async {
     setProcessing(true);
     openTransferSession.resume(task.sessionId!);
 
@@ -124,21 +125,32 @@ class TransferScreenViewModel extends ViewModelBase {
     );
 
     setProcessing(false);
+
+    if (list.isEmpty) {
+      final confirmed = await DialogService.confirmDialog(context,
+          title: "Đóng vị trí",
+          message: "Đã chuyển hết sản phẩm, bạn có muốn đóng vị trí hiện tại?");
+
+      if (!confirmed) {
+        return;
+      }
+
+      close(context);
+    }
   }
 
-  Future<void> close() async {
-    setProcessing(true);
+  Future<void> moveAll(BuildContext context) async {
+    final srBin = registerSourceLogic.current();
 
-    await closeTransportSession.execute(sessionId());
-    openTransferSession.close();
+    final confirmed = await DialogService.confirmDialog(context,
+        title: "Chuyển tất cả",
+        message:
+            "Bạn có chắc muốn luân chuyển tất cả sản phẩm từ $srBin đến $destBin không?");
 
-    // TODO: debug to see
-    //_process.postfinalue(Resource.Success(StartOver))
+    if (!confirmed) {
+      return;
+    }
 
-    setProcessing(false);
-  }
-
-  Future<void> moveAll() async {
     setProcessing(true);
     final destLocation = destBin ?? "n/a";
     transferAllBINToBIN.execute(
@@ -196,13 +208,7 @@ class TransferScreenViewModel extends ViewModelBase {
     final isAwaitingSerial = processingItem != null;
 
     if (!isAwaitingSerial && code == registerSourceLogic.current()) {
-      //TODO: run here
-      // _process.finalue = Resource.Success(
-      //     MoveAll(
-      //         registerSource.current() ?: "n/a", destBin ?: "n/a",
-      //         emptyList()
-      //     )
-      // )
+      await moveAll(context);
       return;
     }
 
@@ -237,7 +243,7 @@ class TransferScreenViewModel extends ViewModelBase {
               "Số lượng sản phẩm cần luân chuyển lớn hơn số lượng có trong vị trí nguồn");
           return;
         } else {
-          process(found, quantity, null);
+          _process(found, quantity, null);
         }
       } else {
         processingItem = found;
@@ -245,7 +251,7 @@ class TransferScreenViewModel extends ViewModelBase {
         return;
       }
     } else {
-      await process(found, 1, code);
+      await _process(found, 1, code);
     }
   }
 
@@ -257,14 +263,14 @@ class TransferScreenViewModel extends ViewModelBase {
     final index =
         processingItem!.serials.indexWhere((serial) => serial == code);
     if (index > -1) {
-      process(processingItem!, 1, code);
+      _process(processingItem!, 1, code);
     } else {
       DialogService.showErrorBotToast(
           "Serial không tồn tại trong vị trí nguồn");
     }
   }
 
-  Future<void> process(
+  Future<void> _process(
       StoringProduct product, int quantity, String? serial) async {
     if (registerSourceLogic.current() == null) {
       return;
@@ -546,10 +552,17 @@ class TransferScreenViewModel extends ViewModelBase {
       return;
     }
 
+    await close(context);
+  }
+
+  Future<void> close(BuildContext context) async {
     setProcessing(true);
 
     await closeTransportSession.execute(sessionId());
     await openTransferSession.close();
+
+    // TODO: debug to see
+    //_process.postfinalue(Resource.Success(StartOver))
 
     setProcessing(false);
 
@@ -562,5 +575,15 @@ class TransferScreenViewModel extends ViewModelBase {
     }
 
     return false;
+  }
+
+  Future<void> showSuggestLocationsDialog(
+      BuildContext context, DiffBinTransferSourceProduct product) {
+    DialogService.showBottomSheet(context,
+        chid: SuggestLocationView(
+          product: product,
+        ),
+        title: "Khu vực gợi ý");
+    return Future.value();
   }
 }
