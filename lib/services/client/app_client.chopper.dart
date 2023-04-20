@@ -507,4 +507,73 @@ class _$AppClient extends AppClient {
     );
     return client.send<dynamic, dynamic>($request);
   }
+
+  @override
+  Future<Response<CycleCountSessionResponse>> startSessionCycleCount(
+      Map<String, dynamic> request) {
+    final Uri $url = Uri.parse('/CycleCounts');
+    final $body = request;
+    final Request $request = Request(
+      'POST',
+      $url,
+      client.baseUrl,
+      body: $body,
+    );
+    return client
+        .send<CycleCountSessionResponse, CycleCountSessionResponse>($request);
+  }
+
+  @override
+  Future<Response<CycleCountSession>> getProductsCycleCount(int sessionId) {
+    final Uri $url = Uri.parse('/CountingSessions/${sessionId}/for-counting');
+    final Request $request = Request(
+      'GET',
+      $url,
+      client.baseUrl,
+    );
+    return client.send<CycleCountSession, CycleCountSession>($request);
+  }
+
+  @override
+  Future<Response<dynamic>> processCount(
+    int sessionId,
+    Map<String, dynamic> request,
+  ) {
+    final Uri $url = Uri.parse('CountingSessions/${sessionId}/process-item');
+    final $body = request;
+    final Request $request = Request(
+      'POST',
+      $url,
+      client.baseUrl,
+      body: $body,
+    );
+    return client.send<dynamic, dynamic>($request);
+  }
+
+  @override
+  Future<Response<dynamic>> removeCount(
+    int sessionId,
+    Map<String, dynamic> request,
+  ) {
+    final Uri $url = Uri.parse('CountingSessions/${sessionId}/remove-item');
+    final $body = request;
+    final Request $request = Request(
+      'POST',
+      $url,
+      client.baseUrl,
+      body: $body,
+    );
+    return client.send<dynamic, dynamic>($request);
+  }
+
+  @override
+  Future<Response<dynamic>> finishSessionCycleCount(int sessionId) {
+    final Uri $url = Uri.parse('CountingSessions/${sessionId}/finish');
+    final Request $request = Request(
+      'POST',
+      $url,
+      client.baseUrl,
+    );
+    return client.send<dynamic, dynamic>($request);
+  }
 }

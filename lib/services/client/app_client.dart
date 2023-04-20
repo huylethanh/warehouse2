@@ -150,4 +150,33 @@ abstract class AppClient extends ChopperService {
 
   @Post(path: "/Transfers/{id}/finish")
   Future<Response> finishTransferring(@Path("id") int sessionId);
+
+  //============ Cycle count =======================================
+
+  @Post(path: "/CycleCounts") //CycleCountSessionRequest
+  Future<Response<CycleCountSessionResponse>> startSessionCycleCount(
+      @Body() Map<String, dynamic> request);
+
+  @Get(path: "/CountingSessions/{sessionId}/for-counting")
+  Future<Response<CycleCountSession>> getProductsCycleCount(
+      @Path("sessionId") int sessionId);
+
+  @Post(path: "CountingSessions/{sessionId}/process-item")
+  Future<Response> processCount(
+      @Path("sessionId")
+          int sessionId,
+      @Body()
+          Map<String, dynamic>
+              request); //    @Body payload: CycleCountProcessPayload
+
+  @Post(path: "CountingSessions/{sessionId}/remove-item")
+  Future<Response> removeCount(
+      @Path("sessionId")
+          int sessionId,
+      @Body()
+          Map<String, dynamic>
+              request); // @Body payload: CycleCountRemovePayload
+
+  @Post(path: "CountingSessions/{sessionId}/finish")
+  Future<Response> finishSessionCycleCount(@Path("sessionId") int sessionId);
 }
