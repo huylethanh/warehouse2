@@ -107,6 +107,7 @@ class HomeScreen extends StatelessWidget {
                           viewModel.getName(
                             e["name"],
                           ),
+                          textAlign: TextAlign.center,
                           style: TextStyle(fontSize: 15),
                         ),
                       ],

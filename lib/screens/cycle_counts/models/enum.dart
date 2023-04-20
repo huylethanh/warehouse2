@@ -1,13 +1,7 @@
 enum CycleCountType {
+  SKU,
+  Daily;
+
   // Random,
   // Partner,
-  SKU,
-  Daily;
-}
-
-enum verifyCycleCountType {
-  Random,
-  Partner,
-  SKU,
-  Daily;
 }

@@ -83,6 +83,13 @@ class HomeScreenViewModel extends ViewModelBase {
     );
     views.add(
       {
+        "name": verifyCycleCount,
+        "icon": FontAwesomeIcons.checkToSlot,
+        "color": Colors.blueGrey.shade600
+      },
+    );
+    views.add(
+      {
         "name": handOver,
         "icon": FontAwesomeIcons.listCheck,
         "color": Colors.blueAccent
@@ -151,6 +158,9 @@ class HomeScreenViewModel extends ViewModelBase {
 
       case verifyCycleCount:
         title = "Vui lòng chòn loại xác nhận";
+        content = const CycleCountSelectionView(
+          isCycleCount: true,
+        );
         break;
       default:
     }
@@ -178,6 +188,9 @@ class HomeScreenViewModel extends ViewModelBase {
 
       case randomCount:
         return "Kiểm Kê";
+
+      case verifyCycleCount:
+        return "Xác Nhận Kiểm Kê";
 
       case handOver:
         return "Bàn Giao";

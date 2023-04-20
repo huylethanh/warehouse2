@@ -14,3 +14,9 @@ enum ProductType {
 
   const ProductType(this.value);
 }
+
+extension ProductTypeExtension on ProductType {
+  bool requireSerial() {
+    return this != ProductType.nonSerial;
+  }
+}

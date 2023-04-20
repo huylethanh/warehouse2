@@ -2,18 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:stacked/stacked.dart';
 import 'package:warehouse_app/base/view_models/view_model_base.dart';
-import 'package:warehouse_app/screens/cycle_counts/cycle_count_screen.dart';
 import 'package:warehouse_app/screens/cycle_counts/models/enum.dart';
+import 'package:warehouse_app/screens/cycle_counts/screen_sku/sku_cycle_count_screen.dart';
+import 'package:warehouse_app/screens/cycle_counts/screen_sku/sku_verify_cycle_count_screen.dart';
 import 'package:warehouse_app/utils/utils.dart';
 import 'package:warehouse_app/widgets/buttons/index.dart';
 
+import 'screen_daily/daily_cycle_count_screen.dart';
+import 'screen_daily/daily_verify_cycle_count_screen.dart';
+
 class CycleCountSelectionView extends StatelessWidget {
-  const CycleCountSelectionView({super.key});
+  final bool isCycleCount;
+
+  const CycleCountSelectionView({super.key, this.isCycleCount = false});
 
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder.reactive(viewModelBuilder: () {
-      return _CycleCountSelectionViewViewModel();
+      return _CycleCountSelectionViewViewModel(isCycleCount);
     }, builder:
         (BuildContext context, _CycleCountSelectionViewViewModel viewModel, _) {
       final items = viewModel.types;
@@ -86,14 +92,21 @@ class CycleCountSelectionView extends StatelessWidget {
 class _CycleCountSelectionViewViewModel extends ViewModelBase {
   List<CycleCountType> types = CycleCountType.values;
   CycleCountType? selectedType;
+  late bool isCycleCount;
+
+  _CycleCountSelectionViewViewModel(this.isCycleCount);
 
   String getDiplayName(CycleCountType type) {
     switch (type) {
       case CycleCountType.Daily:
-        return "Xác nhận kiểm kê thường nhật";
+        return isCycleCount
+            ? "Xác nhận kiểm kê thường nhật"
+            : "Kiểm kê thường nhật";
 
       case CycleCountType.SKU:
-        return "Kiểm kê theo sản phẩm";
+        return isCycleCount
+            ? "Xác nhận kiểm kê theo sản phẩm"
+            : "Kiểm kê theo sản phẩm";
     }
   }
 
@@ -107,9 +120,29 @@ class _CycleCountSelectionViewViewModel extends ViewModelBase {
       context,
       MaterialPageRoute(
         builder: (builder) {
-          return CycleCountScreen();
+          return _getScreen();
         },
       ),
     );
+  }
+
+  Widget _getScreen() {
+    late Widget screen;
+
+    switch (selectedType) {
+      case CycleCountType.Daily:
+        screen = isCycleCount
+            ? DailyVerifyCycleCountScreen()
+            : DailyCycleCountScreen();
+        break;
+
+      case CycleCountType.SKU:
+        screen =
+            isCycleCount ? SkuVerifyCycleCountScreen() : SkuCycleCountScreen();
+        break;
+      default:
+    }
+
+    return screen;
   }
 }
