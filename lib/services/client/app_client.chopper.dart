@@ -576,4 +576,41 @@ class _$AppClient extends AppClient {
     );
     return client.send<dynamic, dynamic>($request);
   }
+
+  @override
+  Future<Response<List<PartnerCycleCount>>> getPartnersCycleCount(
+    int cycleCountType,
+    int roundNumber,
+  ) {
+    final Uri $url = Uri.parse('/CycleCounts/partner');
+    final Map<String, dynamic> $params = <String, dynamic>{
+      'cycleCountType': cycleCountType,
+      'roundNumber': roundNumber,
+    };
+    final Request $request = Request(
+      'GET',
+      $url,
+      client.baseUrl,
+      parameters: $params,
+    );
+    return client.send<List<PartnerCycleCount>, PartnerCycleCount>($request);
+  }
+
+  @override
+  Future<Response<PartnerCycleCount>> getPartnerDetailCycleCount(
+    int cycleCountId,
+    int roundNumber,
+  ) {
+    final Uri $url = Uri.parse('/CycleCounts/partner/${cycleCountId}/detail');
+    final Map<String, dynamic> $params = <String, dynamic>{
+      'roundNumber': roundNumber
+    };
+    final Request $request = Request(
+      'GET',
+      $url,
+      client.baseUrl,
+      parameters: $params,
+    );
+    return client.send<PartnerCycleCount, PartnerCycleCount>($request);
+  }
 }

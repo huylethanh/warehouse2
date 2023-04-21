@@ -163,20 +163,21 @@ abstract class AppClient extends ChopperService {
 
   @Post(path: "CountingSessions/{sessionId}/process-item")
   Future<Response> processCount(
-      @Path("sessionId")
-          int sessionId,
-      @Body()
-          Map<String, dynamic>
-              request); //    @Body payload: CycleCountProcessPayload
+      @Path("sessionId") int sessionId, @Body() Map<String, dynamic> request);
 
   @Post(path: "CountingSessions/{sessionId}/remove-item")
   Future<Response> removeCount(
-      @Path("sessionId")
-          int sessionId,
-      @Body()
-          Map<String, dynamic>
-              request); // @Body payload: CycleCountRemovePayload
+      @Path("sessionId") int sessionId, @Body() Map<String, dynamic> request);
 
   @Post(path: "CountingSessions/{sessionId}/finish")
   Future<Response> finishSessionCycleCount(@Path("sessionId") int sessionId);
+
+  @Get(path: "/CycleCounts/partner")
+  Future<Response<List<PartnerCycleCount>>> getPartnersCycleCount(
+      @Query("cycleCountType") int cycleCountType,
+      @Query("roundNumber") int roundNumber);
+
+  @Get(path: "/CycleCounts/partner/{id}/detail")
+  Future<Response<PartnerCycleCount>> getPartnerDetailCycleCount(
+      @Path("id") int cycleCountId, @Query("roundNumber") int roundNumber);
 }
