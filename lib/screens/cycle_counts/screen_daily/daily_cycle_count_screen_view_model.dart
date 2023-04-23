@@ -1,45 +1,41 @@
-import 'package:warehouse_app/base/view_models/index.dart';
-import 'package:warehouse_app/logics/cycle_count_logic/finish_count_logic.dart';
-import 'package:warehouse_app/logics/logics.dart';
+import 'package:flutter/material.dart';
+import 'package:warehouse_app/models/cycle_count_constain.dart';
+import 'package:warehouse_app/screens/cycle_counts/models/cycle_count_view_model_base.dart';
 
-class DailyCycleCountScreenViewModel extends ViewModelBase {
+class DailyCycleCountScreenViewModel extends CycleCountViewModelBase {
+  @override
+  Future<void> scan(BuildContext context, String barcode) async {
+    await super.scan(context, barcode);
 
+    if (lvSessionId == 0) {
+      scanLocationCode(
+          barcode: codeScan,
+          cycleCountType: DAILY,
+          cycleCountId: partnerView.cycleCountId!);
+    } else {
+      scanSkuCode(codeScan, qty);
+    }
+  }
 
+  // fun confirmFinish() {
+  //     processState.postValue(Resource.Success(CycleCountState.ConfirmFinish))
+  // }
 
-   override fun scan(barcode: String) {
-        viewModelScope.launch(defaultHandler + CoroutineDispatchers.Computing) {
-            super.scan(barcode)
-            if (lvSessionId == 0L) {
-                scanLocationCode(
-                    barcode = codeScan,
-                    cycleCountType = DAILY,
-                    cycleCountId = partnerView.cycleCountId
-                )
-            } else {
-                scanSkuCode(codeScan, qty)
-            }
-        }
+  Future<void> getLocations() async {
+    //  currentStateUI = CycleCount.LOAD_PARTNER_DETAIL_SATE
+
+    final partner = await partnerUseCase.getPartners(DAILY, CYCLE_COUNT);
+    if (partner == null || partner.isEmpty) {
+      //   _partnerDetail.postValue(Resource.Success(partnerView.initEmptyPartner()))
+      return;
     }
 
-    // fun confirmFinish() {
-    //     processState.postValue(Resource.Success(CycleCountState.ConfirmFinish))
-    // }
+    final partnerDetail =
+        await partnerUseCase.getPartnerDetail(partner.first.cycleCountId!);
+    partnerView = partnerDetail!.toView();
 
-   Future<void>  getLocations() {
-        currentStateUI = CycleCount.LOAD_PARTNER_DETAIL_SATE
-        _partnerDetail.value = Resource.Loading()
-        viewModelScope.launch(defaultHandler + CoroutineDispatchers.Computing) {
-            val partner = partnerUseCase.getPartners(DAILY, CYCLE_COUNT)
-            if (partner.isEmpty()) {
-                _partnerDetail.postValue(Resource.Success(partnerView.initEmptyPartner()))
-                return@launch
-            }
+    //    _partnerDetail.postValue(Resource.Success(partnerDetail))
 
-            val partnerDetail = partnerUseCase.getPartnerDetail(partner.first().cycleCountId)
-            partnerView = partnerDetail.toView()
-            _partnerDetail.postValue(Resource.Success(partnerDetail))
-        }
-        return _partnerDetail
-    }
-
+    //return _partnerDetail;
+  }
 }

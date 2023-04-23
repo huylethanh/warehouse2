@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
+import 'package:warehouse_app/utils/utils.dart';
 
 import '../../screens/views/views.dart';
 import '../../widgets/widgets.dart';
@@ -51,5 +52,14 @@ abstract class ViewModelBase extends BaseViewModel {
 
   bool isSku(String code) {
     return false;
+  }
+
+  int? getQuantity(List<String> parts) {
+    final quantityString = parts.getOrElse<String>(1, (index) {
+      return "1";
+    });
+
+    final quantity = int.tryParse(quantityString);
+    return quantity;
   }
 }

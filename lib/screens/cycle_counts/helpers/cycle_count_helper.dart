@@ -207,8 +207,7 @@ class CycleCountHelper {
     }
   }
 
-  MapEntry<List<CycleCountItem>, List<CycleCountItem>> twoList(
-      List<CycleCountItem> inWaiting, List<CycleCountItem> counting) {
+  MapEntry<List<CycleCountItem>, List<CycleCountItem>> twoList() {
     return MapEntry(inWaiting, counting);
   }
 
