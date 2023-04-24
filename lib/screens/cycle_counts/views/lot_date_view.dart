@@ -56,6 +56,55 @@ class LotDateView extends StatelessWidget {
             ],
           ),
         ),
+        const SizedBox(
+          height: 8,
+        ),
+        RichText(
+          text: const TextSpan(
+            children: [
+              WidgetSpan(
+                alignment: PlaceholderAlignment.middle,
+                child: Icon(
+                  FontAwesomeIcons.circleInfo,
+                  size: 15,
+                  color: Colors.red,
+                ),
+              ),
+              TextSpan(
+                  text: "   Vui lòng kiểm tra thông tin trước khi xác nhận",
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Colors.redAccent,
+                  ))
+            ],
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8.0),
+          child: Row(
+            children: [
+              Expanded(
+                child: SplashButtonWidget(
+                    borderRadius: const Radius.circular(10),
+                    innerPadding: const EdgeInsets.all(10),
+                    margin: const EdgeInsets.only(right: 8),
+                    color: Colors.green,
+                    child: const Text("Xác nhận"),
+                    onPressed: () {}),
+              ),
+              Expanded(
+                child: SplashButtonWidget(
+                  borderRadius: const Radius.circular(10),
+                  innerPadding: const EdgeInsets.all(10),
+                  margin: const EdgeInsets.only(left: 8),
+                  color: Colors.red,
+                  child: const Text("Đóng"),
+                  onPressed: () {},
+                ),
+              )
+            ],
+          ),
+        )
       ],
     );
   }
