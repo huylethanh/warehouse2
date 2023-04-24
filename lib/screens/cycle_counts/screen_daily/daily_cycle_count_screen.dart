@@ -43,7 +43,7 @@ class DailyCycleCountScreen extends StatelessWidget {
                   BarcodeScanner(
                       value: viewModel.scannedBarcode,
                       finishScanned: (code) {
-                        //
+                        viewModel.scan(context, code);
                       },
                       labelText: viewModel.getScanMessage(),
                       onBarcodeValueChanges: (value) {

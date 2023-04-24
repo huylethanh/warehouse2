@@ -5,6 +5,7 @@ import 'package:warehouse_app/logics/logics.dart';
 import 'package:warehouse_app/models/models.dart';
 import 'package:warehouse_app/screens/cycle_counts/models/new_count.dart';
 import 'package:warehouse_app/screens/cycle_counts/models/started.dart';
+import 'package:warehouse_app/screens/cycle_counts/views/lot_date_view.dart';
 import 'package:warehouse_app/widgets/widgets.dart';
 
 import '../../../models/cycle_count_constain.dart';
@@ -172,10 +173,10 @@ abstract class CycleCountViewModelBase extends ViewModelBase {
     return product.actualLotNumber1 == null;
   }
 
-  void scanSkuCode(String barcode, int quantity) {
+  void scanSkuCode(BuildContext context, String barcode, int quantity) {
     if (quantity > 0) {
       if (!isScanStorageCode(barcode)) {
-        handleScanCodeIsNotStorageCode(barcode, quantity);
+        handleScanCodeIsNotStorageCode(context, barcode, quantity);
       }
 
       return;
@@ -205,14 +206,15 @@ abstract class CycleCountViewModelBase extends ViewModelBase {
     return false;
   }
 
-  void handleScanCodeIsNotStorageCode(String barcode, int quantity) {
+  void handleScanCodeIsNotStorageCode(
+      BuildContext context, String barcode, int quantity) {
     final product = helper.check(barcode);
     if (product != null) {
       if (isProductHasExpireAndLotNumber(product,
           isSerial: !product.isSerial())) {
-        showLotDateDialogState(product, quantity, barcode);
+        showLotDateDialogState(context, product, quantity, barcode);
       } else {
-        foundProduct(product, barcode, quantity);
+        foundProduct(context, product, barcode, quantity);
       }
 
       return;
@@ -229,7 +231,8 @@ abstract class CycleCountViewModelBase extends ViewModelBase {
     return (isNeedDate || isNeedLotNumber) && isSerial;
   }
 
-  foundProduct(CycleCountProduct p, String code, int qty) {
+  foundProduct(
+      BuildContext context, CycleCountProduct p, String code, int qty) {
     if (p.isSerial()) {
       if (p.barcode == code) {
         processingProduct = p;
@@ -239,7 +242,7 @@ abstract class CycleCountViewModelBase extends ViewModelBase {
 
       if (p.isSerialCode(code)) {
         if (isProductHasExpireAndLotNumber(p)) {
-          showLotDateDialogState(p, 1, code);
+          showLotDateDialogState(context, p, 1, code);
         } else {
           process(product: p, code: code, quantity: 1);
         }
@@ -302,9 +305,13 @@ abstract class CycleCountViewModelBase extends ViewModelBase {
     lvSessionId = 0;
   }
 
-  showLotDateDialogState(
-      CycleCountProduct product, int quantity, String barcode) {
-    // DO thing here
+  showLotDateDialogState(BuildContext context, CycleCountProduct product,
+      int quantity, String barcode) {
+    DialogService.showBottomSheet(context,
+        chid: LotDateView(
+          product: product,
+        ),
+        title: "");
   }
 
   NewCount? newCount;

@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:warehouse_app/models/cycle_count_constain.dart';
 import 'package:warehouse_app/models/models.dart';
@@ -16,7 +18,7 @@ class DailyCycleCountScreenViewModel extends CycleCountViewModelBase {
           cycleCountType: DAILY,
           cycleCountId: partnerView.cycleCountId!);
     } else {
-      scanSkuCode(codeScan, qty);
+      scanSkuCode(context, codeScan, qty);
     }
   }
 
