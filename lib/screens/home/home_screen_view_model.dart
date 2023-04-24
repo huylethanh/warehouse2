@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:warehouse_app/base/view_models/index.dart';
+import 'package:warehouse_app/models/cycle_count_constain.dart';
 import 'package:warehouse_app/models/models.dart';
 import 'package:warehouse_app/screens/cycle_counts/cycle_count_selection_view.dart';
+import 'package:warehouse_app/screens/cycle_counts/screen_daily/daily_cycle_count_screen.dart';
 import 'package:warehouse_app/screens/picking/picking.dart';
 import 'package:warehouse_app/screens/repick/repick_screen_view_model.dart';
 import 'package:warehouse_app/screens/transfer/transfer.dart';
@@ -29,7 +31,7 @@ class HomeScreenViewModel extends ViewModelBase {
   static const String eqc = "Eqc";
   static const String returnProdcut = "Return";
   static const String repick = "Repick";
-  static const String randomCount = "RandomCount"; //8
+  static const String cycleCount = "RandomCount"; //8
   static const String verifyCycleCount = "VerifyCycleCount"; //9
 
   int selectedIndex = 0;
@@ -76,7 +78,7 @@ class HomeScreenViewModel extends ViewModelBase {
 
     views.add(
       {
-        "name": randomCount,
+        "name": cycleCount,
         "icon": FontAwesomeIcons.checkToSlot,
         "color": Colors.blueGrey
       },
@@ -131,7 +133,7 @@ class HomeScreenViewModel extends ViewModelBase {
         page = const TransferScreen();
         break;
 
-      case randomCount:
+      case cycleCount:
       case verifyCycleCount:
         _showBottomsheet(context, name);
         return;
@@ -151,7 +153,7 @@ class HomeScreenViewModel extends ViewModelBase {
     late Widget content;
     late String title;
     switch (name) {
-      case randomCount:
+      case cycleCount:
         content = const CycleCountSelectionView();
         title = "Vui lòng chòn loại kiểm kê";
         break;
@@ -186,7 +188,7 @@ class HomeScreenViewModel extends ViewModelBase {
       case transfer:
         return "Luân Chuyển";
 
-      case randomCount:
+      case cycleCount:
         return "Kiểm Kê";
 
       case verifyCycleCount:
@@ -285,11 +287,46 @@ class HomeScreenViewModel extends ViewModelBase {
 
     if (_remaining is CycleCountTask) {
       final cast = _remaining as CycleCountTask;
-      final name = cast.isVerify() ? "Xác nhận kiểm kê" : "Kiểm kê ngẫu nhiên";
+      var name = "";
+      if (cast.isVerify()) {
+        switch (cast.cycleCountType) {
+          case DAILY:
+            name = "Xác nhận kiểm kê thường nhật";
+            break;
+          case SKU:
+            name = "Xác nhận kiểm kê theo sản phẩm";
+            break;
+          default:
+            {
+              DialogService.showWarningBotToast(
+                  "Không hổ trợ xác nhận kiểm kê khác");
+              return const SizedBox();
+            }
+        }
+      } else {
+        switch (cast.cycleCountType) {
+          case DAILY:
+            name = "Kiểm kê thường nhật";
+            break;
+
+          case SKU:
+            name = "Kiểm kê theo sản phẩm";
+            break;
+          default:
+            {
+              DialogService.showWarningBotToast(
+                  "Không hổ trợ xác kiểm kê khác");
+              return const SizedBox();
+            }
+        }
+      }
+
       return _taskView(
         taskName: name,
         taskCode: cast.cycleCountCode!,
-        onPressed: () {},
+        onPressed: () {
+          goToRemaining(context, _remaining!, cycleCount);
+        },
       );
     }
 
@@ -336,6 +373,14 @@ class HomeScreenViewModel extends ViewModelBase {
         }
         break;
 
+      case cycleCount:
+        if (task is CycleCountTask) {
+          view = DailyCycleCountScreen(
+            resumeTask: task,
+          );
+        }
+        break;
+
       //    case picking:
 
       // break;
@@ -367,7 +412,7 @@ class HomeScreenViewModel extends ViewModelBase {
     var actionCycleCount = "";
     if (task is CycleCountTask) {
       actionCycleCount =
-          task.isVerify() ? verifyCycleCount : randomCount; // magic number here
+          task.isVerify() ? verifyCycleCount : cycleCount; // magic number here
     }
 
     final continueable = ((viewName == receive || viewName == returnProdcut) &&

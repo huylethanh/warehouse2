@@ -176,12 +176,14 @@ class CycleCountTask extends RemainingTask {
   final String? cycleCountCode;
   final int? cycleCountId;
   final bool? needToVerify;
+  final int? cycleCountType;
 
   CycleCountTask({
     super.sessionId,
     this.cycleCountCode,
     this.cycleCountId,
     this.needToVerify,
+    this.cycleCountType,
   });
 
   bool isVerify() {

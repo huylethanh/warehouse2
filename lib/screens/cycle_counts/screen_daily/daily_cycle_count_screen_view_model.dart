@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:warehouse_app/models/cycle_count_constain.dart';
+import 'package:warehouse_app/models/models.dart';
 import 'package:warehouse_app/screens/cycle_counts/models/cycle_count_view_model_base.dart';
 
 class DailyCycleCountScreenViewModel extends CycleCountViewModelBase {
+  PartnerCycleCount? partnerDetail;
+
   @override
   Future<void> scan(BuildContext context, String barcode) async {
     await super.scan(context, barcode);
@@ -17,25 +20,36 @@ class DailyCycleCountScreenViewModel extends CycleCountViewModelBase {
     }
   }
 
+  void loadData() {
+    getLocations();
+  }
+
   // fun confirmFinish() {
   //     processState.postValue(Resource.Success(CycleCountState.ConfirmFinish))
   // }
 
-  Future<void> getLocations() async {
-    //  currentStateUI = CycleCount.LOAD_PARTNER_DETAIL_SATE
+  String getScanMessage() {
+    if (started != null) {
+      return "Quét mã sản phẩm/Serial/Barcode";
+    }
 
+    if (partnerDetail != null) {}
+
+    return "";
+  }
+
+  Future<void> getLocations() async {
+    setBusy(true);
     final partner = await partnerUseCase.getPartners(DAILY, CYCLE_COUNT);
     if (partner == null || partner.isEmpty) {
       //   _partnerDetail.postValue(Resource.Success(partnerView.initEmptyPartner()))
       return;
     }
 
-    final partnerDetail =
+    partnerDetail =
         await partnerUseCase.getPartnerDetail(partner.first.cycleCountId!);
     partnerView = partnerDetail!.toView();
 
-    //    _partnerDetail.postValue(Resource.Success(partnerDetail))
-
-    //return _partnerDetail;
+    setBusy(false);
   }
 }

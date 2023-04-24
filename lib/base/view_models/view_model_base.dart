@@ -9,7 +9,7 @@ import '../../widgets/widgets.dart';
 
 abstract class ViewModelBase extends BaseViewModel {
   bool isProcessing = false;
-
+  String scannedBarcode = "";
   bool gettingCargo = false;
 
   void setProcessing(bool value) {

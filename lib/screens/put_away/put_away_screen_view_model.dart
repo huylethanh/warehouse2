@@ -21,7 +21,6 @@ class PutAwayScreenViewModel extends ViewModelBase {
 
   // check box
   bool gettingCargo = false;
-  String scannedBarcode = "";
 
   OPS operation = OPS.REG_TRANSPORT;
   int total = 0;
@@ -66,6 +65,7 @@ class PutAwayScreenViewModel extends ViewModelBase {
     setBusy(false);
   }
 
+  @override
   processInput(BuildContext context, String scannedBarcode) async {
     String barcode = scannedBarcode.trim();
     if (gettingCargo && scannedBarcode.contains("|") && _isSku(barcode)) {
@@ -86,6 +86,7 @@ class PutAwayScreenViewModel extends ViewModelBase {
     scan(context, barcode);
   }
 
+  @override
   void cargoSelectedChanges(bool value) {
     cargoSelected = value;
     notifyListeners();

@@ -11,7 +11,7 @@ class BarcodeScanner extends StatelessWidget {
   final void Function(String barcode) finishScanned;
   final String labelText;
   final String? value;
-  final String? Function(String barcode) onBarcodeValueChanges;
+  final Function(String barcode) onBarcodeValueChanges;
   final void Function(bool)? cargoSelectedChanges;
   final bool? cargoSelected;
   final Widget? moreInfo;

@@ -32,6 +32,11 @@ class JsonToTypeConverter extends JsonConverter {
     IrCodeView: (json) => IrCodeView.fromJson(json),
     TransferResponse: (json) => TransferResponse.fromJson(json),
     SuggestLocation: (json) => SuggestLocation.fromJson(json),
+    PartnerCycleCount: (json) => PartnerCycleCount.fromJson(json),
+    CycleCountLocation: (json) => CycleCountLocation.fromJson(json),
+    CycleCountSession: (json) => CycleCountSession.fromJson(json),
+    CycleCountSessionResponse: (json) =>
+        CycleCountSessionResponse.fromJson(json),
   };
 
   JsonToTypeConverter();

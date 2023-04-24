@@ -43,7 +43,7 @@ class CycleCountProduct {
 
   final int modifiedQty1;
   final int modifiedQty2;
-  late final List<String> additionSerials;
+  List<String> additionSerials;
 
   CycleCountProduct({
     this.productBarcodeId,

@@ -7,17 +7,17 @@ part of 'cycle_count_product.dart';
 // **************************************************************************
 
 abstract class _$CycleCountProductCWProxy {
-  CycleCountProduct actualExpiredDate1(String? actualExpiredDate1);
+  CycleCountProduct actualExpiredDate1(DateTime? actualExpiredDate1);
 
-  CycleCountProduct actualExpiredDate2(String? actualExpiredDate2);
+  CycleCountProduct actualExpiredDate2(DateTime? actualExpiredDate2);
 
   CycleCountProduct actualLotNumber1(String? actualLotNumber1);
 
   CycleCountProduct actualLotNumber2(String? actualLotNumber2);
 
-  CycleCountProduct actualManufactureDate1(String? actualManufactureDate1);
+  CycleCountProduct actualManufactureDate1(DateTime? actualManufactureDate1);
 
-  CycleCountProduct actualManufactureDate2(String? actualManufactureDate2);
+  CycleCountProduct actualManufactureDate2(DateTime? actualManufactureDate2);
 
   CycleCountProduct actualQty1(int actualQty1);
 
@@ -57,17 +57,17 @@ abstract class _$CycleCountProductCWProxy {
 
   CycleCountProduct storageCodes(List<RandomCountSerial> storageCodes);
 
-  CycleCountProduct systemExpiredDate1(String? systemExpiredDate1);
+  CycleCountProduct systemExpiredDate1(DateTime? systemExpiredDate1);
 
-  CycleCountProduct systemExpiredDate2(String? systemExpiredDate2);
+  CycleCountProduct systemExpiredDate2(DateTime? systemExpiredDate2);
 
   CycleCountProduct systemLotNumber1(String? systemLotNumber1);
 
   CycleCountProduct systemLotNumber2(String? systemLotNumber2);
 
-  CycleCountProduct systemManufactureDate1(String? systemManufactureDate1);
+  CycleCountProduct systemManufactureDate1(DateTime? systemManufactureDate1);
 
-  CycleCountProduct systemManufactureDate2(String? systemManufactureDate2);
+  CycleCountProduct systemManufactureDate2(DateTime? systemManufactureDate2);
 
   CycleCountProduct systemQty1(int? systemQty1);
 
@@ -126,11 +126,11 @@ class _$CycleCountProductCWProxyImpl implements _$CycleCountProductCWProxy {
   const _$CycleCountProductCWProxyImpl(this._value);
 
   @override
-  CycleCountProduct actualExpiredDate1(String? actualExpiredDate1) =>
+  CycleCountProduct actualExpiredDate1(DateTime? actualExpiredDate1) =>
       this(actualExpiredDate1: actualExpiredDate1);
 
   @override
-  CycleCountProduct actualExpiredDate2(String? actualExpiredDate2) =>
+  CycleCountProduct actualExpiredDate2(DateTime? actualExpiredDate2) =>
       this(actualExpiredDate2: actualExpiredDate2);
 
   @override
@@ -142,11 +142,11 @@ class _$CycleCountProductCWProxyImpl implements _$CycleCountProductCWProxy {
       this(actualLotNumber2: actualLotNumber2);
 
   @override
-  CycleCountProduct actualManufactureDate1(String? actualManufactureDate1) =>
+  CycleCountProduct actualManufactureDate1(DateTime? actualManufactureDate1) =>
       this(actualManufactureDate1: actualManufactureDate1);
 
   @override
-  CycleCountProduct actualManufactureDate2(String? actualManufactureDate2) =>
+  CycleCountProduct actualManufactureDate2(DateTime? actualManufactureDate2) =>
       this(actualManufactureDate2: actualManufactureDate2);
 
   @override
@@ -222,11 +222,11 @@ class _$CycleCountProductCWProxyImpl implements _$CycleCountProductCWProxy {
       this(storageCodes: storageCodes);
 
   @override
-  CycleCountProduct systemExpiredDate1(String? systemExpiredDate1) =>
+  CycleCountProduct systemExpiredDate1(DateTime? systemExpiredDate1) =>
       this(systemExpiredDate1: systemExpiredDate1);
 
   @override
-  CycleCountProduct systemExpiredDate2(String? systemExpiredDate2) =>
+  CycleCountProduct systemExpiredDate2(DateTime? systemExpiredDate2) =>
       this(systemExpiredDate2: systemExpiredDate2);
 
   @override
@@ -238,11 +238,11 @@ class _$CycleCountProductCWProxyImpl implements _$CycleCountProductCWProxy {
       this(systemLotNumber2: systemLotNumber2);
 
   @override
-  CycleCountProduct systemManufactureDate1(String? systemManufactureDate1) =>
+  CycleCountProduct systemManufactureDate1(DateTime? systemManufactureDate1) =>
       this(systemManufactureDate1: systemManufactureDate1);
 
   @override
-  CycleCountProduct systemManufactureDate2(String? systemManufactureDate2) =>
+  CycleCountProduct systemManufactureDate2(DateTime? systemManufactureDate2) =>
       this(systemManufactureDate2: systemManufactureDate2);
 
   @override
@@ -303,11 +303,11 @@ class _$CycleCountProductCWProxyImpl implements _$CycleCountProductCWProxy {
       actualExpiredDate1: actualExpiredDate1 == const $CopyWithPlaceholder()
           ? _value.actualExpiredDate1
           // ignore: cast_nullable_to_non_nullable
-          : actualExpiredDate1 as String?,
+          : actualExpiredDate1 as DateTime?,
       actualExpiredDate2: actualExpiredDate2 == const $CopyWithPlaceholder()
           ? _value.actualExpiredDate2
           // ignore: cast_nullable_to_non_nullable
-          : actualExpiredDate2 as String?,
+          : actualExpiredDate2 as DateTime?,
       actualLotNumber1: actualLotNumber1 == const $CopyWithPlaceholder()
           ? _value.actualLotNumber1
           // ignore: cast_nullable_to_non_nullable
@@ -320,12 +320,12 @@ class _$CycleCountProductCWProxyImpl implements _$CycleCountProductCWProxy {
           actualManufactureDate1 == const $CopyWithPlaceholder()
               ? _value.actualManufactureDate1
               // ignore: cast_nullable_to_non_nullable
-              : actualManufactureDate1 as String?,
+              : actualManufactureDate1 as DateTime?,
       actualManufactureDate2:
           actualManufactureDate2 == const $CopyWithPlaceholder()
               ? _value.actualManufactureDate2
               // ignore: cast_nullable_to_non_nullable
-              : actualManufactureDate2 as String?,
+              : actualManufactureDate2 as DateTime?,
       actualQty1:
           actualQty1 == const $CopyWithPlaceholder() || actualQty1 == null
               ? _value.actualQty1
@@ -413,11 +413,11 @@ class _$CycleCountProductCWProxyImpl implements _$CycleCountProductCWProxy {
       systemExpiredDate1: systemExpiredDate1 == const $CopyWithPlaceholder()
           ? _value.systemExpiredDate1
           // ignore: cast_nullable_to_non_nullable
-          : systemExpiredDate1 as String?,
+          : systemExpiredDate1 as DateTime?,
       systemExpiredDate2: systemExpiredDate2 == const $CopyWithPlaceholder()
           ? _value.systemExpiredDate2
           // ignore: cast_nullable_to_non_nullable
-          : systemExpiredDate2 as String?,
+          : systemExpiredDate2 as DateTime?,
       systemLotNumber1: systemLotNumber1 == const $CopyWithPlaceholder()
           ? _value.systemLotNumber1
           // ignore: cast_nullable_to_non_nullable
@@ -430,12 +430,12 @@ class _$CycleCountProductCWProxyImpl implements _$CycleCountProductCWProxy {
           systemManufactureDate1 == const $CopyWithPlaceholder()
               ? _value.systemManufactureDate1
               // ignore: cast_nullable_to_non_nullable
-              : systemManufactureDate1 as String?,
+              : systemManufactureDate1 as DateTime?,
       systemManufactureDate2:
           systemManufactureDate2 == const $CopyWithPlaceholder()
               ? _value.systemManufactureDate2
               // ignore: cast_nullable_to_non_nullable
-              : systemManufactureDate2 as String?,
+              : systemManufactureDate2 as DateTime?,
       systemQty1: systemQty1 == const $CopyWithPlaceholder()
           ? _value.systemQty1
           // ignore: cast_nullable_to_non_nullable
@@ -550,20 +550,36 @@ CycleCountProduct _$CycleCountProductFromJson(Map<String, dynamic> json) =>
                   (e) => RandomCountSerial.fromJson(e as Map<String, dynamic>))
               .toList() ??
           const [],
-      actualExpiredDate1: json['actualExpiredDate1'] as String?,
+      actualExpiredDate1: json['actualExpiredDate1'] == null
+          ? null
+          : DateTime.parse(json['actualExpiredDate1'] as String),
       actualLotNumber1: json['actualLotNumber1'] as String?,
-      actualManufactureDate1: json['actualManufactureDate1'] as String?,
+      actualManufactureDate1: json['actualManufactureDate1'] == null
+          ? null
+          : DateTime.parse(json['actualManufactureDate1'] as String),
       actualQty2: json['actualQty2'] as int? ?? 0,
-      actualExpiredDate2: json['actualExpiredDate2'] as String?,
-      actualManufactureDate2: json['actualManufactureDate2'] as String?,
+      actualExpiredDate2: json['actualExpiredDate2'] == null
+          ? null
+          : DateTime.parse(json['actualExpiredDate2'] as String),
+      actualManufactureDate2: json['actualManufactureDate2'] == null
+          ? null
+          : DateTime.parse(json['actualManufactureDate2'] as String),
       systemQty1: json['systemQty1'] as int?,
       systemQty2: json['systemQty2'] as int?,
       systemLotNumber1: json['systemLotNumber1'] as String?,
       systemLotNumber2: json['systemLotNumber2'] as String?,
-      systemExpiredDate1: json['systemExpiredDate1'] as String?,
-      systemExpiredDate2: json['systemExpiredDate2'] as String?,
-      systemManufactureDate1: json['systemManufactureDate1'] as String?,
-      systemManufactureDate2: json['systemManufactureDate2'] as String?,
+      systemExpiredDate1: json['systemExpiredDate1'] == null
+          ? null
+          : DateTime.parse(json['systemExpiredDate1'] as String),
+      systemExpiredDate2: json['systemExpiredDate2'] == null
+          ? null
+          : DateTime.parse(json['systemExpiredDate2'] as String),
+      systemManufactureDate1: json['systemManufactureDate1'] == null
+          ? null
+          : DateTime.parse(json['systemManufactureDate1'] as String),
+      systemManufactureDate2: json['systemManufactureDate2'] == null
+          ? null
+          : DateTime.parse(json['systemManufactureDate2'] as String),
       isLotNumber: json['isLotNumber'] as bool?,
       isExpiryDate: json['isExpiryDate'] as bool?,
       actualLotNumber2: json['actualLotNumber2'] as String?,
@@ -591,20 +607,24 @@ Map<String, dynamic> _$CycleCountProductToJson(CycleCountProduct instance) =>
       'productName': instance.productName,
       'avatarURL': instance.avatarURL,
       'storageCodes': instance.storageCodes,
-      'actualExpiredDate1': instance.actualExpiredDate1,
+      'actualExpiredDate1': instance.actualExpiredDate1?.toIso8601String(),
       'actualLotNumber1': instance.actualLotNumber1,
-      'actualManufactureDate1': instance.actualManufactureDate1,
+      'actualManufactureDate1':
+          instance.actualManufactureDate1?.toIso8601String(),
       'actualQty2': instance.actualQty2,
-      'actualExpiredDate2': instance.actualExpiredDate2,
-      'actualManufactureDate2': instance.actualManufactureDate2,
+      'actualExpiredDate2': instance.actualExpiredDate2?.toIso8601String(),
+      'actualManufactureDate2':
+          instance.actualManufactureDate2?.toIso8601String(),
       'systemQty1': instance.systemQty1,
       'systemQty2': instance.systemQty2,
       'systemLotNumber1': instance.systemLotNumber1,
       'systemLotNumber2': instance.systemLotNumber2,
-      'systemExpiredDate1': instance.systemExpiredDate1,
-      'systemExpiredDate2': instance.systemExpiredDate2,
-      'systemManufactureDate1': instance.systemManufactureDate1,
-      'systemManufactureDate2': instance.systemManufactureDate2,
+      'systemExpiredDate1': instance.systemExpiredDate1?.toIso8601String(),
+      'systemExpiredDate2': instance.systemExpiredDate2?.toIso8601String(),
+      'systemManufactureDate1':
+          instance.systemManufactureDate1?.toIso8601String(),
+      'systemManufactureDate2':
+          instance.systemManufactureDate2?.toIso8601String(),
       'isLotNumber': instance.isLotNumber,
       'isExpiryDate': instance.isExpiryDate,
       'actualLotNumber2': instance.actualLotNumber2,

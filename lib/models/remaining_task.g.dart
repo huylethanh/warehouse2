@@ -652,6 +652,8 @@ abstract class _$CycleCountTaskCWProxy {
 
   CycleCountTask cycleCountId(int? cycleCountId);
 
+  CycleCountTask cycleCountType(int? cycleCountType);
+
   CycleCountTask needToVerify(bool? needToVerify);
 
   CycleCountTask sessionId(int? sessionId);
@@ -665,6 +667,7 @@ abstract class _$CycleCountTaskCWProxy {
   CycleCountTask call({
     String? cycleCountCode,
     int? cycleCountId,
+    int? cycleCountType,
     bool? needToVerify,
     int? sessionId,
   });
@@ -685,6 +688,10 @@ class _$CycleCountTaskCWProxyImpl implements _$CycleCountTaskCWProxy {
       this(cycleCountId: cycleCountId);
 
   @override
+  CycleCountTask cycleCountType(int? cycleCountType) =>
+      this(cycleCountType: cycleCountType);
+
+  @override
   CycleCountTask needToVerify(bool? needToVerify) =>
       this(needToVerify: needToVerify);
 
@@ -702,6 +709,7 @@ class _$CycleCountTaskCWProxyImpl implements _$CycleCountTaskCWProxy {
   CycleCountTask call({
     Object? cycleCountCode = const $CopyWithPlaceholder(),
     Object? cycleCountId = const $CopyWithPlaceholder(),
+    Object? cycleCountType = const $CopyWithPlaceholder(),
     Object? needToVerify = const $CopyWithPlaceholder(),
     Object? sessionId = const $CopyWithPlaceholder(),
   }) {
@@ -714,6 +722,10 @@ class _$CycleCountTaskCWProxyImpl implements _$CycleCountTaskCWProxy {
           ? _value.cycleCountId
           // ignore: cast_nullable_to_non_nullable
           : cycleCountId as int?,
+      cycleCountType: cycleCountType == const $CopyWithPlaceholder()
+          ? _value.cycleCountType
+          // ignore: cast_nullable_to_non_nullable
+          : cycleCountType as int?,
       needToVerify: needToVerify == const $CopyWithPlaceholder()
           ? _value.needToVerify
           // ignore: cast_nullable_to_non_nullable
@@ -861,6 +873,7 @@ CycleCountTask _$CycleCountTaskFromJson(Map<String, dynamic> json) =>
       cycleCountCode: json['cycleCountCode'] as String?,
       cycleCountId: json['cycleCountId'] as int?,
       needToVerify: json['needToVerify'] as bool?,
+      cycleCountType: json['cycleCountType'] as int?,
     );
 
 Map<String, dynamic> _$CycleCountTaskToJson(CycleCountTask instance) =>
@@ -869,4 +882,5 @@ Map<String, dynamic> _$CycleCountTaskToJson(CycleCountTask instance) =>
       'cycleCountCode': instance.cycleCountCode,
       'cycleCountId': instance.cycleCountId,
       'needToVerify': instance.needToVerify,
+      'cycleCountType': instance.cycleCountType,
     };
