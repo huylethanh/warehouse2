@@ -93,6 +93,36 @@ class AskForDurationScreen extends StatelessWidget {
                 duration.issueDate,
                 maxDate: duration.expireDate,
               ),
+              if (viewModel.invalidateIfExpiry)
+                Row(
+                  children: const [
+                    Text(
+                      "* abcdel;dl;dasl;dsal;dsal;dsal;.",
+                      textAlign: TextAlign.left,
+                      style: TextStyle(
+                        color: Colors.red,
+                        fontSize: 10,
+                      ),
+                    ),
+                  ],
+                ),
+              if (!viewModel.validateFields["expireDate"]!) ...[
+                const SizedBox(
+                  height: 5,
+                ),
+                Row(
+                  children: const [
+                    Text(
+                      "* Ngày sản xuất không hợp lệ.",
+                      textAlign: TextAlign.left,
+                      style: TextStyle(
+                        color: Colors.red,
+                        fontSize: 10,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
               vGap,
               // _labelAndDateSelection(
               //   context,
@@ -122,7 +152,7 @@ class AskForDurationScreen extends StatelessWidget {
                       ),
                       onChanged: (text) {
                         int value = int.parse(text);
-                        viewModel.onProductLifeNumberChanges(value);
+                        viewModel.updateDuration("numOfExpiry", value);
                       },
                     ),
                   ),
@@ -149,7 +179,7 @@ class AskForDurationScreen extends StatelessWidget {
                         }).toList(),
                         value: viewModel.productLife,
                         onChanged: (value) {
-                          viewModel.onLifeSelected(value!);
+                          viewModel.updateDuration("unitExpiry", value);
                         },
                       ),
                     ),
@@ -167,7 +197,24 @@ class AskForDurationScreen extends StatelessWidget {
                 duration.expireDate,
                 minDate: duration.issueDate,
                 // maxDate: duration.expireDate,
-              )
+              ),
+              if (!viewModel.validateFields["expireDate"]!) ...[
+                const SizedBox(
+                  height: 5,
+                ),
+                Row(
+                  children: const [
+                    Text(
+                      "* Ngày hết hạn không hợp lệ.",
+                      textAlign: TextAlign.left,
+                      style: TextStyle(
+                        color: Colors.red,
+                        fontSize: 10,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
             ],
             if (needLotNumber) ...[
               vGap,
@@ -203,24 +250,6 @@ class AskForDurationScreen extends StatelessWidget {
                   viewModel.updateDuration("lotNumber", value);
                 },
               ),
-
-              if (!viewModel.validateFields["lotNumber"]!) ...[
-                const SizedBox(
-                  height: 5,
-                ),
-                Row(
-                  children: const [
-                    Text(
-                      "* Chưa nhập lot number.",
-                      textAlign: TextAlign.left,
-                      style: TextStyle(
-                        color: Colors.red,
-                        fontSize: 10,
-                      ),
-                    ),
-                  ],
-                ),
-              ],
             ],
             if (viewModel.percentShelfLife != null) ...[
               vGap,

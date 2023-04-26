@@ -8,14 +8,18 @@ part 'duration_value.g.dart';
 class DurationValue {
   final DateTime? issueDate;
   final DateTime? expireDate;
-  //final DateTime? bestUseD;
   final String? lotNumber;
+  final String? lotNumberPass;
+  final int? numOfExpiry;
+  final String? unitExpiry;
 
   DurationValue({
     this.issueDate,
     this.expireDate,
-    //this.bestUseD,
+    this.lotNumberPass,
     this.lotNumber,
+    this.numOfExpiry,
+    this.unitExpiry,
   });
 
   factory DurationValue.fromJson(Map<String, dynamic> json) =>

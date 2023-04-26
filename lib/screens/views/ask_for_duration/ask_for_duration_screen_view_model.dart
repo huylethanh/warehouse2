@@ -21,7 +21,7 @@ class AskForDurationScreenViewModel extends ViewModelBase {
       "issueDate": false,
       "expireDate": false,
       //"bestUseD": false,
-      "lotNumber": false,
+      //"lotNumber": false,
     };
   }
 
@@ -30,7 +30,7 @@ class AskForDurationScreenViewModel extends ViewModelBase {
   }
 
   void updateDuration(String fieldName, dynamic value) {
-    if (fieldName != "lotNumber") {
+    if (["expireDate", "issueDate"].contains(fieldName)) {
       final validate = _validateSelectedDate(fieldName, value);
       if (!validate) {
         return;
@@ -46,12 +46,12 @@ class AskForDurationScreenViewModel extends ViewModelBase {
         durationValue = durationValue.copyWith(expireDate: value);
         break;
 
-      // case "bestUseD":
-      //   durationValue = durationValue.copyWith(bestUseD: value);
-      //   break;
+      case "numOfExpiry":
+        durationValue = durationValue.copyWith(numOfExpiry: value);
+        break;
 
-      case "lotNumber":
-        durationValue = durationValue.copyWith(lotNumber: value);
+      case "unitExpiry":
+        durationValue = durationValue.copyWith(unitExpiry: value);
         break;
     }
 
@@ -78,46 +78,6 @@ class AskForDurationScreenViewModel extends ViewModelBase {
 
       case "expireDate":
         break;
-
-      case "bestUseD":
-        if (value.difference(durationValue.expireDate!).inDays > 0) {
-          DialogService.showWarningBotToast(
-              "Ngày sữ dụng tốt nhất phải nằm trong ngày sản xuất và ngày hết hạn.");
-          return false;
-        }
-
-        if (value.difference(durationValue.issueDate!).inDays < 0) {
-          DialogService.showWarningBotToast(
-              "Ngày sữ dụng tốt nhất phải nằm trong ngày sản xuất và ngày hết hạn.");
-          return false;
-        }
-
-        break;
-    }
-
-    return true;
-  }
-
-  bool validateBeforeInputDate(String fieldName) {
-    switch (fieldName) {
-      case "issueDate":
-        break;
-
-      case "expireDate":
-        // durationValue = durationValue.copyWith(expireDate: value);
-        break;
-
-      case "bestUseD":
-        if (durationValue.expireDate == null) {
-          DialogService.showWarningBotToast("Chưa chọn ngày hết hạn.");
-          return false;
-        }
-
-        if (durationValue.issueDate == null) {
-          DialogService.showWarningBotToast("Chưa chọn ngày sản xuất.");
-          return false;
-        }
-        break;
     }
 
     return true;
@@ -137,6 +97,25 @@ class AskForDurationScreenViewModel extends ViewModelBase {
 
     if (validateFields.values.every((element) => element)) {
       isValid = true;
+    }
+
+    if (isValid) {
+      validateIfExpiry();
+    }
+  }
+
+  bool invalidateIfExpiry = true;
+  void validateIfExpiry() {
+    invalidateIfExpiry = false;
+
+    if (durationValue.unitExpiry != null && durationValue.numOfExpiry != null) {
+      final days =
+          durationValue.expireDate!.difference(durationValue.issueDate!).inDays;
+
+      if (days < durationValue.numOfExpiry! - 5 ||
+          days > durationValue.numOfExpiry! - 5) {
+        invalidateIfExpiry = true;
+      }
     }
   }
 
