@@ -8,13 +8,13 @@ part 'duration_value.g.dart';
 class DurationValue {
   final DateTime? issueDate;
   final DateTime? expireDate;
-  final DateTime? bestUseD;
+  //final DateTime? bestUseD;
   final String? lotNumber;
 
   DurationValue({
     this.issueDate,
     this.expireDate,
-    this.bestUseD,
+    //this.bestUseD,
     this.lotNumber,
   });
 

@@ -65,6 +65,10 @@ class _DateFieldState extends State<DateField> {
                   lastDate: widget.maxDate,
                 );
 
+                if (selected == null) {
+                  return;
+                }
+
                 initialDate = selected;
                 _controller.text = StringFormat.shortDate(initialDate);
 

@@ -6,6 +6,7 @@ import 'package:warehouse_app/models/models.dart';
 import 'package:warehouse_app/screens/cycle_counts/models/new_count.dart';
 import 'package:warehouse_app/screens/cycle_counts/models/started.dart';
 import 'package:warehouse_app/screens/cycle_counts/views/lot_date_view.dart';
+import 'package:warehouse_app/screens/views/ask_for_duration/ask_for_duration_screen.dart';
 import 'package:warehouse_app/widgets/widgets.dart';
 
 import '../../../models/cycle_count_constain.dart';
@@ -307,11 +308,23 @@ abstract class CycleCountViewModelBase extends ViewModelBase {
 
   showLotDateDialogState(BuildContext context, CycleCountProduct product,
       int quantity, String barcode) {
-    DialogService.showBottomSheet(context,
-        chid: LotDateView(
-          product: product,
+    DialogService.showBottomSheet(
+      context,
+      chid: AskForDurationScreen(
+        product: ProductInfo(
+            productName: product.productName,
+            avatarURL: product.avatarURL,
+            code: product.barcode ?? ""),
+        needDuration: product.isExpiryDate ?? false,
+        needLotNumber: product.isLotNumber ?? false,
+        durationValue: DurationValue(
+          lotNumber: product.systemLotNumber1,
+          expireDate: product.systemExpiredDate1 ?? DateTime.now(),
+          issueDate: product.systemManufactureDate1 ?? DateTime.now(),
         ),
-        title: "");
+      ),
+      title: "",
+    );
   }
 
   NewCount? newCount;

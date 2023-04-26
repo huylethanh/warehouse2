@@ -1,5 +1,4 @@
-import 'dart:math';
-
+import 'package:jiffy/jiffy.dart';
 import 'package:warehouse_app/base/view_models/index.dart';
 import 'package:warehouse_app/utils/string_extension.dart';
 import 'package:warehouse_app/logics/logics.dart';
@@ -11,6 +10,9 @@ class AskForDurationScreenViewModel extends ViewModelBase {
 
   bool isValid = false;
   double? percentShelfLife;
+  Map<String, String> life = {"D": "Ngày", "M": "Tháng", "Y": "Năm"};
+  String productLife = "D";
+  int? productLifeNumber;
 
   AskForDurationScreenViewModel(DurationValue? durationValue) {
     this.durationValue = durationValue ?? DurationValue();
@@ -18,9 +20,13 @@ class AskForDurationScreenViewModel extends ViewModelBase {
     validateFields = <String, bool>{
       "issueDate": false,
       "expireDate": false,
-      "bestUseD": false,
+      //"bestUseD": false,
       "lotNumber": false,
     };
+  }
+
+  String getLifeDisplay(String value) {
+    return life[value]!;
   }
 
   void updateDuration(String fieldName, dynamic value) {
@@ -40,9 +46,9 @@ class AskForDurationScreenViewModel extends ViewModelBase {
         durationValue = durationValue.copyWith(expireDate: value);
         break;
 
-      case "bestUseD":
-        durationValue = durationValue.copyWith(bestUseD: value);
-        break;
+      // case "bestUseD":
+      //   durationValue = durationValue.copyWith(bestUseD: value);
+      //   break;
 
       case "lotNumber":
         durationValue = durationValue.copyWith(lotNumber: value);
@@ -145,5 +151,46 @@ class AskForDurationScreenViewModel extends ViewModelBase {
     final low = expireDate.millisecond - issueDate.millisecond;
 
     percentShelfLife = (high / low) * 100;
+  }
+
+  void onLifeSelected(String value) {
+    productLife = value;
+    _calculateExpireDate();
+  }
+
+  void onProductLifeNumberChanges(int value) {
+    productLifeNumber = value;
+    _calculateExpireDate();
+    //notifyListeners();
+  }
+
+  void _calculateExpireDate() {
+    if (durationValue.issueDate != null && productLifeNumber != null) {
+      switch (productLife) {
+        case "D":
+          updateDuration(
+              "expireDate",
+              Jiffy.parseFromDateTime(durationValue.issueDate!)
+                  .add(days: productLifeNumber!)
+                  .dateTime);
+          break;
+
+        case "M":
+          updateDuration(
+              "expireDate",
+              Jiffy.parseFromDateTime(durationValue.issueDate!)
+                  .add(months: productLifeNumber!)
+                  .dateTime);
+          break;
+
+        case "Y":
+          updateDuration(
+              "expireDate",
+              Jiffy.parseFromDateTime(durationValue.issueDate!)
+                  .add(years: productLifeNumber!)
+                  .dateTime);
+          break;
+      }
+    }
   }
 }

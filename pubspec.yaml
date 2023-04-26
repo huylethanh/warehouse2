@@ -45,11 +45,12 @@ dependencies:
   flutter_secure_storage: ^6.0.0
   device_info_plus: ^7.0.0
   font_awesome_flutter: ^10.2.1
-  intl: ^0.17.0
+  intl: ^0.18.0
   flutter_barcode_scanner: ^2.0.0
   darq: ^1.2.1
   bot_toast: ^4.0.3
   pull_to_refresh: ^2.0.0
+  jiffy: ^6.1.0
 
 dev_dependencies:
   flutter_test:

@@ -428,7 +428,10 @@ class ReceiveSessionScreenViewModel extends ViewModelBase {
     final duration = await DialogService.showBottomSheet<DurationValue>(
       context,
       chid: AskForDurationScreen(
-        product: product,
+        product: ProductInfo(
+            productName: product.productName!,
+            avatarURL: product.avatarURL!,
+            code: product.sku),
         needDuration: requiredDuration,
         needLotNumber: requiredLotNumber,
       ),
@@ -445,7 +448,8 @@ class ReceiveSessionScreenViewModel extends ViewModelBase {
         : ProductDuration(
             expireD: duration.expireDate,
             issueD: duration.issueDate,
-            bestUseD: duration.bestUseD);
+          );
+    //bestUseD: duration.bestUseD);
 
     final lotNumber = requiredLotNumber ? duration.lotNumber : null;
 

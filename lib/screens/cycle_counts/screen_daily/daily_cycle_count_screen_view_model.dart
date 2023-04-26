@@ -37,7 +37,7 @@ class DailyCycleCountScreenViewModel extends CycleCountViewModelBase {
 
     if (partnerDetail != null) {}
 
-    return "";
+    return "Quét mã vị trí";
   }
 
   Future<void> getLocations() async {

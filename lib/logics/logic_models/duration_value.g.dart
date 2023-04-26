@@ -7,8 +7,6 @@ part of 'duration_value.dart';
 // **************************************************************************
 
 abstract class _$DurationValueCWProxy {
-  DurationValue bestUseD(DateTime? bestUseD);
-
   DurationValue expireDate(DateTime? expireDate);
 
   DurationValue issueDate(DateTime? issueDate);
@@ -22,7 +20,6 @@ abstract class _$DurationValueCWProxy {
   /// DurationValue(...).copyWith(id: 12, name: "My name")
   /// ````
   DurationValue call({
-    DateTime? bestUseD,
     DateTime? expireDate,
     DateTime? issueDate,
     String? lotNumber,
@@ -34,9 +31,6 @@ class _$DurationValueCWProxyImpl implements _$DurationValueCWProxy {
   final DurationValue _value;
 
   const _$DurationValueCWProxyImpl(this._value);
-
-  @override
-  DurationValue bestUseD(DateTime? bestUseD) => this(bestUseD: bestUseD);
 
   @override
   DurationValue expireDate(DateTime? expireDate) =>
@@ -57,16 +51,11 @@ class _$DurationValueCWProxyImpl implements _$DurationValueCWProxy {
   /// DurationValue(...).copyWith(id: 12, name: "My name")
   /// ````
   DurationValue call({
-    Object? bestUseD = const $CopyWithPlaceholder(),
     Object? expireDate = const $CopyWithPlaceholder(),
     Object? issueDate = const $CopyWithPlaceholder(),
     Object? lotNumber = const $CopyWithPlaceholder(),
   }) {
     return DurationValue(
-      bestUseD: bestUseD == const $CopyWithPlaceholder()
-          ? _value.bestUseD
-          // ignore: cast_nullable_to_non_nullable
-          : bestUseD as DateTime?,
       expireDate: expireDate == const $CopyWithPlaceholder()
           ? _value.expireDate
           // ignore: cast_nullable_to_non_nullable
@@ -101,9 +90,6 @@ DurationValue _$DurationValueFromJson(Map<String, dynamic> json) =>
       expireDate: json['expireDate'] == null
           ? null
           : DateTime.parse(json['expireDate'] as String),
-      bestUseD: json['bestUseD'] == null
-          ? null
-          : DateTime.parse(json['bestUseD'] as String),
       lotNumber: json['lotNumber'] as String?,
     );
 
@@ -111,6 +97,5 @@ Map<String, dynamic> _$DurationValueToJson(DurationValue instance) =>
     <String, dynamic>{
       'issueDate': instance.issueDate?.toIso8601String(),
       'expireDate': instance.expireDate?.toIso8601String(),
-      'bestUseD': instance.bestUseD?.toIso8601String(),
       'lotNumber': instance.lotNumber,
     };
