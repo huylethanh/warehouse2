@@ -5,7 +5,6 @@ import 'package:warehouse_app/logics/logics.dart';
 import 'package:warehouse_app/models/models.dart';
 import 'package:warehouse_app/screens/cycle_counts/models/new_count.dart';
 import 'package:warehouse_app/screens/cycle_counts/models/started.dart';
-import 'package:warehouse_app/screens/cycle_counts/views/lot_date_view.dart';
 import 'package:warehouse_app/screens/views/ask_for_duration/ask_for_duration_screen.dart';
 import 'package:warehouse_app/widgets/widgets.dart';
 
@@ -55,7 +54,7 @@ abstract class CycleCountViewModelBase extends ViewModelBase {
       return;
     }
 
-    helper.process(details.details!);
+    await helper.process(details.details!);
 
     final pair = helper.twoList();
     final inWaiting = pair.key;
@@ -306,9 +305,9 @@ abstract class CycleCountViewModelBase extends ViewModelBase {
     lvSessionId = 0;
   }
 
-  showLotDateDialogState(BuildContext context, CycleCountProduct product,
-      int quantity, String barcode) {
-    DialogService.showBottomSheet(
+  Future<void> showLotDateDialogState(BuildContext context,
+      CycleCountProduct product, int quantity, String barcode) async {
+    final value = await DialogService.showBottomSheet<DurationValue>(
       context,
       chid: AskForDurationScreen(
         product: ProductInfo(
@@ -325,6 +324,22 @@ abstract class CycleCountViewModelBase extends ViewModelBase {
       ),
       title: "",
     );
+
+    if (value == null) {
+      return;
+    }
+
+    product = product.copyWith(
+      numOfExpiry: value.numOfExpiry,
+      unitExpiry: value.unitExpiry,
+      actualExpiredDate1: value.expireDate,
+      actualManufactureDate1: value.issueDate,
+      actualLotNumber1: value.lotNumber,
+    );
+
+    setProcessing(true);
+    await process(product: product, code: barcode, quantity: quantity);
+    setProcessing(false);
   }
 
   NewCount? newCount;

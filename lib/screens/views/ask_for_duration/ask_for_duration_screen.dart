@@ -40,6 +40,9 @@ class AskForDurationScreen extends StatelessWidget {
       viewModelBuilder: () {
         return AskForDurationScreenViewModel(durationValue);
       },
+      onViewModelReady: (AskForDurationScreenViewModel viewModel) {
+        viewModel.init();
+      },
       builder:
           (BuildContext context, AskForDurationScreenViewModel viewModel, _) {
         final duration = viewModel.durationValue;
@@ -93,11 +96,14 @@ class AskForDurationScreen extends StatelessWidget {
                 duration.issueDate,
                 maxDate: duration.expireDate,
               ),
-              if (viewModel.invalidateIfExpiry)
+              if (viewModel.invalidateIfExpiry) ...[
+                const SizedBox(
+                  height: 5,
+                ),
                 Row(
                   children: const [
                     Text(
-                      "* abcdel;dl;dasl;dsal;dsal;dsal;.",
+                      "Ngày hết hạn không thỏa hạn mức sử dụng được thiết lập.",
                       textAlign: TextAlign.left,
                       style: TextStyle(
                         color: Colors.red,
@@ -105,7 +111,8 @@ class AskForDurationScreen extends StatelessWidget {
                       ),
                     ),
                   ],
-                ),
+                )
+              ],
               if (!viewModel.validateFields["expireDate"]!) ...[
                 const SizedBox(
                   height: 5,
@@ -137,6 +144,7 @@ class AskForDurationScreen extends StatelessWidget {
                 children: [
                   Expanded(
                     child: TextFormField(
+                      initialValue: duration.numOfExpiry?.toString(),
                       textInputAction: TextInputAction.done,
                       keyboardType: TextInputType.number,
                       decoration: const InputDecoration(
@@ -151,7 +159,7 @@ class AskForDurationScreen extends StatelessWidget {
                         isDense: true,
                       ),
                       onChanged: (text) {
-                        int value = int.parse(text);
+                        int? value = int.tryParse(text);
                         viewModel.updateDuration("numOfExpiry", value);
                       },
                     ),
@@ -177,7 +185,8 @@ class AskForDurationScreen extends StatelessWidget {
                             ),
                           );
                         }).toList(),
-                        value: viewModel.productLife,
+                        value:
+                            duration.unitExpiry ?? viewModel.defaultUnitExpiry,
                         onChanged: (value) {
                           viewModel.updateDuration("unitExpiry", value);
                         },
@@ -198,6 +207,23 @@ class AskForDurationScreen extends StatelessWidget {
                 minDate: duration.issueDate,
                 // maxDate: duration.expireDate,
               ),
+              if (viewModel.invalidateIfExpiry) ...[
+                const SizedBox(
+                  height: 5,
+                ),
+                Row(
+                  children: const [
+                    Text(
+                      "Ngày hết hạn không thỏa hạn mức sử dụng được thiết lập.",
+                      textAlign: TextAlign.left,
+                      style: TextStyle(
+                        color: Colors.red,
+                        fontSize: 10,
+                      ),
+                    ),
+                  ],
+                )
+              ],
               if (!viewModel.validateFields["expireDate"]!) ...[
                 const SizedBox(
                   height: 5,

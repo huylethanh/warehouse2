@@ -1,4 +1,3 @@
-import 'package:jiffy/jiffy.dart';
 import 'package:warehouse_app/base/view_models/index.dart';
 import 'package:warehouse_app/utils/string_extension.dart';
 import 'package:warehouse_app/logics/logics.dart';
@@ -11,8 +10,9 @@ class AskForDurationScreenViewModel extends ViewModelBase {
   bool isValid = false;
   double? percentShelfLife;
   Map<String, String> life = {"D": "Ngày", "M": "Tháng", "Y": "Năm"};
-  String productLife = "D";
+
   int? productLifeNumber;
+  String defaultUnitExpiry = "D";
 
   AskForDurationScreenViewModel(DurationValue? durationValue) {
     this.durationValue = durationValue ?? DurationValue();
@@ -23,6 +23,13 @@ class AskForDurationScreenViewModel extends ViewModelBase {
       //"bestUseD": false,
       //"lotNumber": false,
     };
+  }
+
+  void init() {
+    if (durationValue.unitExpiry == null) {
+      durationValue = durationValue.copyWith();
+    }
+    validateData();
   }
 
   String getLifeDisplay(String value) {
@@ -47,7 +54,11 @@ class AskForDurationScreenViewModel extends ViewModelBase {
         break;
 
       case "numOfExpiry":
-        durationValue = durationValue.copyWith(numOfExpiry: value);
+        var unitExpiry = durationValue.unitExpiry;
+        unitExpiry ??= defaultUnitExpiry;
+
+        durationValue =
+            durationValue.copyWith(numOfExpiry: value, unitExpiry: unitExpiry);
         break;
 
       case "unitExpiry":
@@ -95,25 +106,28 @@ class AskForDurationScreenViewModel extends ViewModelBase {
       validateFields[field] = json[field] != null;
     }
 
-    if (validateFields.values.every((element) => element)) {
-      isValid = true;
-    }
+    isValid = validateFields.values.every((element) => element);
 
     if (isValid) {
       validateIfExpiry();
+      isValid = !invalidateIfExpiry;
     }
   }
 
-  bool invalidateIfExpiry = true;
+  bool invalidateIfExpiry = false;
   void validateIfExpiry() {
     invalidateIfExpiry = false;
 
     if (durationValue.unitExpiry != null && durationValue.numOfExpiry != null) {
+      final cal = _calculateExpryNumber();
+      if (cal == 0) {
+        return;
+      }
+
       final days =
           durationValue.expireDate!.difference(durationValue.issueDate!).inDays;
 
-      if (days < durationValue.numOfExpiry! - 5 ||
-          days > durationValue.numOfExpiry! - 5) {
+      if (days < cal - 5 || days > cal + 5) {
         invalidateIfExpiry = true;
       }
     }
@@ -132,44 +146,20 @@ class AskForDurationScreenViewModel extends ViewModelBase {
     percentShelfLife = (high / low) * 100;
   }
 
-  void onLifeSelected(String value) {
-    productLife = value;
-    _calculateExpireDate();
-  }
-
-  void onProductLifeNumberChanges(int value) {
-    productLifeNumber = value;
-    _calculateExpireDate();
-    //notifyListeners();
-  }
-
-  void _calculateExpireDate() {
-    if (durationValue.issueDate != null && productLifeNumber != null) {
-      switch (productLife) {
+  int _calculateExpryNumber() {
+    if (durationValue.issueDate != null && durationValue.expireDate != null) {
+      switch (durationValue.unitExpiry) {
         case "D":
-          updateDuration(
-              "expireDate",
-              Jiffy.parseFromDateTime(durationValue.issueDate!)
-                  .add(days: productLifeNumber!)
-                  .dateTime);
-          break;
+          return durationValue.numOfExpiry ?? 0;
 
         case "M":
-          updateDuration(
-              "expireDate",
-              Jiffy.parseFromDateTime(durationValue.issueDate!)
-                  .add(months: productLifeNumber!)
-                  .dateTime);
-          break;
+          return (durationValue.numOfExpiry ?? 0) * 30;
 
         case "Y":
-          updateDuration(
-              "expireDate",
-              Jiffy.parseFromDateTime(durationValue.issueDate!)
-                  .add(years: productLifeNumber!)
-                  .dateTime);
-          break;
+          return (durationValue.numOfExpiry ?? 0) * 365;
       }
     }
+
+    return 0;
   }
 }

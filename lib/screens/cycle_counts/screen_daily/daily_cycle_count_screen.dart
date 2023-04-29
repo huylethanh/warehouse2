@@ -64,6 +64,7 @@ class DailyCycleCountScreen extends StatelessWidget {
 
     final started = viewModel.started!;
     final waiting = started.waiting;
+    final counting = started.counting;
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
@@ -80,63 +81,80 @@ class DailyCycleCountScreen extends StatelessWidget {
               ),
             ),
           ),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.only(top: 8.0),
-              child: ListView.builder(
-                itemCount: waiting.length,
-                itemBuilder: (BuildContext context, index) {
-                  final item = waiting[index];
-                  return RoundedContainer(
-                    backgroundColor: AppColor.color3D3D3D,
-                    child: Row(
-                      children: [
-                        RoundedContainer(
-                          backgroundColor: AppColor.color636366,
-                          height: 70,
-                          width: 70,
-                          child: Image.network(
-                            item.image ?? "",
-                            errorBuilder: (context, error, stackTrace) {
-                              return const Icon(
-                                FontAwesomeIcons.image,
-                                size: 40,
-                              );
-                            },
-                          ),
-                        ),
-                        const SizedBox(
-                          width: 16,
-                        ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            FieldValue(
-                              fieldName: const Text("Tên sản phẩm:"),
-                              value: Text(item.name ?? ""),
-                            ),
-                            const SizedBox(
-                              height: 8,
-                            ),
-                            FieldValue(
-                              fieldName: const Text("Mã sản phẩm:"),
-                              value: Text(
-                                item.barcode ?? "",
-                                style: const TextStyle(
-                                    color: Colors.green, fontSize: 20),
-                              ),
-                            )
-                          ],
-                        )
-                      ],
-                    ),
-                  );
-                },
-              ),
+          if (waiting.isNotEmpty)
+            Expanded(
+              child: Padding(
+                  padding: const EdgeInsets.only(top: 8.0),
+                  child: _list(context, viewModel, waiting, false)),
             ),
-          ),
+          if (counting.isNotEmpty)
+            Expanded(
+              child: Padding(
+                  padding: const EdgeInsets.only(top: 8.0),
+                  child: _list(context, viewModel, counting, true)),
+            ),
         ],
       ),
+    );
+  }
+
+  Widget _list(BuildContext context, DailyCycleCountScreenViewModel viewModel,
+      List<CycleCountItem> items, bool isCounting) {
+    return ListView.builder(
+      itemCount: items.length,
+      itemBuilder: (BuildContext context, index) {
+        final item = items[index];
+        return RoundedContainer(
+          backgroundColor: AppColor.color3D3D3D,
+          child: Row(
+            children: [
+              RoundedContainer(
+                backgroundColor: AppColor.color636366,
+                height: 70,
+                width: 70,
+                child: Image.network(
+                  item.image ?? "",
+                  errorBuilder: (context, error, stackTrace) {
+                    return const Icon(
+                      FontAwesomeIcons.image,
+                      size: 40,
+                    );
+                  },
+                ),
+              ),
+              const SizedBox(
+                width: 16,
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  FieldValue(
+                    fieldName: const Text("Tên sản phẩm:"),
+                    value: Text(item.name ?? ""),
+                  ),
+                  const SizedBox(
+                    height: 8,
+                  ),
+                  FieldValue(
+                    fieldName: const Text("Mã sản phẩm:"),
+                    value: Text(
+                      item.barcode ?? "",
+                      style: const TextStyle(color: Colors.green, fontSize: 20),
+                    ),
+                  ),
+                  FieldValue(
+                    fieldName: const Text("Số lượng:"),
+                    value: Text(
+                      "${item.quantity1}",
+                      style: const TextStyle(color: Colors.green, fontSize: 20),
+                    ),
+                  )
+                ],
+              )
+            ],
+          ),
+        );
+      },
     );
   }
 
