@@ -1,10 +1,10 @@
-
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 import 'package:warehouse_app/base/view_models/index.dart';
 
 class QuantityInput extends StatelessWidget {
-  const QuantityInput({super.key});
+  final Widget? child;
+  const QuantityInput({super.key, this.child});
 
   @override
   Widget build(BuildContext context) {
@@ -16,6 +16,9 @@ class QuantityInput extends StatelessWidget {
         child: Material(
           child: Column(
             children: [
+              if (child != null) ...[
+                child!,
+              ],
               TextFormField(
                 keyboardType: TextInputType.number,
                 decoration: const InputDecoration(

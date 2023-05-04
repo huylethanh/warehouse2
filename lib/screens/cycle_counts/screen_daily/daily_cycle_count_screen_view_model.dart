@@ -13,22 +13,18 @@ class DailyCycleCountScreenViewModel extends CycleCountViewModelBase {
     await super.scan(context, barcode);
 
     if (lvSessionId == 0) {
-      scanLocationCode(
+      await scanLocationCode(
           barcode: codeScan,
           cycleCountType: DAILY,
           cycleCountId: partnerView.cycleCountId!);
     } else {
-      scanSkuCode(context, codeScan, qty);
+      await scanSkuCode(context, codeScan, qty);
     }
   }
 
-  void loadData() {
-    getLocations();
+  void loadData() async {
+    await getLocations();
   }
-
-  // fun confirmFinish() {
-  //     processState.postValue(Resource.Success(CycleCountState.ConfirmFinish))
-  // }
 
   String getScanMessage() {
     if (started != null) {

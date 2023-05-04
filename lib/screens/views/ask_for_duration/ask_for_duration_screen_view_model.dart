@@ -140,8 +140,9 @@ class AskForDurationScreenViewModel extends ViewModelBase {
 
     final now = DateTime.now();
 
-    final high = expireDate.millisecond - now.millisecond;
-    final low = expireDate.millisecond - issueDate.millisecond;
+    final high = expireDate.millisecondsSinceEpoch - now.millisecondsSinceEpoch;
+    final low =
+        expireDate.millisecondsSinceEpoch - issueDate.millisecondsSinceEpoch;
 
     percentShelfLife = (high / low) * 100;
   }

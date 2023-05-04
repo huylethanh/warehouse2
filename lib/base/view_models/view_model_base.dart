@@ -34,10 +34,17 @@ abstract class ViewModelBase extends BaseViewModel {
     return;
   }
 
+  Widget? buildInputQuantityDetail() {
+    return null;
+  }
+
   Future<void> _inputQuantityDialog(
       BuildContext context, String barCode) async {
     final result = await DialogService.showBottomSheet<int>(context,
-        chid: const QuantityInput(), title: "Nhận số lượng cho SKU");
+        chid: QuantityInput(
+          child: buildInputQuantityDetail(),
+        ),
+        title: "Nhận số lượng cho SKU");
 
     if (result == null) {
       return;

@@ -66,8 +66,8 @@ class PickingListScreenViewModel extends ViewModelBase {
       return "Không có dữ liệu";
     }
 
-    final dateTimeCreatePick = timestamp.millisecond;
-    final currentDateTime = DateTime.now().millisecond;
+    final dateTimeCreatePick = timestamp.millisecondsSinceEpoch;
+    final currentDateTime = DateTime.now().millisecondsSinceEpoch;
 
     final millis = DateTime.fromMillisecondsSinceEpoch(
         currentDateTime - dateTimeCreatePick);

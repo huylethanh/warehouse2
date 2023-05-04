@@ -64,16 +64,22 @@ abstract class CycleCountViewModelBase extends ViewModelBase {
     setProcessing(false);
   }
 
-  Future<void> finish() async {
+  Future<bool> finish(BuildContext context) async {
+    final confirmed = await DialogService.confirmDialog(context,
+        title: "Kết thúc", message: "Bạn có muốn kết thúc công việc?");
+    if (!confirmed) {
+      return false;
+    }
+
     setProcessing(true);
     final resutl = await finishCountUseCase.execute(lvSessionId);
     if (!resutl) {
-      // abc hhere
       setProcessing(false);
-      return;
+      return true;
     }
-    //     processState.postfinalue(Resource.Success(CycleCountState.Finish))
+
     setProcessing(false);
+    return true;
   }
 
   Future<void> process(
@@ -90,16 +96,18 @@ abstract class CycleCountViewModelBase extends ViewModelBase {
 
       if (product.actualExpiredDate2 != null &&
           product.actualManufactureDate2 != null) {
-        expDate = product.actualExpiredDate2!.millisecond ~/ 1000;
-        manufactureDate = product.actualManufactureDate2!.millisecond ~/ 1000;
+        expDate = product.actualExpiredDate2!.millisecondsSinceEpoch ~/ 1000;
+        manufactureDate =
+            product.actualManufactureDate2!.millisecondsSinceEpoch ~/ 1000;
       }
     } else {
       lotNumber = product.actualLotNumber1;
 
       if (product.actualExpiredDate1 != null &&
           product.actualManufactureDate1 != null) {
-        expDate = product.actualExpiredDate1!.millisecond ~/ 1000;
-        manufactureDate = product.actualManufactureDate1!.millisecond ~/ 1000;
+        expDate = product.actualExpiredDate1!.millisecondsSinceEpoch ~/ 1000;
+        manufactureDate =
+            product.actualManufactureDate1!.millisecondsSinceEpoch ~/ 1000;
       }
     }
 
@@ -119,7 +127,7 @@ abstract class CycleCountViewModelBase extends ViewModelBase {
       return;
     }
 
-    processCountUseCase.execute(
+    final result = await processCountUseCase.execute(
         lvSessionId,
         CycleCountProcessPayload(
             productBarcodeId: product.productBarcodeId,
@@ -130,6 +138,10 @@ abstract class CycleCountViewModelBase extends ViewModelBase {
             manufactureDate: manufactureDate,
             numOfExpiry: numOfExpiry,
             unitExpiry: unitExpiry));
+
+    if (!result) {
+      return;
+    }
 
     helper.newCount(product, code, quantity);
 
@@ -173,10 +185,11 @@ abstract class CycleCountViewModelBase extends ViewModelBase {
     return product.actualLotNumber1 == null;
   }
 
-  void scanSkuCode(BuildContext context, String barcode, int quantity) {
+  Future<void> scanSkuCode(
+      BuildContext context, String barcode, int quantity) async {
     if (quantity > 0) {
       if (!isScanStorageCode(barcode)) {
-        handleScanCodeIsNotStorageCode(context, barcode, quantity);
+        await handleScanCodeIsNotStorageCode(context, barcode, quantity);
       }
 
       return;
@@ -206,15 +219,15 @@ abstract class CycleCountViewModelBase extends ViewModelBase {
     return false;
   }
 
-  void handleScanCodeIsNotStorageCode(
-      BuildContext context, String barcode, int quantity) {
+  Future<void> handleScanCodeIsNotStorageCode(
+      BuildContext context, String barcode, int quantity) async {
     final product = helper.check(barcode);
     if (product != null) {
       if (isProductHasExpireAndLotNumber(product,
           isSerial: !product.isSerial())) {
-        showLotDateDialogState(context, product, quantity, barcode);
+        await showLotDateDialogState(context, product, quantity, barcode);
       } else {
-        foundProduct(context, product, barcode, quantity);
+        await foundProduct(context, product, barcode, quantity);
       }
 
       return;
@@ -232,24 +245,27 @@ abstract class CycleCountViewModelBase extends ViewModelBase {
   }
 
   foundProduct(
-      BuildContext context, CycleCountProduct p, String code, int qty) {
+      BuildContext context, CycleCountProduct p, String code, int qty) async {
+    setProcessing(true);
     if (p.isSerial()) {
       if (p.barcode == code) {
         processingProduct = p;
         //   processState.postfinalue(Resource.Success(CycleCountState.AwaitSerial))
+        setProcessing(false);
         return;
       }
 
       if (p.isSerialCode(code)) {
         if (isProductHasExpireAndLotNumber(p)) {
-          showLotDateDialogState(context, p, 1, code);
+          await showLotDateDialogState(context, p, 1, code);
         } else {
-          process(product: p, code: code, quantity: 1);
+          await process(product: p, code: code, quantity: 1);
         }
       }
     } else {
-      process(product: p, quantity: qty);
+      await process(product: p, quantity: qty);
     }
+    setProcessing(false);
   }
 
   @override
@@ -270,7 +286,7 @@ abstract class CycleCountViewModelBase extends ViewModelBase {
     return Future.value();
   }
 
-  void scanLocationCode(
+  Future<void> scanLocationCode(
       {required String barcode,
       int cycleCountId = 0,
       int roundNumber = CYCLE_COUNT,
@@ -288,7 +304,7 @@ abstract class CycleCountViewModelBase extends ViewModelBase {
     final detailsDataSession =
         await getSessionCountUseCase.execute(startSession.countingSessionId!);
     lvSessionId = startSession.countingSessionId!;
-    helper.process(detailsDataSession!.details!);
+    await helper.process(detailsDataSession!.details!);
     final pair = helper.twoList();
 
     final inWaiting = pair.key;
