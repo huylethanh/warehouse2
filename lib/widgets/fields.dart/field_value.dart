@@ -14,18 +14,24 @@ class FieldValue extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Expanded(
-          flex: expanedFieldName ? 1 : 0,
+        DefaultTextStyle(
+            style: const TextStyle(fontWeight: FontWeight.bold),
+            child: fieldName),
+        if (expanedFieldName)
+          const Expanded(
+            child: SizedBox(),
+          ),
+        if (!expanedFieldName)
+          const SizedBox(
+            width: 8,
+          ),
+        Flexible(
           child: DefaultTextStyle(
               style: const TextStyle(fontWeight: FontWeight.bold),
-              child: fieldName),
+              child: value),
         ),
-        const SizedBox(
-          width: 8,
-        ),
-        DefaultTextStyle(
-            style: const TextStyle(fontWeight: FontWeight.bold), child: value),
       ],
     );
   }

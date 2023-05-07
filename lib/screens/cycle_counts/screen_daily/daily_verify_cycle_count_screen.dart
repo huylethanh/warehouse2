@@ -25,7 +25,10 @@ class DailyVerifyCycleCountScreen extends StatelessWidget {
 
         return Scaffold(
           appBar: AppBar(
-            title: const Text("Xác nhận kiểm kê thường nhật"),
+            title: const Text(
+              "Xác nhận kiểm kê thường nhật",
+              style: TextStyle(fontSize: 16),
+            ),
             centerTitle: true,
             actions: [
               TextButton(

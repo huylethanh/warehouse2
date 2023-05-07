@@ -44,6 +44,14 @@ class DailyCycleCountScreen extends StatelessWidget {
             appBar: AppBar(
               title: const Text("Kiểm kê thường nhật"),
               centerTitle: true,
+              actions: [
+                if (viewModel.started == null)
+                  TextButton(
+                      onPressed: () {
+                        viewModel.reloadData();
+                      },
+                      child: const Text("Refresh"))
+              ],
             ),
             body: Stack(
               children: [
@@ -100,19 +108,10 @@ class DailyCycleCountScreen extends StatelessWidget {
               fieldName: const Text("Vị trí đang kiểm kê:"),
               value: Text(
                 started.location!,
-                style: const TextStyle(color: Colors.blue, fontSize: 26),
+                style: const TextStyle(color: Colors.blue, fontSize: 22),
               ),
             ),
           ),
-          if (waiting.isNotEmpty) ...[
-            vGap,
-            const Text("Sản phẩm chưa kiểm kê"),
-            Expanded(
-              child: Padding(
-                  padding: const EdgeInsets.only(top: 8.0),
-                  child: _list(context, viewModel, waiting, false)),
-            ),
-          ],
           if (counting.isNotEmpty) ...[
             vGap,
             const Text("Sản phẩm đang kiểm kê"),
@@ -120,6 +119,15 @@ class DailyCycleCountScreen extends StatelessWidget {
               child: Padding(
                   padding: const EdgeInsets.only(top: 8.0),
                   child: _list(context, viewModel, counting, true)),
+            ),
+          ],
+          if (waiting.isNotEmpty) ...[
+            vGap,
+            const Text("Sản phẩm chưa kiểm kê"),
+            Expanded(
+              child: Padding(
+                  padding: const EdgeInsets.only(top: 8.0),
+                  child: _list(context, viewModel, waiting, false)),
             ),
           ],
         ],
@@ -134,6 +142,7 @@ class DailyCycleCountScreen extends StatelessWidget {
       itemBuilder: (BuildContext context, index) {
         final item = items[index];
         return RoundedContainer(
+          margin: const EdgeInsets.symmetric(vertical: 4),
           backgroundColor: AppColor.color3D3D3D,
           child: Row(
             children: [
@@ -154,33 +163,41 @@ class DailyCycleCountScreen extends StatelessWidget {
               const SizedBox(
                 width: 16,
               ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  FieldValue(
-                    fieldName: const Text("Tên sản phẩm:"),
-                    value: Text(item.name ?? ""),
-                  ),
-                  const SizedBox(
-                    height: 8,
-                  ),
-                  FieldValue(
-                    fieldName: const Text("Mã sản phẩm:"),
-                    value: Text(
-                      item.barcode ?? "",
-                      style: const TextStyle(color: Colors.green, fontSize: 20),
-                    ),
-                  ),
-                  if (isCounting)
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
                     FieldValue(
-                      fieldName: const Text("Số lượng:"),
+                      fieldName: const Text("Tên sản phẩm:"),
                       value: Text(
-                        "${item.quantity1}",
-                        style:
-                            const TextStyle(color: Colors.green, fontSize: 20),
+                        item.name ?? "",
+                        softWrap: true,
+                        // style: TextStyle(overflow: TextOverflow.ellipsis),
+                        //maxLines: 2,
                       ),
-                    )
-                ],
+                    ),
+                    const SizedBox(
+                      height: 8,
+                    ),
+                    FieldValue(
+                      fieldName: const Text("Mã sản phẩm:"),
+                      value: Text(
+                        item.barcode ?? "",
+                        style:
+                            const TextStyle(color: Colors.green, fontSize: 18),
+                      ),
+                    ),
+                    if (isCounting)
+                      FieldValue(
+                        fieldName: const Text("Số lượng:"),
+                        value: Text(
+                          "${item.quantity1}",
+                          style: const TextStyle(
+                              color: Colors.green, fontSize: 18),
+                        ),
+                      )
+                  ],
+                ),
               )
             ],
           ),

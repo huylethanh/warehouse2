@@ -23,7 +23,15 @@ class DailyCycleCountScreenViewModel extends CycleCountViewModelBase {
   }
 
   void loadData() async {
+    setBusy(true);
     await getLocations();
+    setBusy(false);
+  }
+
+  void reloadData() async {
+    setProcessing(true);
+    await getLocations();
+    setProcessing(false);
   }
 
   String getScanMessage() {
@@ -37,7 +45,6 @@ class DailyCycleCountScreenViewModel extends CycleCountViewModelBase {
   }
 
   Future<void> getLocations() async {
-    setBusy(true);
     final partner = await partnerUseCase.getPartners(DAILY, CYCLE_COUNT);
     if (partner == null || partner.isEmpty) {
       //   _partnerDetail.postValue(Resource.Success(partnerView.initEmptyPartner()))
@@ -47,7 +54,5 @@ class DailyCycleCountScreenViewModel extends CycleCountViewModelBase {
     partnerDetail =
         await partnerUseCase.getPartnerDetail(partner.first.cycleCountId!);
     partnerView = partnerDetail!.toView();
-
-    setBusy(false);
   }
 }
