@@ -11,7 +11,7 @@ class DailyCycleCountScreenViewModel extends CycleCountViewModelBase {
   @override
   Future<void> scan(BuildContext context, String barcode) async {
     await super.scan(context, barcode);
-
+    setProcessing(true);
     if (lvSessionId == 0) {
       await scanLocationCode(
           barcode: codeScan,
@@ -20,6 +20,7 @@ class DailyCycleCountScreenViewModel extends CycleCountViewModelBase {
     } else {
       await scanSkuCode(context, codeScan, qty);
     }
+    setProcessing(false);
   }
 
   void loadData() async {

@@ -5,6 +5,7 @@ import 'package:warehouse_app/models/cycle_count_constain.dart';
 import 'package:warehouse_app/models/models.dart';
 import 'package:warehouse_app/screens/cycle_counts/cycle_count_selection_view.dart';
 import 'package:warehouse_app/screens/cycle_counts/screen_daily/daily_cycle_count_screen.dart';
+import 'package:warehouse_app/screens/cycle_counts/screen_daily/daily_verify_cycle_count_screen.dart';
 import 'package:warehouse_app/screens/picking/picking.dart';
 import 'package:warehouse_app/screens/repick/repick_screen_view_model.dart';
 import 'package:warehouse_app/screens/transfer/transfer.dart';
@@ -375,9 +376,15 @@ class HomeScreenViewModel extends ViewModelBase {
 
       case cycleCount:
         if (task is CycleCountTask) {
-          view = DailyCycleCountScreen(
-            resumeTask: task,
-          );
+          if (task.isVerify()) {
+            view = DailyVerifyCycleCountScreen(
+              resumeTask: task,
+            );
+          } else {
+            view = DailyCycleCountScreen(
+              resumeTask: task,
+            );
+          }
         }
         break;
 
