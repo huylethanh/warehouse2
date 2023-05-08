@@ -112,98 +112,99 @@ class DailyCycleCountScreen extends StatelessWidget {
               ),
             ),
           ),
-          if (counting.isNotEmpty) ...[
-            vGap,
-            const Text("Sản phẩm đang kiểm kê"),
-            Expanded(
-              child: Padding(
-                  padding: const EdgeInsets.only(top: 8.0),
-                  child: _list(context, viewModel, counting, true)),
+          Expanded(
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  if (counting.isNotEmpty) ...[
+                    vGap,
+                    const Text("Sản phẩm đang kiểm kê"),
+                    vGap,
+                    ..._list(context, viewModel, counting, true),
+                  ],
+                  if (waiting.isNotEmpty) ...[
+                    vGap,
+                    const Text("Sản phẩm chưa kiểm kê"),
+                    vGap,
+                    ..._list(context, viewModel, waiting, false),
+                  ],
+                ],
+              ),
             ),
-          ],
-          if (waiting.isNotEmpty) ...[
-            vGap,
-            const Text("Sản phẩm chưa kiểm kê"),
-            Expanded(
-              child: Padding(
-                  padding: const EdgeInsets.only(top: 8.0),
-                  child: _list(context, viewModel, waiting, false)),
-            ),
-          ],
+          )
         ],
       ),
     );
   }
 
-  Widget _list(BuildContext context, DailyCycleCountScreenViewModel viewModel,
-      List<CycleCountItem> items, bool isCounting) {
-    return ListView.builder(
-      itemCount: items.length,
-      itemBuilder: (BuildContext context, index) {
-        final item = items[index];
-        return RoundedContainer(
-          margin: const EdgeInsets.symmetric(vertical: 4),
-          backgroundColor: AppColor.color3D3D3D,
-          child: Row(
-            children: [
-              RoundedContainer(
-                backgroundColor: AppColor.color636366,
-                height: 70,
-                width: 70,
-                child: Image.network(
-                  item.image ?? "",
-                  errorBuilder: (context, error, stackTrace) {
-                    return const Icon(
-                      FontAwesomeIcons.image,
-                      size: 40,
-                    );
-                  },
-                ),
+  List<Widget> _list(
+      BuildContext context,
+      DailyCycleCountScreenViewModel viewModel,
+      List<CycleCountItem> items,
+      bool isCounting) {
+    return items.map((item) {
+      return RoundedContainer(
+        margin: const EdgeInsets.symmetric(vertical: 4),
+        backgroundColor: AppColor.color3D3D3D,
+        child: Row(
+          children: [
+            RoundedContainer(
+              backgroundColor: AppColor.color636366,
+              height: 70,
+              width: 70,
+              child: Image.network(
+                item.image ?? "",
+                errorBuilder: (context, error, stackTrace) {
+                  return const Icon(
+                    FontAwesomeIcons.image,
+                    size: 40,
+                  );
+                },
               ),
-              const SizedBox(
-                width: 16,
-              ),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    FieldValue(
-                      fieldName: const Text("Tên sản phẩm:"),
-                      value: Text(
-                        item.name ?? "",
-                        softWrap: true,
-                        // style: TextStyle(overflow: TextOverflow.ellipsis),
-                        //maxLines: 2,
-                      ),
+            ),
+            const SizedBox(
+              width: 16,
+            ),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  FieldValue(
+                    fieldName: const Text("Tên sản phẩm:"),
+                    value: Text(
+                      item.name ?? "",
+                      softWrap: true,
+                      // style: TextStyle(overflow: TextOverflow.ellipsis),
+                      //maxLines: 2,
                     ),
-                    const SizedBox(
-                      height: 8,
+                  ),
+                  const SizedBox(
+                    height: 8,
+                  ),
+                  FieldValue(
+                    fieldName: const Text("Mã sản phẩm:"),
+                    value: Text(
+                      item.barcode ?? "",
+                      style: const TextStyle(color: Colors.green, fontSize: 18),
                     ),
+                  ),
+                  if (isCounting)
                     FieldValue(
-                      fieldName: const Text("Mã sản phẩm:"),
+                      fieldName: const Text("Số lượng:"),
                       value: Text(
-                        item.barcode ?? "",
+                        "${item.quantity1}",
                         style:
                             const TextStyle(color: Colors.green, fontSize: 18),
                       ),
-                    ),
-                    if (isCounting)
-                      FieldValue(
-                        fieldName: const Text("Số lượng:"),
-                        value: Text(
-                          "${item.quantity1}",
-                          style: const TextStyle(
-                              color: Colors.green, fontSize: 18),
-                        ),
-                      )
-                  ],
-                ),
-              )
-            ],
-          ),
-        );
-      },
-    );
+                    )
+                ],
+              ),
+            )
+          ],
+        ),
+      );
+    }).toList();
   }
 
   Widget _locations(

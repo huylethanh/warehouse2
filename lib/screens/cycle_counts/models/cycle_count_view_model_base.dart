@@ -22,12 +22,16 @@ abstract class CycleCountViewModelBase extends ViewModelBase {
 
   late PartnerCycleCountView partnerView =
       PartnerCycleCountView(0, "", "", "", 0, 0, "", []);
-  bool isVerify = false;
+  final bool isVerify;
   CycleCountProduct? processingProduct;
   int lvSessionId = 0;
   Started? started;
   String codeScan = "";
   int qty = 1;
+
+  CycleCountViewModelBase({this.isVerify = false}) {
+    helper.isVerify = isVerify;
+  }
 
   CycleCountProduct product(int index) {
     return helper.original[index];
@@ -38,14 +42,12 @@ abstract class CycleCountViewModelBase extends ViewModelBase {
   }
 
   Future<void> resume(int idSession) async {
-    helper.isVerify = isVerify;
     lvSessionId = idSession;
     await refresh();
   }
 
   Future<void> refresh() async {
     setProcessing(true);
-    helper.isVerify = isVerify;
 
     final details = await getSessionCountUseCase.execute(lvSessionId);
     if (details == null) {
@@ -271,7 +273,6 @@ abstract class CycleCountViewModelBase extends ViewModelBase {
   @override
   Future<void> scan(BuildContext context, String barcode) {
     //  currentStateUI = CycleCount.COUNTING_STATE
-    helper.isVerify = isVerify;
     final normalize = barcode.trim();
     final parts = normalize.split("|");
     final code = parts[0];
@@ -354,7 +355,11 @@ abstract class CycleCountViewModelBase extends ViewModelBase {
     );
 
     setProcessing(true);
-    await process(product: product, code: barcode, quantity: quantity);
+    await process(
+        product: product,
+        code: barcode,
+        quantity: quantity,
+        isVerify: isVerify);
     setProcessing(false);
   }
 

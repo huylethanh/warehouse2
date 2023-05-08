@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:warehouse_app/models/cycle_count_constain.dart';
 import 'package:warehouse_app/models/models.dart';
-import 'dart:math' as math;
 import '../models/cycle_count_view_model_base.dart';
 
 class DailyVerifyCycleCountScreenViewModel extends CycleCountViewModelBase {
   PartnerCycleCount? partnerDetail;
+
+  DailyVerifyCycleCountScreenViewModel() : super(isVerify: true);
 
   void loadData() async {
     setBusy(true);
