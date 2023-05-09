@@ -11,7 +11,7 @@ import 'package:warehouse_app/widgets/widgets.dart';
 import '../../../models/cycle_count_constain.dart';
 import '../helpers/cycle_count_helper.dart';
 
-abstract class CycleCountViewModelBase extends ViewModelBase {
+abstract class CycleCountViewModelBase extends ScanableViewModelBase {
   final startCountUseCase = StartCountLogic();
   final partnerUseCase = PartnerCycleCountLogic();
   final getSessionCountUseCase = GetSessionCountLogic();
@@ -29,7 +29,7 @@ abstract class CycleCountViewModelBase extends ViewModelBase {
   String codeScan = "";
   int qty = 1;
 
-  CycleCountViewModelBase({this.isVerify = false}) {
+  CycleCountViewModelBase({required this.isVerify}) : super() {
     helper.isVerify = isVerify;
   }
 

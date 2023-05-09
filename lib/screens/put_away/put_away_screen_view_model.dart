@@ -8,7 +8,7 @@ import 'package:warehouse_app/utils/utils.dart';
 import 'package:warehouse_app/logics/logics.dart';
 import 'package:warehouse_app/widgets/widgets.dart';
 
-class PutAwayScreenViewModel extends ViewModelBase {
+class PutAwayScreenViewModel extends ScanableViewModelBase {
   final RegisterTransport registerTransport = RegisterTransport();
   final transportRuleControl = TransportRuleControl();
   final queryInfoAtLocation = QueryInfoAtLocation();
@@ -28,6 +28,8 @@ class PutAwayScreenViewModel extends ViewModelBase {
   bool cargoSelected = false;
   NewTransport? newTransport;
   CheckCodeResponse? checkCodeResponse;
+
+  PutAwayScreenViewModel() : super();
 
   Future<void> resume(PutAwayTask task) async {
     setBusy(true);

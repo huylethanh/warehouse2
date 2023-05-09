@@ -51,6 +51,7 @@ dependencies:
   bot_toast: ^4.0.3
   pull_to_refresh: ^2.0.0
   jiffy: ^6.1.0
+  flutter_broadcasts: ^0.3.0
 
 dev_dependencies:
   flutter_test:

@@ -91,6 +91,7 @@ class PutAwayScreen extends StatelessWidget {
       BuildContext context, PutAwayScreenViewModel viewModel) {
     return [
       BarcodeScanner(
+        viewModel: viewModel,
         value: viewModel.scannedBarcode,
         finishScanned: (barcode) {
           viewModel.processInput(context, viewModel.scannedBarcode);

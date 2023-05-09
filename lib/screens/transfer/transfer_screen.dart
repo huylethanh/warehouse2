@@ -42,6 +42,7 @@ class TransferScreen extends StatelessWidget {
                 child: Column(
                   children: [
                     BarcodeScanner(
+                      viewModel: viewModel,
                       finishScanned: (barcode) {
                         if (isNullOrEmpty(barcode)) {
                           return;

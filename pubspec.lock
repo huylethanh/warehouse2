@@ -286,6 +286,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.0"
+  flutter_broadcasts:
+    dependency: "direct main"
+    description:
+      name: flutter_broadcasts
+      sha256: "5ff4fe59a8928319b5b66a4b6c654a04075401237df245938e5dea95ed7e814a"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.3.0"
   flutter_lints:
     dependency: "direct dev"
     description:

@@ -98,6 +98,7 @@ class PickingSessionScreen extends StatelessWidget {
                       height: 8,
                     ),
                     BarcodeScanner(
+                      viewModel: viewModel,
                       finishScanned: (barcode) {
                         if (isNullOrEmpty(barcode)) {
                           return;

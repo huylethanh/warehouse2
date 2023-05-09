@@ -11,7 +11,7 @@ import 'package:warehouse_app/logics/logics.dart';
 import 'package:warehouse_app/widgets/widgets.dart';
 import 'package:darq/darq.dart';
 
-class ReceiveSessionScreenViewModel extends ViewModelBase {
+class ReceiveSessionScreenViewModel extends ScanableViewModelBase {
   final _receiveService = ReceiveService();
   final _metadataService = MetadataService();
   final CheckHasFullDimension _checkHasFullDimension = CheckHasFullDimension();
@@ -46,7 +46,7 @@ class ReceiveSessionScreenViewModel extends ViewModelBase {
     required this.conditionType,
     required this.session,
     this.receiveTask,
-  });
+  }) : super();
 
   init() {
     loadData();

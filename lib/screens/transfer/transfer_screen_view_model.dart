@@ -12,7 +12,7 @@ import '../../models/models.dart';
 import 'models/resume.dart';
 import 'models/source_bin_registered.dart';
 
-class TransferScreenViewModel extends ViewModelBase {
+class TransferScreenViewModel extends ScanableViewModelBase {
   final checkQuantityPacking = CheckQuantityPacking();
   final registerSourceLogic = RegisterSourceTransport();
   final registerDestLocation = RegisterDestLocation();
@@ -39,6 +39,8 @@ class TransferScreenViewModel extends ViewModelBase {
 
   Resume? resumeData;
   SourceBinRegistered? sourceBinRegistered;
+
+  TransferScreenViewModel() : super();
 
   Future<void> loadSuggestLocation(
       int productId, int conditionTypeId, int unitId) async {

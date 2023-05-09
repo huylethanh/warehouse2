@@ -152,6 +152,7 @@ class ReceiveSessionScreen extends StatelessWidget {
                     ),
                     vGap,
                     BarcodeScanner(
+                      viewModel: viewModel,
                       value: viewModel.scannedBarcode,
                       labelText: viewModel.hasCurrentCode()
                           ? 'Scan barcode'

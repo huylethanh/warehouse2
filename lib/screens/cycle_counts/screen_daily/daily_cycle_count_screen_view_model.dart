@@ -8,6 +8,8 @@ import 'package:warehouse_app/screens/cycle_counts/models/cycle_count_view_model
 class DailyCycleCountScreenViewModel extends CycleCountViewModelBase {
   PartnerCycleCount? partnerDetail;
 
+  DailyCycleCountScreenViewModel() : super(isVerify: false);
+
   @override
   Future<void> scan(BuildContext context, String barcode) async {
     await super.scan(context, barcode);

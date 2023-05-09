@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+import 'package:flutter_broadcasts/flutter_broadcasts.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:warehouse_app/base/view_models/index.dart';
 import 'package:warehouse_app/utils/utils.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -15,12 +17,14 @@ class BarcodeScanner extends StatelessWidget {
   final void Function(bool)? cargoSelectedChanges;
   final bool? cargoSelected;
   final Widget? moreInfo;
+  final ScanableViewModelBase viewModel;
 
   const BarcodeScanner({
     super.key,
     required this.finishScanned,
     required this.labelText,
     required this.onBarcodeValueChanges,
+    required this.viewModel,
     this.cargoSelectedChanges,
     this.cargoSelected,
     this.moreInfo,
@@ -33,6 +37,31 @@ class BarcodeScanner extends StatelessWidget {
 
     return Column(
       children: [
+        StreamBuilder<BroadcastMessage>(
+            initialData: null,
+            stream: viewModel.receiver.messages,
+            builder: (context, snapshot) {
+              switch (snapshot.connectionState) {
+                case ConnectionState.active:
+                  {
+                    final data = snapshot.data?.data?["data"];
+                    if (data == null || data["data"] == null) {
+                      DialogService.showErrorBotToast("Không đọc được barcode");
+                    }
+
+                    onBarcodeValueChanges(data["data"]);
+                    scannedValue = data["data"];
+                    finishScanned(scannedValue);
+                    break;
+                  }
+                case ConnectionState.none:
+                case ConnectionState.done:
+                case ConnectionState.waiting:
+                default:
+                  return const SizedBox();
+              }
+              return const SizedBox();
+            }),
         Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [

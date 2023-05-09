@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:warehouse_app/screens/index.dart';
 
 class AppNavigation {
-  static final navKey = new GlobalKey<NavigatorState>();
+  static final navKey = GlobalKey<NavigatorState>();
 
   static void pushNamed<T>(String name, {Object? arguments}) {
     navKey.currentState!.pushNamed<T>(name, arguments: arguments);

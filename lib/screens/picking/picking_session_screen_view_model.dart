@@ -14,7 +14,7 @@ import 'models/models.dart';
 
 enum TASK { begin, registeredTransport, registerBin, finish }
 
-class PickingSessionScreenViewModel extends ViewModelBase {
+class PickingSessionScreenViewModel extends ScanableViewModelBase {
   late ORPicking orPicking;
 
   final pickController = BinPickController();
@@ -41,7 +41,7 @@ class PickingSessionScreenViewModel extends ViewModelBase {
 
   LastPicked? last;
 
-  PickingSessionScreenViewModel();
+  PickingSessionScreenViewModel() : super();
 
   init(ORPicking orPicking) {
     this.orPicking = orPicking;

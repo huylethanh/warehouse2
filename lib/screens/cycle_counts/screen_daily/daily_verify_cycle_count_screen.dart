@@ -53,6 +53,7 @@ class DailyVerifyCycleCountScreen extends StatelessWidget {
                 child: Column(
                   children: [
                     BarcodeScanner(
+                      viewModel: viewModel,
                       value: viewModel.scannedBarcode,
                       finishScanned: (code) {
                         viewModel.processInput(context, code);
