@@ -241,8 +241,8 @@ abstract class CycleCountViewModelBase extends ScanableViewModelBase {
   bool isProductHasExpireAndLotNumber(CycleCountProduct product,
       {bool isSerial = true}) {
     final isNeedDate =
-        product.isExpiryDate! && isExpireManufactureDateNull(product);
-    final isNeedLotNumber = product.isLotNumber! && isLotNumberNull(product);
+        product.isExpiryDate && isExpireManufactureDateNull(product);
+    final isNeedLotNumber = product.isLotNumber && isLotNumberNull(product);
     return (isNeedDate || isNeedLotNumber) && isSerial;
   }
 
@@ -270,22 +270,11 @@ abstract class CycleCountViewModelBase extends ScanableViewModelBase {
     setProcessing(false);
   }
 
-  @override
-  Future<void> scan(BuildContext context, String barcode) {
-    //  currentStateUI = CycleCount.COUNTING_STATE
-    final normalize = barcode.trim();
-    final parts = normalize.split("|");
-    final code = parts[0];
-    final int? quantity = getQuantity(parts);
-    if (quantity == null) {
-      DialogService.showErrorBotToast("Dữ liệu không hợp lệ");
-      return Future.value();
-    }
+  // @override
+  // Future<void> scan(BuildContext context, String barcode) {
+  //   //  currentStateUI = CycleCount.COUNTING_STATE
 
-    codeScan = code;
-    qty = quantity;
-    return Future.value();
-  }
+  // }
 
   Future<void> scanLocationCode(
       {required String barcode,
@@ -331,8 +320,8 @@ abstract class CycleCountViewModelBase extends ScanableViewModelBase {
             productName: product.productName,
             avatarURL: product.avatarURL,
             code: product.barcode ?? ""),
-        needDuration: product.isExpiryDate ?? false,
-        needLotNumber: product.isLotNumber ?? false,
+        needDuration: product.isExpiryDate,
+        needLotNumber: product.isLotNumber,
         durationValue: DurationValue(
           lotNumber: product.systemLotNumber1,
           expireDate: product.systemExpiredDate1 ?? DateTime.now(),

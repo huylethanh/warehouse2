@@ -28,8 +28,8 @@ class CycleCountProduct {
   final DateTime? systemExpiredDate2;
   final DateTime? systemManufactureDate1;
   final DateTime? systemManufactureDate2;
-  final bool? isLotNumber;
-  final bool? isExpiryDate;
+  final bool isLotNumber;
+  final bool isExpiryDate;
   final String? actualLotNumber2;
   final bool hasDifferentQty1;
   final bool hasDifferentQty2;
@@ -67,8 +67,8 @@ class CycleCountProduct {
     this.systemExpiredDate2,
     this.systemManufactureDate1,
     this.systemManufactureDate2,
-    this.isLotNumber,
-    this.isExpiryDate,
+    this.isLotNumber = false,
+    this.isExpiryDate = false,
     this.actualLotNumber2,
     this.hasDifferentQty1 = false,
     this.hasDifferentQty2 = false,

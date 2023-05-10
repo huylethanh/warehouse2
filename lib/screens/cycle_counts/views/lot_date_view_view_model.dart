@@ -19,8 +19,8 @@ class LotDateViewModel extends ViewModelBase {
     issuDate = product.systemManufactureDate1 ?? DateTime.now();
     lotNumber = product.systemLotNumber1;
 
-    needDate = product.isExpiryDate ?? false;
-    needLotNumber = product.isLotNumber ?? false;
+    needDate = product.isExpiryDate;
+    needLotNumber = product.isLotNumber;
   }
 
   void onIssuDateChanges(DateTime date) {
