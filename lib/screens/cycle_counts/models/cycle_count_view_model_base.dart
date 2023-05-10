@@ -3,13 +3,16 @@ import 'package:warehouse_app/base/view_models/index.dart';
 import 'package:warehouse_app/logics/cycle_count_logic/finish_count_logic.dart';
 import 'package:warehouse_app/logics/logics.dart';
 import 'package:warehouse_app/models/models.dart';
+import 'package:warehouse_app/screens/cycle_counts/models/enum.dart';
 import 'package:warehouse_app/screens/cycle_counts/models/new_count.dart';
 import 'package:warehouse_app/screens/cycle_counts/models/started.dart';
+import 'package:warehouse_app/screens/cycle_counts/screen_daily/edit_cycle_count_screen.dart';
 import 'package:warehouse_app/screens/views/ask_for_duration/ask_for_duration_screen.dart';
 import 'package:warehouse_app/widgets/widgets.dart';
 
 import '../../../models/cycle_count_constain.dart';
 import '../helpers/cycle_count_helper.dart';
+import '../screen_daily/edit_cycle_count_screen_view_model.dart';
 
 abstract class CycleCountViewModelBase extends ScanableViewModelBase {
   final startCountUseCase = StartCountLogic();
@@ -359,5 +362,23 @@ abstract class CycleCountViewModelBase extends ScanableViewModelBase {
     final counting = pair.value;
 
     newCount = NewCount(inWaiting, counting);
+  }
+
+  Future<void> showEdit(BuildContext context, CycleCountProduct product) async {
+    final data = EditProductCycleCount(
+        sessionId: lvSessionId,
+        product: product,
+        locationCode: started!.location!,
+        type: CycleCountType.Partner,
+        isVerify: isVerify);
+
+    final result = Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (BuildContext context) {
+          return EditCycleCountScreen(editProductCycleCount: data);
+        },
+      ),
+    );
   }
 }

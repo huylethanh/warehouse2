@@ -147,9 +147,12 @@ class DailyVerifyCycleCountScreen extends StatelessWidget {
       final isDeviatedFirst = viewModel.isDeviatedFirst(item);
       final isDeviatedSecond = viewModel.isDeviatedSecond(item);
 
-      return RoundedContainer(
+      return SplashButtonWidget(
+        onPressed: () {
+          viewModel.showEdit(context, item.product);
+        },
         margin: const EdgeInsets.symmetric(vertical: 4),
-        backgroundColor: AppColor.color3D3D3D,
+        color: AppColor.color3D3D3D,
         child: Row(
           children: [
             RoundedContainer(

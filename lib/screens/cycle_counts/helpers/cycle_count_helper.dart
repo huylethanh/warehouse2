@@ -49,6 +49,7 @@ class CycleCountHelper {
 
       if (isCounted) {
         counting.add(CycleCountItem(
+            product: product,
             id: product.productBarcodeId,
             image: product.avatarURL ?? "",
             name: product.productName,
@@ -80,6 +81,7 @@ class CycleCountHelper {
         final actualQuantity2 = (isVerify) ? 0 : product.actualQty2;
 
         inWaiting.add(CycleCountItem(
+            product: product,
             id: product.productBarcodeId,
             image: product.avatarURL ?? "",
             name: product.productName,
@@ -166,6 +168,7 @@ class CycleCountHelper {
       counting.insert(
           0,
           CycleCountItem(
+              product: p,
               id: p.productBarcodeId,
               image: p.avatarURL ?? "",
               name: p.productName,

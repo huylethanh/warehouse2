@@ -107,6 +107,10 @@ class _CycleCountSelectionViewViewModel extends ViewModelBase {
         return isCycleCount
             ? "Xác nhận kiểm kê theo sản phẩm"
             : "Kiểm kê theo sản phẩm";
+
+      default:
+        throw Exception(
+            "_CycleCountSelectionViewViewModel: Not support CycleCountType:$type");
     }
   }
 

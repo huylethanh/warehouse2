@@ -1,3 +1,5 @@
+import 'package:warehouse_app/models/models.dart';
+
 class CycleCountItem {
   int? id;
   String? image;
@@ -25,6 +27,7 @@ class CycleCountItem {
   bool hasDifferentQty2;
   bool isSerial;
   int? dataIndex;
+  final CycleCountProduct product;
 
   CycleCountItem({
     this.id,
@@ -53,6 +56,7 @@ class CycleCountItem {
     this.hasDifferentQty2 = false,
     this.isSerial = false,
     this.dataIndex,
+    required this.product,
   });
 
   bool areItemsTheSame(CycleCountItem oldItem, CycleCountItem newItem) {
