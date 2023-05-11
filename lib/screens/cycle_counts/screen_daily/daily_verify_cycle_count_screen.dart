@@ -151,99 +151,109 @@ class DailyVerifyCycleCountScreen extends StatelessWidget {
         onPressed: () {
           viewModel.showEdit(context, item.product);
         },
+        childAlign: Alignment.topLeft,
+        borderRadius: const Radius.circular(10),
+        innerPadding: EdgeInsets.all(8),
         margin: const EdgeInsets.symmetric(vertical: 4),
         color: AppColor.color3D3D3D,
-        child: Row(
+        child: Column(
           children: [
-            RoundedContainer(
-              backgroundColor: AppColor.color636366,
-              height: 70,
-              width: 70,
-              child: Image.network(
-                item.image ?? "",
-                errorBuilder: (context, error, stackTrace) {
-                  return const Icon(
-                    FontAwesomeIcons.image,
-                    size: 40,
-                  );
-                },
-              ),
-            ),
-            const SizedBox(
-              width: 16,
-            ),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  FieldValue(
-                    fieldName: const Text("Tên sản phẩm:"),
-                    value: Text(
-                      item.name ?? "",
-                      softWrap: true,
-                      // style: TextStyle(overflow: TextOverflow.ellipsis),
-                      //maxLines: 2,
-                    ),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                RoundedContainer(
+                  backgroundColor: AppColor.color636366,
+                  height: 70,
+                  width: 70,
+                  child: Image.network(
+                    item.image ?? "",
+                    errorBuilder: (context, error, stackTrace) {
+                      return const Icon(
+                        FontAwesomeIcons.image,
+                        size: 40,
+                      );
+                    },
                   ),
-                  vGap,
-                  FieldValue(
-                    fieldName: const Text("Mã sản phẩm:"),
-                    value: Text(
-                      item.barcode ?? "",
-                      style: const TextStyle(color: Colors.green, fontSize: 18),
-                    ),
-                  ),
-                  if (isCounting)
-                    FieldValue(
-                      fieldName: const Text("Số lượng:"),
-                      value: Text(
-                        "${item.quantity1}",
-                        style:
-                            const TextStyle(color: Colors.green, fontSize: 18),
-                      ),
-                    ),
-                  vGap,
-                  RoundedContainer(
-                    innerPadding: const EdgeInsets.all(5),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        _rowData("Lần:", 1, Colors.green),
-                        _rowData("Tổng:", item.systemQty1, Colors.blue),
-                        _rowData("Đã đếm:", item.quantity1, Colors.orange),
-                        _rowData(
-                          "Lệch:",
-                          viewModel.getQuantityDeviated(
-                              item.systemQty1, item.quantity1, isDeviatedFirst),
-                          Colors.red,
+                ),
+                const SizedBox(
+                  width: 16,
+                ),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      FieldValue(
+                        fieldName: const Text("Tên sản phẩm:"),
+                        value: Text(
+                          item.name ?? "",
+                          softWrap: true,
+                          // style: TextStyle(overflow: TextOverflow.ellipsis),
+                          //maxLines: 2,
                         ),
-                      ],
-                    ),
-                  ),
-                  if (isCounting) ...[
-                    vGap,
-                    RoundedContainer(
-                      backgroundColor: AppColor.color1E1E1E,
-                      innerPadding: const EdgeInsets.all(5),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          _rowData("Lần:", 2, Colors.green),
-                          _rowData("Tổng:", item.systemQty2, Colors.blue),
-                          _rowData("Đã đếm:", item.quantity2, Colors.orange),
-                          _rowData(
-                            "Lệch:",
-                            viewModel.getQuantityDeviated(item.systemQty2,
-                                item.quantity2, isDeviatedSecond),
-                            Colors.red,
-                          ),
-                        ],
                       ),
-                    )
-                  ],
+                      vGap,
+                      FieldValue(
+                        fieldName: const Text("Mã sản phẩm:"),
+                        value: Text(
+                          item.barcode ?? "",
+                          style: const TextStyle(
+                              color: Colors.green, fontSize: 18),
+                        ),
+                      ),
+                      if (isCounting)
+                        FieldValue(
+                          fieldName: const Text("Số lượng:"),
+                          value: Text(
+                            "${item.quantity1}",
+                            style: const TextStyle(
+                                color: Colors.green, fontSize: 18),
+                          ),
+                        ),
+                      vGap,
+                    ],
+                  ),
+                )
+              ],
+            ),
+            vGap,
+            RoundedContainer(
+              innerPadding: const EdgeInsets.all(5),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  _rowData("Lần:", 1, Colors.green),
+                  _rowData("Tổng:", item.systemQty1, Colors.blue),
+                  _rowData("Đã đếm:", item.quantity1, Colors.orange),
+                  _rowData(
+                    "Lệch:",
+                    viewModel.getQuantityDeviated(
+                        item.systemQty1, item.quantity1, isDeviatedFirst),
+                    Colors.red,
+                  ),
                 ],
               ),
-            )
+            ),
+            if (isCounting) ...[
+              vGap,
+              RoundedContainer(
+                backgroundColor: AppColor.color1E1E1E,
+                innerPadding: const EdgeInsets.all(5),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    _rowData("Lần:", 2, Colors.green),
+                    _rowData("Tổng:", item.systemQty2, Colors.blue),
+                    _rowData("Đã đếm:", item.quantity2, Colors.orange),
+                    _rowData(
+                      "Lệch:",
+                      viewModel.getQuantityDeviated(
+                          item.systemQty2, item.quantity2, isDeviatedSecond),
+                      Colors.red,
+                    ),
+                  ],
+                ),
+              )
+            ],
           ],
         ),
       );

@@ -35,9 +35,9 @@ abstract class _$CycleCountProductCWProxy {
 
   CycleCountProduct hasDifferentQty2(bool hasDifferentQty2);
 
-  CycleCountProduct isExpiryDate(bool? isExpiryDate);
+  CycleCountProduct isExpiryDate(bool isExpiryDate);
 
-  CycleCountProduct isLotNumber(bool? isLotNumber);
+  CycleCountProduct isLotNumber(bool isLotNumber);
 
   CycleCountProduct modifiedQty1(int modifiedQty1);
 
@@ -178,11 +178,11 @@ class _$CycleCountProductCWProxyImpl implements _$CycleCountProductCWProxy {
       this(hasDifferentQty2: hasDifferentQty2);
 
   @override
-  CycleCountProduct isExpiryDate(bool? isExpiryDate) =>
+  CycleCountProduct isExpiryDate(bool isExpiryDate) =>
       this(isExpiryDate: isExpiryDate);
 
   @override
-  CycleCountProduct isLotNumber(bool? isLotNumber) =>
+  CycleCountProduct isLotNumber(bool isLotNumber) =>
       this(isLotNumber: isLotNumber);
 
   @override
@@ -363,14 +363,16 @@ class _$CycleCountProductCWProxyImpl implements _$CycleCountProductCWProxy {
           ? _value.hasDifferentQty2
           // ignore: cast_nullable_to_non_nullable
           : hasDifferentQty2 as bool,
-      isExpiryDate: isExpiryDate == const $CopyWithPlaceholder()
-          ? _value.isExpiryDate
-          // ignore: cast_nullable_to_non_nullable
-          : isExpiryDate as bool?,
-      isLotNumber: isLotNumber == const $CopyWithPlaceholder()
-          ? _value.isLotNumber
-          // ignore: cast_nullable_to_non_nullable
-          : isLotNumber as bool?,
+      isExpiryDate:
+          isExpiryDate == const $CopyWithPlaceholder() || isExpiryDate == null
+              ? _value.isExpiryDate
+              // ignore: cast_nullable_to_non_nullable
+              : isExpiryDate as bool,
+      isLotNumber:
+          isLotNumber == const $CopyWithPlaceholder() || isLotNumber == null
+              ? _value.isLotNumber
+              // ignore: cast_nullable_to_non_nullable
+              : isLotNumber as bool,
       modifiedQty1:
           modifiedQty1 == const $CopyWithPlaceholder() || modifiedQty1 == null
               ? _value.modifiedQty1
@@ -580,8 +582,8 @@ CycleCountProduct _$CycleCountProductFromJson(Map<String, dynamic> json) =>
       systemManufactureDate2: json['systemManufactureDate2'] == null
           ? null
           : DateTime.parse(json['systemManufactureDate2'] as String),
-      isLotNumber: json['isLotNumber'] as bool?,
-      isExpiryDate: json['isExpiryDate'] as bool?,
+      isLotNumber: json['isLotNumber'] as bool? ?? false,
+      isExpiryDate: json['isExpiryDate'] as bool? ?? false,
       actualLotNumber2: json['actualLotNumber2'] as String?,
       hasDifferentQty1: json['hasDifferentQty1'] as bool? ?? false,
       hasDifferentQty2: json['hasDifferentQty2'] as bool? ?? false,

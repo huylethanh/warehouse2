@@ -1,5 +1,6 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:warehouse_app/base/view_models/index.dart';
 import 'package:warehouse_app/logics/logics.dart';
@@ -286,7 +287,14 @@ class EditCycleCountScreenViewModel extends ScanableViewModelBase {
     //     _state.postValue(Success(SerialRemoved(index)))
   }
 
-  Future<void> reset() async {
+  Future<void> reset(BuildContext context) async {
+    final confirmed = await DialogService.confirmDialog(context,
+        title: "Đếm lại", message: "Bạn có muốn đếm lại sản phẩm này?");
+
+    if (!confirmed) {
+      return;
+    }
+
     final product = mProduct;
 
     if (product == null) {
@@ -303,13 +311,15 @@ class EditCycleCountScreenViewModel extends ScanableViewModelBase {
               productBarcodeId: product.productBarcodeId,
               storageCodes: serials));
     } else {
-      removeCountUseCase.execute(
+      await removeCountUseCase.execute(
           mSessionId,
           CycleCountRemovePayload(
               productBarcodeId: product.productBarcodeId, storageCodes: []));
     }
 
     setProcessing(false);
+    Navigator.pop(context, true);
+
     //_state.postValue(Success(OnReset))
   }
 }

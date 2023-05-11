@@ -87,6 +87,23 @@ abstract class CycleCountViewModelBase extends ScanableViewModelBase {
     return true;
   }
 
+  @override
+  Future<void> scan(BuildContext context, String barcode) {
+    //  currentStateUI = CycleCount.COUNTING_STATE
+    final normalize = barcode.trim();
+    final parts = normalize.split("|");
+    final code = parts[0];
+    final int? quantity = getQuantity(parts);
+    if (quantity == null) {
+      DialogService.showErrorBotToast("Dữ liệu không hợp lệ");
+      return Future.value();
+    }
+
+    codeScan = code;
+    qty = quantity;
+    return Future.value();
+  }
+
   Future<void> process(
       {required CycleCountProduct product,
       String? code,
@@ -273,12 +290,6 @@ abstract class CycleCountViewModelBase extends ScanableViewModelBase {
     setProcessing(false);
   }
 
-  // @override
-  // Future<void> scan(BuildContext context, String barcode) {
-  //   //  currentStateUI = CycleCount.COUNTING_STATE
-
-  // }
-
   Future<void> scanLocationCode(
       {required String barcode,
       int cycleCountId = 0,
@@ -372,7 +383,7 @@ abstract class CycleCountViewModelBase extends ScanableViewModelBase {
         type: CycleCountType.Partner,
         isVerify: isVerify);
 
-    final result = Navigator.push(
+    final result = await Navigator.push(
       context,
       MaterialPageRoute(
         builder: (BuildContext context) {
@@ -380,5 +391,9 @@ abstract class CycleCountViewModelBase extends ScanableViewModelBase {
         },
       ),
     );
+
+    if (result == true) {
+      await refresh();
+    }
   }
 }
