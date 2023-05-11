@@ -375,10 +375,18 @@ abstract class CycleCountViewModelBase extends ScanableViewModelBase {
     newCount = NewCount(inWaiting, counting);
   }
 
-  Future<void> showEdit(BuildContext context, CycleCountProduct product) async {
+  Future<void> showEdit(BuildContext context, CycleCountProduct item) async {
+    final index = helper.original.indexWhere(
+        (element) => element.productBarcodeId == item.productBarcodeId);
+
+    if (index < 0) {
+      DialogService.showErrorBotToast("Không tìm thấy sản phẩm");
+      return;
+    }
+
     final data = EditProductCycleCount(
         sessionId: lvSessionId,
-        product: product,
+        product: helper.original[index],
         locationCode: started!.location!,
         type: CycleCountType.Partner,
         isVerify: isVerify);
