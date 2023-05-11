@@ -10,7 +10,10 @@ import 'edit_cycle_count_screen_view_model.dart';
 
 class EditCycleCountScreen extends StatelessWidget {
   final EditProductCycleCount editProductCycleCount;
-  const EditCycleCountScreen({super.key, required this.editProductCycleCount});
+  final String title;
+
+  const EditCycleCountScreen(
+      {super.key, required this.editProductCycleCount, required this.title});
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +36,9 @@ class EditCycleCountScreen extends StatelessWidget {
         final item = editProductCycleCount.product;
 
         return Scaffold(
-          appBar: AppBar(),
+          appBar: AppBar(
+            title: Text(title),
+          ),
           body: Padding(
             padding: const EdgeInsets.all(8.0),
             child: Stack(

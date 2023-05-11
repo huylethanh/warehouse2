@@ -395,7 +395,10 @@ abstract class CycleCountViewModelBase extends ScanableViewModelBase {
       context,
       MaterialPageRoute(
         builder: (BuildContext context) {
-          return EditCycleCountScreen(editProductCycleCount: data);
+          return EditCycleCountScreen(
+            editProductCycleCount: data,
+            title: "${isVerify ? "Xác nhận kiểm" : "Kiểm"} kê thường nhật",
+          );
         },
       ),
     );
