@@ -90,7 +90,7 @@ class CycleCountSelectionView extends StatelessWidget {
 }
 
 class _CycleCountSelectionViewViewModel extends ViewModelBase {
-  List<CycleCountType> types = CycleCountType.values;
+  List<CycleCountType> types = [CycleCountType.Daily, CycleCountType.SKU];
   CycleCountType? selectedType;
   late bool isCycleCount;
 
