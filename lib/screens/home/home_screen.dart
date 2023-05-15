@@ -48,24 +48,35 @@ class HomeScreen extends StatelessWidget {
                           ),
                         ),
                         Padding(
-                          padding: const EdgeInsets.only(right: 8.0),
-                          child: ClipOval(
-                            child: Material(
-                              color: Colors.blue, // Button color
-                              child: InkWell(
-                                onTap: () {},
-                                child: const SizedBox(
-                                  width: 20,
-                                  height: 20,
-                                  child: Icon(
-                                    FontAwesomeIcons.user,
-                                    size: 10,
-                                  ),
+                            padding: const EdgeInsets.only(right: 8.0),
+                            child: InkWell(
+                              onTap: () {
+                                viewModel.logout(context);
+                              },
+                              child: const Text(
+                                "Logout",
+                                style: TextStyle(
+                                  fontSize: 13,
                                 ),
                               ),
-                            ),
-                          ),
-                        )
+                            )
+                            //  ClipOval(
+                            //   child: Material(
+                            //     color: Colors.blue, // Button color
+                            //     child: InkWell(
+                            //       onTap: () {},
+                            //       child: const SizedBox(
+                            //         width: 20,
+                            //         height: 20,
+                            //         child: Icon(
+                            //           FontAwesomeIcons.user,
+                            //           size: 10,
+                            //         ),
+                            //       ),
+                            //     ),
+                            //   ),
+                            // ),
+                            )
                       ],
                     ),
                   ),

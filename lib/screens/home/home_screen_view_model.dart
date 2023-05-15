@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:warehouse_app/base/view_models/index.dart';
@@ -6,6 +8,7 @@ import 'package:warehouse_app/models/models.dart';
 import 'package:warehouse_app/screens/cycle_counts/cycle_count_selection_view.dart';
 import 'package:warehouse_app/screens/cycle_counts/screen_daily/daily_cycle_count_screen.dart';
 import 'package:warehouse_app/screens/cycle_counts/screen_daily/daily_verify_cycle_count_screen.dart';
+import 'package:warehouse_app/screens/index.dart';
 import 'package:warehouse_app/screens/picking/picking.dart';
 import 'package:warehouse_app/screens/repick/repick_screen_view_model.dart';
 import 'package:warehouse_app/screens/transfer/transfer.dart';
@@ -483,5 +486,12 @@ class HomeScreenViewModel extends ViewModelBase {
         ],
       ),
     );
+  }
+
+  void logout(BuildContext context) async {
+    await LoginReference().clearAll();
+    Navigator.pushReplacement(context, MaterialPageRoute(builder: (builder) {
+      return const LoginScreen();
+    }));
   }
 }

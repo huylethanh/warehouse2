@@ -26,13 +26,13 @@ class LoginReference {
     this.username = username;
   }
 
-  Future readAll() async {
+  Future<void> readAll() async {
     accessToken = await _storage.read(key: "accessToken");
     refreshToken = await _storage.read(key: "refreshToken");
     username = await _storage.read(key: "username");
   }
 
-  Future clearAll() async {
+  Future<void> clearAll() async {
     await _storage.delete(key: 'accessToken');
     await _storage.delete(key: 'refreshToken');
     await _storage.delete(key: 'username');

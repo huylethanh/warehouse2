@@ -17,7 +17,10 @@ class ChopperClients {
 
   String? token;
 
-  String baseURL = 'https://ops-api.dev.tnclog.vn/';
+  String baseURL = 'https://wms-api.kvuong.dev/';
+
+  //'https://wms-api.kvuong.dev/';
+  //= 'https://ops-api.dev.tnclog.vn/';
 
   String? deviceIdentifier;
 
@@ -58,6 +61,7 @@ class ChopperClients {
         }
       ],
       converter: JsonToTypeConverter(),
+      errorConverter: JsonToTypeConverter(),
     );
   }
 
